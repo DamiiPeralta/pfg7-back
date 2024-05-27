@@ -1,4 +1,4 @@
-name: deploy
+/*name: deploy
 
 on:
   push:
@@ -25,3 +25,4 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/apideploy:latest
+*/
