@@ -7,6 +7,21 @@ export class Team {
   @PrimaryGeneratedColumn('uuid')
   team_id: string;
 
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  team_name: string;
+  
+  @Column({ type: 'text', nullable: true })
+  description: string;
+  
+  @Column({ type: 'varchar', length: 50, nullable: false })
+  created_date: string;
+  
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  finish_date: string;
+  
+  @Column({ unique: true, type: 'varchar', length: 50 })
+  invitation_code: string;
+
   @ManyToOne(() => User, user => user.teams)
   team_leader: User;
 
@@ -15,19 +30,4 @@ export class Team {
 
   @OneToMany(() => Task, task => task.team)
   tasks: Task[];
-
-  @Column({ length: 50 })
-  team_name: string;
-
-  @Column('text')
-  description: string;
-
-  @Column()
-  created_date: string;
-
-  @Column()
-  finish_date: string;
-
-  @Column({ unique: true })
-  invitation_code: string;
 }
