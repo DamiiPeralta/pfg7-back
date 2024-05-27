@@ -1,41 +1,26 @@
-import { IsNotEmpty, IsEmail, IsString, IsBoolean, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsBoolean, IsOptional, MaxLength, MinLength, Matches } from 'class-validator';
 
 export class UserDto {
   @IsNotEmpty()
   @IsString()
-  readonly token: string;
+  @MinLength(3)
+  @MaxLength(80)
+  name: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly nickname: string;
+  @MinLength(3)
+  @MaxLength(80)
+  nickname: string;
 
   @IsNotEmpty()
   @IsEmail()
-  readonly email: string;
+  email: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly password: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly created: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly last_login: string;
-
-  @IsOptional()
-  @IsBoolean()
-  readonly status?: boolean;
-
-  @IsOptional()
-  readonly tasks?: any[];
-
-  @IsOptional()
-  readonly teams?: any[];
+  @MinLength(8)
+  @MaxLength(15)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/)
+  password: string;
 }
