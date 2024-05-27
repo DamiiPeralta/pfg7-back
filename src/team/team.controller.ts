@@ -1,5 +1,8 @@
 import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Teams')
+@ApiBearerAuth()
 @Controller('teams')
 export class TeamController {
 

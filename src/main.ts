@@ -10,15 +10,15 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe)
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle("Demo Nest")
-    .setDescription("Esta es una API construida con Nest para ser empleada en las demos de la clase")
+    .setTitle("EasyTask - Back")
+    .setDescription("Trabajo realizado por el back-team del grupo 07 - WEBFT 48")
     .setVersion("1.0")
     .addBearerAuth()
     .build();
     
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("api", app, document)
-  await app.listen(3000);
+  await app.listen(3000); 
 }
 
 bootstrap();
