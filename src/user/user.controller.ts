@@ -1,30 +1,48 @@
-import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException } from '@nestjs/common';
+import { UserDto } from './user.dto';
+import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
-
+  constructor(private readonly usersService: UserService) {}
   @Get()
-  findAll() {
-    return 'Este es un GET de users';
+  async getUsers() {
+    return await this.usersService.getAllUsers();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return `Este es un GET de user con id: ${id}`;
+  async findUserById(@Param('id') id: string) {
+    try {
+      return await this.usersService.getUserById(id);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
   @Post()
-  create() {
-    return 'Este es un POST de user';
+  async createUser(@Body() userDto: UserDto) {
+    const user = await this.usersService.createUser(userDto);
+    const createdAt = new Date();
+    delete user.password;
+    return { user, createdAt };
   }
 
   @Put(':id')
-  update(@Param('id') id: string) {
-    return `Este es un PUT de user con id: ${id}`;
+  async updateUser(@Param('id') id: string, @Body() userDto: UserDto) {
+    try {
+      return await this.usersService.updateUser(id, userDto);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `Este es un DELETE de user con id: ${id}`;
+  async deleteUser(@Param('id') id: string) {
+    try {
+      await this.usersService.deleteUser(id);
+      return { message: 'User deleted successfully' };
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 }
