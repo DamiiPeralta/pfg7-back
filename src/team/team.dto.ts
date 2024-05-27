@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsUUID, Length, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, Length, IsNotEmpty } from 'class-validator';
 
 export class TeamDto {
   @IsString()
