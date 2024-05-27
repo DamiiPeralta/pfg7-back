@@ -24,9 +24,10 @@ import { TeamModule } from './team/team.module';
       global:true,
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
-    })
+    }),
+    UserModule, TaskModule, TeamModule
     ],
   controllers: [],
-  providers: [UserModule, TaskModule, TeamModule],
+  providers: [],
 })
 export class AppModule {}
