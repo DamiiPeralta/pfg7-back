@@ -1,4 +1,4 @@
-version: "3.8"
+/*version: "3.8"
 
 services:
   nestapp:
@@ -19,3 +19,4 @@ services:
   
 volumes:
   pgdata:
+*/
