@@ -4,6 +4,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from "./config/typeorm"
 //import { FileUploadModule } from './file_upload/file_upload.module';
 import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from './user/user.module';
+import { TaskModule } from './task/task.module';
+import { TeamModule } from './team/team.module';
 
 @Module({
   imports: [
@@ -24,6 +27,6 @@ import { JwtModule } from '@nestjs/jwt';
     })
     ],
   controllers: [],
-  providers: [],
+  providers: [UserModule, TaskModule, TeamModule],
 })
 export class AppModule {}
