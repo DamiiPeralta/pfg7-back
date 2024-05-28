@@ -19,6 +19,7 @@ export class UserRepository {
         if (!user) {
             throw new NotFoundException(`User with ID ${id} not found`);
         }
+        
         return user;
     }
 
@@ -37,5 +38,4 @@ export class UserRepository {
         const user = await this.findById(id);
         await this.userRepository.remove(user);
     }
-
-}//pito 
+}

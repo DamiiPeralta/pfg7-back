@@ -1,30 +1,46 @@
-import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException } from '@nestjs/common';
+import { TeamService } from './team.service';
+import { TeamDto } from './team.dto';
 
 @Controller('teams')
 export class TeamController {
+  constructor(private readonly teamsService: TeamService) {}
 
   @Get()
-  findAll() {
-    return 'Este es un GET de teams';
+  async getTeams() {
+    return await this.teamsService.getAllTeams();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return `Este es un GET de team con id: ${id}`;
+  async findTeamById(@Param('id') id: string) {
+    try {
+      return await this.teamsService.getTeamById(id);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
   @Post()
-  create() {
-    return 'Este es un POST de team';
+  async createTeam(@Body() teamDto: TeamDto) {
+    return await this.teamsService.createTeam(teamDto);
   }
 
   @Put(':id')
-  update(@Param('id') id: string) {
-    return `Este es un PUT de team con id: ${id}`;
+  async updateTeam(@Param('id') id: string, @Body() teamDto: TeamDto) {
+    try {
+      return await this.teamsService.updateTeam(id, teamDto);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `Este es un DELETE de team con id: ${id}`;
+  async deleteTeam(@Param('id') id: string) {
+    try {
+      await this.teamsService.deleteTeam(id);
+      return { message: 'Team deleted successfully' };
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 }
