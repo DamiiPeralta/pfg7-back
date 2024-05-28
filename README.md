@@ -2,72 +2,110 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Easy Task
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Final project of Henry's bootcamp
 
-## Description
+[Frontend Repo](https://github.com/DamiiPeralta/PFG7-Front)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Running the Server](#running-the-server)
+  - [API Documentation](#api-documentation)
+- [Team](#team)
+- [License](#license)
+
+## Introduction
+
+Our project focuses on the development of a task management and estimation platform, aimed at the technology sector and software development teams. In a context where tools like Jira and Trello dominate the market, we aim to offer a more integrated and collaborative solution. This application will not only allow task creation and tracking but will also incorporate voting functionalities to facilitate team decision-making on task estimation. The need we are addressing is to improve efficiency and collaboration in remote or hybrid teams, providing an all-in-one tool that centralizes task management and communication. Our app stands out for integrating well-being and mental health features, such as well-being surveys and overload alerts, to foster a healthy work environment. Additionally, it includes a rewards and achievements system that motivates teams by recognizing and rewarding goal achievement and effective collaboration, creating a more motivating and balanced user experience.
+
+## Features
+
+- **User Authentication:** JWT-based authentication.
+- **Task Management:** CRUD operations for tasks.
+- **User Management:** CRUD operations for users.
+- **Role-based Authorization:** Different access levels for different user roles.
+- **File Storage:** Integration with Cloudinary for storing files.
+- **API Documentation:** Interactive API documentation with Swagger.
+
+## Technologies Used
+
+- **NestJS:** A progressive Node.js framework for building efficient and scalable server-side applications.
+- **TypeScript:** Strongly typed programming language that builds on JavaScript.
+- **TypeORM:** ORM for TypeScript and JavaScript (ES7, ES6, ES5).
+- **JWT:** For secure authentication.
+- **Bcrypt:** For hashing passwords.
+- **Swagger:** For API documentation.
+- **PostgreSQL:** For the database.
+- **Cloudinary:** For file storage.
+- **Docker:** For containerization.
+- **Render:** For deployment.
 
 ## Installation
 
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/your-username/task-management-api.git
+   cd task-management-api
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up the environment variables:**
+   Create a `.env` file in the root of the project and add the following variables:
+
+   ```env
+   DATABASE_HOST=your_database_host
+   DATABASE_PORT=your_database_port
+   DATABASE_USERNAME=your_database_username
+   DATABASE_PASSWORD=your_database_password
+   DATABASE_NAME=your_database_name
+   JWT_SECRET=your_jwt_secret
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   ```
+
+## Usage
+
+### Running the Server
+
+To start the server, run:
+
 ```bash
-$ npm install
+npm run start
 ```
 
-## Running the app
+The server will be running on `http://localhost:3000`.
 
-```bash
-# development
-$ npm run start
+### API Documentation
 
-# watch mode
-$ npm run start:dev
+Access the Swagger documentation at `http://localhost:3000/api`.
 
-# production mode
-$ npm run start:prod
-```
+## Team
 
-## Test
+The following individuals have contributed to the development of this project:
 
-```bash
-# unit tests
-$ npm run test
+### Frontend
 
-# e2e tests
-$ npm run test:e2e
+| [<img src="https://avatars.githubusercontent.com/u/137831158?v=4" width=80><br><sub>Delfina Merlo</sub>](https://github.com/D-MERLO) | [<img src="https://avatars.githubusercontent.com/u/117830607?v=4" width=80><br><sub>Samanta Driuzzi</sub>](https://github.com/SamantaDriuzzi) | [<img src="https://avatars.githubusercontent.com/u/130951872?v=4" width=80><br><sub>Yesenia Gonzalez</sub>](https://github.com/yesiviola) |
+| :---: | :---: | :---: |
 
-# test coverage
-$ npm run test:cov
-```
+### Backend
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+| [<img src="https://avatars.githubusercontent.com/u/86084164?v=4" width=80><br><sub>Damian Peralta</sub>](https://github.com/DamiiPeralta) | [<img src="https://avatars.githubusercontent.com/u/83714656?v=4" width=80><br><sub>Alejandro Campaya</sub>](https://github.com/Alejandro0419) | [<img src="https://avatars.githubusercontent.com/u/97191718?v=4" width=80><br><sub>Cristian Araya</sub>](https://github.com/ArayaCG) |
+| :---: | :---: | :---: |
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
