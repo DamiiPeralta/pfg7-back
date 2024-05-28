@@ -1,33 +1,56 @@
-import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  ParseUUIDPipe,
+  Body,
+  NotFoundException,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { TaskService } from './task.service';
+import { TaskDto } from './task.dto';
 
 @ApiTags('Tasks')
 @ApiBearerAuth()
 @Controller('tasks')
 export class TaskController {
+  constructor(private readonly taskService: TaskService) {}
 
   @Get()
-  findAll() {
-    return 'Este es un GET de tasks';
+  async getTasks() {
+    return await this.taskService.getAllTask();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return `Este es un GET de task con id: ${id}`;
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.taskService.getTaskById(id);
   }
 
   @Post()
-  create() {
-    return 'Este es un POST de task';
+  async create(@Body() newTask: TaskDto) {
+    const task = await this.taskService.createTask(newTask);
+    return task;
   }
 
   @Put(':id')
-  update(@Param('id') id: string) {
-    return `Este es un PUT de task con id: ${id}`;
+  async update(@Param('id') id: string, @Body() updateTask: TaskDto) {
+    try {
+      return await this.taskService.updateTask(id, updateTask);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `Este es un DELETE de task con id: ${id}`;
+  async remove(@Param('id') id: string) {
+    try {
+      await this.taskService.deleteTask(id);
+      return { message: 'User deleted successfully' };
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 }
