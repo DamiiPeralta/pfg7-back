@@ -45,3 +45,39 @@ export class UserDto {
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/)
   password: string;
 }
+
+export class UpdateUserDto{
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(80)
+  name: string;
+
+  /**
+   * The nickname must be a non-empty string of maximum 80 characters.
+   * @example "johndoe"
+   */
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(80)
+  nickname: string;
+  /**
+   * The email must be a non-empty string and must have a valid email format.
+   * @example "user@example.com"
+   */
+  @IsOptional()
+  @IsEmail()
+  email: string;
+
+  /**
+   * The password must be a non-empty string of minimum 8 characters, maximum 15 characters, and must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.
+   * @example "Password123!"
+   */
+  @IsOptional()
+  @IsString()
+  @MinLength(8)
+  @MaxLength(15)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/)
+  password: string;
+}

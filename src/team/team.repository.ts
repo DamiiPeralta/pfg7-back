@@ -29,6 +29,8 @@ export class TeamRepository {
   async createTeam(user_Id:string,teamDto: TeamDto): Promise<Team> {
     let team = new Team();
     Object.assign(team, teamDto);
+    const createdAt = new Date();
+    team.created_date = createdAt.toDateString();
     const user = await this.userService.getUserById(user_Id);
     team.team_leader = user;
     const newTeam = this.teamRepository.create(teamDto);
