@@ -5,17 +5,17 @@ import { Team } from "./team.entity";
 import { TeamDto } from "./team.dto";
 
 @Injectable()
-export class TeamsRepository {
+export class TeamRepository {
   constructor(
     @InjectRepository(Team)
     private readonly teamRepository: Repository<Team>
   ) {}
 
-  async findAll(): Promise<Team[]> {
+  async getTeams(): Promise<Team[]> {
     return await this.teamRepository.find();
   }
 
-  async findById(id: string): Promise<Team> {
+  async findTeamById(id: string): Promise<Team> {
     const team = await this.teamRepository.findOne({ where: { team_id: id } });
     if (!team) {
       throw new NotFoundException(`Team with ID ${id} not found`);
@@ -23,19 +23,19 @@ export class TeamsRepository {
     return team;
   }
 
-  async create(teamDto: TeamDto): Promise<Team> {
+  async createTeam(teamDto: TeamDto): Promise<Team> {
     const newTeam = this.teamRepository.create(teamDto);
     return await this.teamRepository.save(newTeam);
   }
 
-  async update(id: string, teamDto: TeamDto): Promise<Team> {
-    const team = await this.findById(id);
+  async updateTeam(id: string, teamDto: TeamDto): Promise<Team> {
+    const team = await this.findTeamById(id);
     Object.assign(team, teamDto); // Update only provided fields
     return await this.teamRepository.save(team);
   }
 
-  async delete(id: string): Promise<void> {
-    const team = await this.findById(id);
+  async deleteTeam(id: string): Promise<void> {
+    const team = await this.findTeamById(id);
     await this.teamRepository.remove(team);
   }
 }

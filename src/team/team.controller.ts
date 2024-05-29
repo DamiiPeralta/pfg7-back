@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { TeamDto } from './team.dto';
-=======
-import { Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
->>>>>>> 2a673bafebf1ec4e8808c035f381c429fbfb38dd
 
 @ApiTags('Teams')
 @ApiBearerAuth()
@@ -15,7 +11,7 @@ export class TeamController {
 
   @Get()
   async getTeams() {
-    return await this.teamsService.getAllTeams();
+    return await this.teamsService.getTeams();
   }
 
   @Get(':id')
