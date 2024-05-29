@@ -15,8 +15,8 @@ export class TeamService {
     return await this.teamsRepository.findTeamById(id);
   }
 
-  async createTeam(teamDto: TeamDto): Promise<Team> {
-    const team = await this.teamsRepository.createTeam(teamDto);
+  async createTeam(user_Id: string, teamDto: TeamDto): Promise<Team> {
+    const team = await this.teamsRepository.createTeam(user_Id, teamDto);
     return team;
   }
 

@@ -3,12 +3,15 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Team } from "./team.entity";
 import { TeamDto } from "./team.dto";
+import { User } from "src/user/user.entity";
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class TeamRepository {
   constructor(
     @InjectRepository(Team)
-    private readonly teamRepository: Repository<Team>
+    private readonly teamRepository: Repository<Team>,
+    private readonly userService: UserService
   ) {}
 
   async getTeams(): Promise<Team[]> {
@@ -23,7 +26,11 @@ export class TeamRepository {
     return team;
   }
 
-  async createTeam(teamDto: TeamDto): Promise<Team> {
+  async createTeam(user_Id:string,teamDto: TeamDto): Promise<Team> {
+    let team = new Team();
+    Object.assign(team, teamDto);
+    const user = await this.userService.getUserById(user_Id);
+    team.team_leader = user;
     const newTeam = this.teamRepository.create(teamDto);
     return await this.teamRepository.save(newTeam);
   }

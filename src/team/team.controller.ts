@@ -24,8 +24,8 @@ export class TeamController {
   }
 
   @Post()
-  async createTeam(@Body() teamDto: TeamDto) {
-    return await this.teamsService.createTeam(teamDto);
+  async createTeam(@Param('id') user_Id: string,@Body() teamDto: TeamDto) {
+    return await this.teamsService.createTeam(user_Id, teamDto);
   }
 
   @Put(':id')
