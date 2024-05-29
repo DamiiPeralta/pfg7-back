@@ -34,6 +34,21 @@ export class UserRepository {
         }
     }
 
+    async findUserByEmail(email: string): Promise<User> {
+        try {
+            const user = await this.userRepository.findOne({ where: { email: email },relations: ['tasks', "teams"] });
+            if (!user) {
+                throw new NotFoundException(`User with Email ${email} not found`);
+            }
+            return user;
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+            throw new InternalServerErrorException('Failed to retrieve the user');
+        }
+    }
+
     async findByEmail(email: string): Promise<User> {
         const user = await this.userRepository.findOneBy({ email });
         if (user) return user; // manejar exepcion sin devolver email

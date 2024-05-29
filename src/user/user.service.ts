@@ -34,6 +34,20 @@ export class UserService {
       throw new InternalServerErrorException('Failed to retrieve the user');
     }
   }
+  async getUserByEmail(email: string): Promise<User> {
+    try {
+      const user = await this.usersRepository.findUserById(email);
+      if (!user) {
+        throw new NotFoundException(`User with ID ${email} not found`);
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to retrieve the user');
+    }
+  }
 
 
   async createUser(userDto: UserDto): Promise<User> {
