@@ -18,11 +18,28 @@ export class AuthController { //Mover logica para repository.
   ) {}
   private readonly logger = new Logger(AuthController.name);
   @Post('signup')
-  createUser(@Body() user: UserDto) {
-    this.authService.createUser(user);
-    const userWithoutPassword = user;
-    delete userWithoutPassword.password;
-    return { userWithoutPassword};
+  async signUp(@Body() user: UserDto) {
+    try {
+      return await this.authService.signUp(user);
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error; // Propagar excepción BadRequestException sin modificar
+      } else if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        // Si el error proviene de una respuesta HTTP (por ejemplo, una solicitud a un servicio externo)
+        this.logger.error(
+          `External request error: ${error.response.data.message}`,
+        );
+        throw new InternalServerErrorException('Internal server error.');
+      } else {
+        // Otros errores no manejados
+        this.logger.error(`Error no manejado: ${error.message}`);
+        throw new InternalServerErrorException('Internal server error.');
+      }
+    }
   }
   @Post('signin')
   async signIn(@Body() loginUserDto: LoginUserDto) {

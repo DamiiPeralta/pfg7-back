@@ -1,48 +1,57 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/user.entity';
-import { Repository } from 'typeorm';
 import { LoginUserDto, UserDto } from 'src/user/user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import { UserRepository } from 'src/user/user.repository';
 
 @Injectable()
 export class AuthRepository {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userRepository: UserRepository,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async createUser(user: UserDto) {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-
-    const dbUser = await this.userService.getUserByEmail(user.email);
+  async signUp(user: UserDto) {
+    try{
+      console.log(user)
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+    const { email } = user;
+    console.log(email)
+    console.log(hashedPassword)
+    const dbUser = await this.userRepository.findUserByEmail(email);
     if (dbUser) {
       throw new BadRequestException('Email already in use');
     }
     if (!hashedPassword) {
       throw new BadRequestException('Password could not be hashed');
     }
-    const newUser = {
-      ...user,
-      password: hashedPassword,
-    };
-    this.userService.createUser(newUser);
-    
-    //Verifica que se haya creado el usuario en la bdd.
-    const foundUser = await this.userService.getUserByEmail(newUser.email)
-    if(foundUser){
-        return { success: 'User created succesfully' };
+    console.log(hashedPassword)
+/*     let newUser = new UserDto()
+
+     user.password = hashedPassword;
+    console.log(user)
+    this.userService.createUser(user);
+ */
+    const newUser = await this.userRepository.createUser({
+        ...user,
+        password: hashedPassword,
+      });
+
+    const { password, ...userNoPassword } = user;
+    return { success: 'User created succesfully', userNoPassword }; 
+    }catch(error){
+       throw new BadRequestException('User could not be created');
     }
-    throw new BadRequestException('Failed to create user');
   }
 
   async signIn(loginUserDto: LoginUserDto){
     const { email, password } = loginUserDto;
-    let dbUser = await this.userService.getUserByEmail(email);
+    let dbUser = await this.userRepository.findUserByEmail(email);
     if (!dbUser) {
       throw new BadRequestException('Invalid Credentials.');
     }
@@ -70,19 +79,19 @@ export class AuthRepository {
     return { success: 'User logged in successfully', token };
   }
 
-  async checkUserExistsByEmail(loginUserDto: LoginUserDto): Promise<boolean> {
+  /* async checkUserExistsByEmail(loginUserDto: LoginUserDto): Promise<boolean> {
     // Verifica si existe un usuario con el correo electrónico proporcionado
     const user = await this.userRepository.find({
       where: { email: loginUserDto.email },
     });
     return !!user;
-  }
+  } */
 
-  async checkPasswordMatches(loginUserDto: LoginUserDto): Promise<boolean> {
+  /* async checkPasswordMatches(loginUserDto: LoginUserDto): Promise<boolean> {
     // Verifica si la contraseña coincide con la registrada para el usuario con el correo electrónico proporcionado
     const user = await this.userRepository.findOne({
       where: { email: loginUserDto.email },
     });
     return user && user.password === loginUserDto.password;
-  }
+  } */
 }

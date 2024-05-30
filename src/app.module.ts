@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { TeamModule } from './team/team.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    UserModule, TaskModule, TeamModule
+    AuthModule, UserModule, TaskModule, TeamModule
     ],
   controllers: [],
   providers: [],

@@ -36,11 +36,11 @@ export class UserService {
   }
   async getUserByEmail(email: string): Promise<User> {
     try {
-      const user = await this.usersRepository.findUserById(email);
-      if (!user) {
-        throw new NotFoundException(`User with ID ${email} not found`);
-      }
-      return user;
+      const foundUser = await this.usersRepository.findUserByEmail(email);
+/*       if (!foundUser) {
+        throw new NotFoundException(`User with email ${email} not found`);
+      } */
+      return foundUser;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

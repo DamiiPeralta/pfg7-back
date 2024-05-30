@@ -48,11 +48,6 @@ export class UserRepository {
             throw new InternalServerErrorException('Failed to retrieve the user');
         }
     }
-
-    async findByEmail(email: string): Promise<User> {
-        const user = await this.userRepository.findOneBy({ email });
-        if (user) return user; // manejar exepcion sin devolver email
-      }
     async createUser(userDto: UserDto): Promise<User> {
         try {
             const user: Partial<User> = userDto;
