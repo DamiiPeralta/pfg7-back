@@ -33,9 +33,41 @@ export class AuthRepository {
     this.userService.createUser(newUser);
     
     //Verifica que se haya creado el usuario en la bdd.
+    const foundUser = await this.userService.getUserByEmail(newUser.email)
+    if(foundUser){
+        return { success: 'User created succesfully' };
+    }
+    throw new BadRequestException('Failed to create user');
+  }
 
-    //const foundUser = await this
-    return { success: 'User created succesfully' };
+  async signIn(loginUserDto: LoginUserDto){
+    const { email, password } = loginUserDto;
+    let dbUser = await this.userService.getUserByEmail(email);
+    if (!dbUser) {
+      throw new BadRequestException('Invalid Credentials.');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, dbUser.password);
+    if (!isPasswordValid) {
+      throw new BadRequestException('Invalid Credentials.');
+    }
+    const userPayload = {
+      sub: dbUser.user_id,
+      id: dbUser.user_id,
+      email: dbUser.email,
+      //isAdmin: dbUser.isAdmin
+      //roles: [dbUser.isAdmin ? Role.Admin : Role.User]
+    };
+
+    const token = this.jwtService.sign(userPayload);
+    const nowLogin = new Date();
+    dbUser.last_login = nowLogin.toDateString();
+    dbUser.token = token;
+    dbUser.status = true;
+    await this.userService.updateUser(dbUser.user_id, dbUser);
+
+    // Si las credenciales son válidas, retornamos un token de autenticación (simulado)
+    return { success: 'User logged in successfully', token };
   }
 
   async checkUserExistsByEmail(loginUserDto: LoginUserDto): Promise<boolean> {

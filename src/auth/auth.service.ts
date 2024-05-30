@@ -39,6 +39,8 @@ export class AuthService {
   }
 
   async signIn(loginUserDto: LoginUserDto) {
+    return await this.authRepository.signIn(loginUserDto);
+    /* 
     // Extraemos las credenciales del objeto UserDto
     const { email, password } = loginUserDto;
     let dbUser = await this.userService.getUserByEmail(email);
@@ -66,6 +68,6 @@ export class AuthService {
     await this.userService.updateUser(dbUser.user_id, dbUser);
 
     // Si las credenciales son válidas, retornamos un token de autenticación (simulado)
-    return { success: 'User logged in successfully', token };
+    return { success: 'User logged in successfully', token }; */
   }
 }
