@@ -37,9 +37,9 @@ export class TeamRepository {
     return await this.teamRepository.save(newTeam);
   }
 
-  async updateTeam(id: string, teamDto: TeamDto): Promise<Team> {
-    const team = await this.findTeamById(id);
-    Object.assign(team, teamDto); // Update only provided fields
+  async updateTeam(id: string, team: Partial<Team>): Promise<Team> {
+    const upTeam = await this.findTeamById(id);
+    Object.assign(upTeam, team); // Update only provided fields
     return await this.teamRepository.save(team);
   }
 

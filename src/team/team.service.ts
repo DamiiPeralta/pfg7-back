@@ -20,9 +20,9 @@ export class TeamService {
     return team;
   }
 
-  async updateTeam(id: string, teamDto: TeamDto): Promise<Team> {
+  async updateTeam(id: string, team: Partial<Team>): Promise<Team> {
     const existingTeam = await this.teamsRepository.findTeamById(id);
-    Object.assign(existingTeam, teamDto); // Update only provided fields
+    Object.assign(existingTeam, team); // Update only provided fields
     return await this.teamsRepository.updateTeam(id, existingTeam);
   }
 

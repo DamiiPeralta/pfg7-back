@@ -43,7 +43,7 @@ export class Team {
    * The invitation code must be a string of maximum 50 characters, unique, and cannot be null.
    * @example "EXAMPLECODE"
    */
-  @Column({ unique: true, type: 'varchar', length: 50 })
+  @Column({ unique: true, type: 'varchar', length: 50, nullable: true })
   invitation_code: string;
 
   /**

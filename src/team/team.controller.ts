@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException } fr
 import { TeamService } from './team.service';
 import { TeamDto } from './team.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Team } from './team.entity';
 
 @ApiTags('Teams')
 @ApiBearerAuth()
@@ -29,9 +30,9 @@ export class TeamController {
   }
 
   @Put(':id')
-  async updateTeam(@Param('id') id: string, @Body() teamDto: TeamDto) {
+  async updateTeam(@Param('id') id: string, @Body() team: Partial<Team>) {
     try {
-      return await this.teamsService.updateTeam(id, teamDto);
+      return await this.teamsService.updateTeam(id, team);
     } catch (error) {
       throw new NotFoundException(error.message);
     }
