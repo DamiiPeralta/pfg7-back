@@ -3,10 +3,11 @@ import { AuthRepository } from '../auth/auth.repository';
 import { UserDto } from '../user/user.dto';
 import { LoginUserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '../roles/roles.enum';
+import { create } from 'domain';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -16,13 +17,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async createUser(user: UserDto, createdAt: string) {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    /*      verificacion de existencia   
+  async createUser(user: UserDto) {
+    return await this.authRepository.createUser(user)
+    /* const hashedPassword = await bcrypt.hash(user.password, 10);
+           
         const dbUser = await this.userService.getUserByEmail(user.email)
         if (dbUser) {
             throw new BadRequestException("Email already exist");
-        } */
+        } 
     if (!hashedPassword) {
       throw new BadRequestException('Password could not be hashed');
     }
@@ -33,7 +35,7 @@ export class AuthService {
     this.userService.createUser(newUser);
     //this.userService.createUser(newUser, createdAt) //De esta forma se encontraba la linea de arriba.
 
-    return { success: 'User created succesfully' };
+    return { success: 'User created succesfully' }; */
   }
 
   async signIn(loginUserDto: LoginUserDto) {

@@ -5,30 +5,24 @@ import {
   BadRequestException,
   Logger,
   InternalServerErrorException,
-  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from '../user/user.dto';
 import { UserDto } from '../user/user.dto';
-import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
 import { ApiTags } from '@nestjs/swagger';
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController { //Mover logica para repository.
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UserService,
   ) {}
   private readonly logger = new Logger(AuthController.name);
   @Post('signup')
   createUser(@Body() user: UserDto) {
-    const createdAt = new Date();
-
-    this.authService.createUser(user, createdAt.toString());
+    this.authService.createUser(user);
     const userWithoutPassword = user;
     delete userWithoutPassword.password;
-    return { userWithoutPassword, createdAt: createdAt };
+    return { userWithoutPassword};
   }
   @Post('signin')
   async signIn(@Body() loginUserDto: LoginUserDto) {
