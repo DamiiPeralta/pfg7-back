@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
 import { Repository } from "typeorm";
 import { UserDto } from "./user.dto";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserRepository {
@@ -34,7 +35,7 @@ export class UserRepository {
         }
     }
 
-    async findUserByEmail(email: string): Promise<User> {
+    async getUserByEmail(email: string): Promise<User> {
         try {
             const user = await this.userRepository.findOne({ where: { email: email },relations: ['tasks', "teams"] });
             if (!user) {
@@ -51,6 +52,8 @@ export class UserRepository {
     async createUser(userDto: UserDto): Promise<User> {
         try {
             const user: Partial<User> = userDto;
+            const hashedPassword = await bcrypt.hash(user.password, 10);
+            user.password = hashedPassword;
             const createdAt = new Date();
             user.created = createdAt.toDateString();
             const newUser = this.userRepository.create(user);
