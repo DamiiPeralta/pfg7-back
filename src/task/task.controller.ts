@@ -8,10 +8,12 @@ import {
   ParseUUIDPipe,
   Body,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
+import { Task } from './task.entity';
 
 @ApiTags('Tasks')
 @ApiBearerAuth()
@@ -20,18 +22,44 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get()
-  async getTasks() {
+  async getTasks(): Promise<Task[]> {
     return await this.taskService.getAllTask();
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Task> {
     return await this.taskService.getTaskById(id);
+  }
+  @Get('search/by-name')
+  async getTasksByName(@Query('name') taskName: string): Promise<Task[]> {
+    return await this.taskService.getTaskByName(taskName);
+  }
+  @Get('user/:id')
+  async getTasksByUserOwner(@Param('id') userId: string): Promise<Task[]> {
+    return await this.taskService.getTaskByUserOwner(userId);
+  }
+
+  @Get('collaborator/:id')
+  async getTasksByCollaborator(@Param('id') userId: string): Promise<Task[]> {
+    return await this.taskService.getTaskByCollaborator(userId);
+  }
+
+  @Get('team/:id')
+  async getTasksByTeam(@Param('id') teamId: string): Promise<Task[]> {
+    return await this.taskService.getTaskByTeam(teamId);
   }
 
   @Post()
-  async create(@Body() newTask: CreateTaskDto) {
-    const task = await this.taskService.createTask(newTask);
+  async create(
+    @Param('idTeam') teamId: string,
+    @Param('idUserOwner') userOwnerId: string,
+    @Body() newTask: CreateTaskDto,
+  ) {
+    const task = await this.taskService.createTask(
+      newTask,
+      teamId,
+      userOwnerId,
+    );
     return task;
   }
 
