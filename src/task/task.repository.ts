@@ -150,6 +150,6 @@ export class TaskRepository {
     if (!task) {
       throw new NotFoundException(`Task with ID ${id} not found`);
     }
-    await this.taskRepository.remove(task);
+    await this.taskRepository.softRemove(task);
   }
 }

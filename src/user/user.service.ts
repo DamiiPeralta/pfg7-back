@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import { UserDto } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -50,7 +49,7 @@ export class UserService {
   }
 
 
-  async createUser(userDto: UserDto): Promise<User> {
+  async createUser(userDto: Partial<User>): Promise<User> {
     try {
       return await this.usersRepository.createUser(userDto);
     } catch (error) {

@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Team } from "./team.entity";
-import { TeamDto } from "./team.dto";
-import { User } from "src/user/user.entity";
 import { UserService } from "src/user/user.service";
 
 @Injectable()
@@ -26,8 +24,8 @@ export class TeamRepository {
     return team;
   }
 
-  async createTeam(user_Id:string,teamDto: TeamDto): Promise<Team> {
-    let team = new Team();
+  async createTeam(user_Id:string,teamDto: Partial<Team>): Promise<Team> {
+    const team = new Team();
     Object.assign(team, teamDto);
     const createdAt = new Date();
     team.created_date = createdAt.toDateString();
@@ -45,6 +43,9 @@ export class TeamRepository {
 
   async deleteTeam(id: string): Promise<void> {
     const team = await this.findTeamById(id);
-    await this.teamRepository.remove(team);
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${id} not found`);
+    }
+    await this.teamRepository.softRemove(team);
   }
 }

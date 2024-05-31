@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from '../user/user.dto';
-import { UserDto } from '../user/user.dto';
+import { CreateUserDto } from '../user/user.dto';
 import { ApiTags } from '@nestjs/swagger';
 @Controller('auth')
 @ApiTags('Auth')
@@ -18,7 +18,7 @@ export class AuthController { //Mover logica para repository.
   ) {}
   private readonly logger = new Logger(AuthController.name);
   @Post('signup')
-  async signUp(@Body() user: UserDto) {
+  async signUp(@Body() user: CreateUserDto) {
     try {
       return await this.authService.signUp(user);
     } catch (error) {

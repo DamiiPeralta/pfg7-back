@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import { UserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
@@ -36,7 +36,7 @@ export class UserController {
   }
 
   @Post()
-  async createUser(@Body() userDto: UserDto) {
+  async createUser(@Body() userDto: CreateUserDto) {
     try {
       const user = await this.userService.createUser(userDto);
       delete user.password;
@@ -47,7 +47,7 @@ export class UserController {
   }
 
   @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() user: Partial<User>) {
+  async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
     try {
       const upUser = await this.userService.updateUser(id, user);
       if (!upUser) {

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, OneToMany, DeleteDateColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 import { Task } from 'src/task/task.entity';
 
@@ -64,6 +64,9 @@ export class Team {
    * One-to-many relationship with the Task entity.
    * Each team can have multiple tasks.
    */
-  @OneToMany(() => Task, task => task.team)
+  @OneToMany(() => Task, task => task.team, { cascade: true })
   tasks: Task[];
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

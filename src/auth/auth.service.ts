@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { AuthRepository } from '../auth/auth.repository';
-import { UserDto } from '../user/user.dto';
 import { LoginUserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -14,14 +14,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(user: UserDto) {
+  async signUp(user: Partial<User>) {
     return await this.userService.createUser(user)
   }
 
   async signIn(loginUserDto: LoginUserDto) {
     try{
       const { email, password } = loginUserDto;
-      let dbUser = await this.userService.getUserByEmail(email);
+      const dbUser = await this.userService.getUserByEmail(email);
       if (!dbUser) {
         throw new BadRequestException('Invalid Credentials.');
       }

@@ -5,6 +5,7 @@ import {
   ManyToMany,
   OneToMany,
   JoinTable,
+  DeleteDateColumn,
 } from 'typeorm';
 import { Task } from 'src/task/task.entity';
 import { Team } from 'src/team/team.entity';
@@ -84,7 +85,10 @@ tasks: Task[];
  * Many-to-many relationship with the Team entity.
  * Each user can be a member of multiple teams.
  */
-@ManyToMany(() => Team, (team) => team.team_users)
+@ManyToMany(() => Team, (team) => team.team_users, { cascade: true }) 
 @JoinTable()
 teams: Team[];
+
+@DeleteDateColumn()
+deletedAt?: Date;
 }

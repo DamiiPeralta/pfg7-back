@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, DeleteDateColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 import { Team } from 'src/team/team.entity';
 
@@ -64,14 +64,14 @@ export class Task {
    * Many-to-many relationship with the User entity.
    * Each task can have multiple collaborators.
    */
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, { cascade: true })
   collaborators: User[];
 
   /**
    * One-to-many relationship with the User entity.
    * Each task has an owner.
    */
-  @ManyToOne(() => User, user => user.tasks)
+  @ManyToOne(() => User, user => user.tasks, { cascade: true })
   user_owner: User;
 
   /**
@@ -80,4 +80,7 @@ export class Task {
    */
   @ManyToOne(() => Team, team => team.tasks)
   team: Team;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

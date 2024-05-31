@@ -1,5 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule }   from   "@nestjs/common"
-import { LoggerMiddleware } from "src/midldleware/logger.middelware";
+import { Module}   from   "@nestjs/common"
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TeamController } from "./team.controller";
 import { Team } from "./team.entity";

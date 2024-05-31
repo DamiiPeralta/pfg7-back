@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException, ParseUUIDPipe } from '@nestjs/common';
 import { TeamService } from './team.service';
-import { TeamDto } from './team.dto';
+import { CreateTeamDto, UpdateTeamDto } from './team.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Team } from './team.entity';
+
 
 @ApiTags('Teams')
 @ApiBearerAuth()
@@ -16,7 +16,7 @@ export class TeamController {
   }
 
   @Get(':id')
-  async findTeamById(@Param('id') id: string) {
+  async findTeamById(@Param('id', ParseUUIDPipe) id: string) {
     try {
       return await this.teamsService.getTeamById(id);
     } catch (error) {
@@ -25,12 +25,12 @@ export class TeamController {
   }
 
   @Post()
-  async createTeam(@Param('id') user_Id: string,@Body() teamDto: TeamDto) {
+  async createTeam(@Param('id', ParseUUIDPipe) user_Id: string,@Body() teamDto: CreateTeamDto) {
     return await this.teamsService.createTeam(user_Id, teamDto);
   }
 
   @Put(':id')
-  async updateTeam(@Param('id') id: string, @Body() team: Partial<Team>) {
+  async updateTeam(@Param('id', ParseUUIDPipe) id: string, @Body() team: UpdateTeamDto) {
     try {
       return await this.teamsService.updateTeam(id, team);
     } catch (error) {
@@ -39,7 +39,7 @@ export class TeamController {
   }
 
   @Delete(':id')
-  async deleteTeam(@Param('id') id: string) {
+  async deleteTeam(@Param('id', ParseUUIDPipe) id: string) {
     try {
       await this.teamsService.deleteTeam(id);
       return { message: 'Team deleted successfully' };

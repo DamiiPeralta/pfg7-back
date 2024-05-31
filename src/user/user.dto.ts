@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEmail, IsString, IsBoolean, IsOptional, MaxLength, MinLength, Matches } from 'class-validator';
 
-export class UserDto {
+export class CreateUserDto {
   /**
    The name must be a non-empty string of maximum 80 characters.
    @example "John Doe"
