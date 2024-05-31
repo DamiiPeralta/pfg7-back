@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Like, Repository } from 'typeorm';
 import { Task } from './task.entity';
@@ -17,7 +17,15 @@ export class TaskRepository {
   ) {}
 
   async findAll(): Promise<Task[]> {
-    return await this.taskRepository.find();
+    try {
+      const tasks: Task[] = await this.taskRepository.find();
+      if (tasks.length === 0) {
+        return [];
+      }
+      return tasks;
+    } catch (error) {
+      throw new Error(`Failed to fetch tasks: ${error.message}`);
+    }
   }
 
   async findById(id: string): Promise<Task> {
@@ -47,7 +55,7 @@ export class TaskRepository {
     return tasks;
   }
 
-  async findByUserOwner(id: string): Promise<Task[]> {
+  async findByUser(id: string): Promise<Task[]> {
     const user = await this.userRepository.findOne({
       where: { user_id: id },
       relations: ['teams', 'tasks'],
@@ -120,29 +128,37 @@ export class TaskRepository {
 
   async create(
     task: Partial<Task>,
-    teamId: string,
-    userOwnerId: string,
+    team: Team,
+    userOwner: User,
   ): Promise<Task> {
-    const createdAt = new Date();
-    task.created = createdAt.toLocaleString();
+    try {
+      task.team = team;
+      task.user_owner = userOwner;
 
-    const team = await this.teamRepository.findOneBy({ team_id: teamId });
-    const userOwner = await this.userRepository.findOneBy({
-      user_id: userOwnerId,
-    });
+      const newTask = this.taskRepository.create(task);
 
-    task.team = team;
-    task.user_owner = userOwner;
+      await this.taskRepository.save(newTask);
 
-    const newTask = this.taskRepository.create(task);
-    await this.taskRepository.save(newTask);
-    return newTask;
+      return newTask;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create task');
+    }
   }
 
   async update(id: string, task: Partial<Task>): Promise<Task> {
-    await this.taskRepository.update(id, task);
-    const updatedTask = await this.taskRepository.findOneBy({ task_id: id });
-    return updatedTask;
+    try {
+      await this.taskRepository.update(id, task);
+
+      const updatedTask = await this.taskRepository.findOneBy({ task_id: id });
+
+      if (!updatedTask) {
+        throw new Error(`Task with ID ${id} not found after update`);
+      }
+
+      return updatedTask;
+    } catch (error) {
+      throw new Error(`Failed to update task: ${error.message}`);
+    }
   }
 
   async delete(id: string): Promise<void> {

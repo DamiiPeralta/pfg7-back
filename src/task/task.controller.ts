@@ -23,30 +23,54 @@ export class TaskController {
 
   @Get()
   async getTasks(): Promise<Task[]> {
-    return await this.taskService.getAllTask();
+    try {
+      return await this.taskService.getAllTask();
+    } catch (error) {
+      throw new NotFoundException('Failed to fetch tasks');
+    }
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Task> {
-    return await this.taskService.getTaskById(id);
+    try {
+      return await this.taskService.getTaskById(id);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
   @Get('search/by-name')
   async getTasksByName(@Query('name') taskName: string): Promise<Task[]> {
-    return await this.taskService.getTaskByName(taskName);
+    try {
+      return await this.taskService.getTaskByName(taskName);
+    } catch (error) {
+      throw new NotFoundException('Failed to fetch tasks by name');
+    }
   }
   @Get('user/:id')
   async getTasksByUserOwner(@Param('id') userId: string): Promise<Task[]> {
-    return await this.taskService.getTaskByUserOwner(userId);
+    try {
+      return await this.taskService.getTaskByUser(userId);
+    } catch (error) {
+      throw new NotFoundException('Failed to fetch tasks by user');
+    }
   }
 
   @Get('collaborator/:id')
   async getTasksByCollaborator(@Param('id') userId: string): Promise<Task[]> {
-    return await this.taskService.getTaskByCollaborator(userId);
+    try {
+      return await this.taskService.getTaskByCollaborator(userId);
+    } catch (error) {
+      throw new NotFoundException('Failed to fetch tasks by collaborator');
+    }
   }
 
   @Get('team/:id')
   async getTasksByTeam(@Param('id') teamId: string): Promise<Task[]> {
-    return await this.taskService.getTaskByTeam(teamId);
+    try {
+      return await this.taskService.getTaskByTeam(teamId);
+    } catch (error) {
+      throw new NotFoundException('Failed to fetch tasks by team');
+    }
   }
 
   @Post()
@@ -55,12 +79,12 @@ export class TaskController {
     @Param('idUserOwner') userOwnerId: string,
     @Body() newTask: CreateTaskDto,
   ) {
-    const task = await this.taskService.createTask(
-      newTask,
-      teamId,
-      userOwnerId,
-    );
-    return task;
+    try {
+      const task = await this.taskService.createTask(newTask, teamId, userOwnerId);
+      return task;
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
   }
 
   @Put(':id')
