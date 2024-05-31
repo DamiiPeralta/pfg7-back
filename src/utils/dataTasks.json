@@ -1,0 +1,74 @@
+[
+  {
+    "team_name": "Team A",
+    "owner_email": "user2@example.com",
+    "name": "Task 1",
+    "description": "This is Task 1.",
+    "status": "In Progress",
+    "priority": 1,
+    "story_points": 2
+  },
+  {
+    "team_name": "Team A",
+    "owner_email": "use4@example.com",
+    "name": "Task 2",
+    "description": "This is Task 2.",
+    "status": "Completed",
+    "priority": 2,
+    "story_points": 5
+  },
+  {
+    "team_name": "Team B",
+    "owner_email": "user5@example.com",
+    "name": "Task 3",
+    "description": "This is Task 3.",
+    "status": "In Progress",
+    "priority": 3,
+    "story_points": 3
+  },
+  {
+    "team_name": "Team B",
+    "owner_email": "user4@example.com",
+    "name": "Task 4",
+    "description": "This is Task 4.",
+    "status": "In Progress",
+    "priority": 1,
+    "story_points": 8
+  },
+  {
+    "team_name": "Team B",
+    "owner_email": "user4@example.com",
+    "name": "Task 5",
+    "description": "This is Task 5.",
+    "status": "Completed",
+    "priority": 2,
+    "story_points": 10
+  },
+  {
+    "team_name": "Team C",
+    "owner_email": "user7@example.com",
+    "name": "Task 6",
+    "description": "This is Task 6.",
+    "status": "Completed",
+    "priority": 2,
+    "story_points": 3
+  },
+  {
+    "team_name": "Team C",
+    "owner_email": "user7@example.com",
+    "name": "Task 7",
+    "description": "This is Task 7.",
+    "status": "In Progress",
+    "priority": 3,
+    "story_points": 7
+  },
+  {
+    "team_name": "Team C",
+    "owner_email": "user6@example.com",
+    "name": "Task 8",
+    "description": "This is Task 8.",
+    "status": "In Progress",
+    "priority": 1,
+    "story_points": 5
+  }
+]

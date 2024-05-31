@@ -1,0 +1,23 @@
+[
+    {
+      "leader_email": "use4@example.com",
+      "team_name": "Team A",
+      "description": "This is Team A.",
+      "created_date": "2022-01-01 12:00:00",
+      "finish_date": "2022-01-31 12:00:00"
+    },
+    {
+      "leader_email": "user5@example.com",
+      "team_name": "Team B",
+      "description": "This is Team B.",
+      "created_date": "2022-02-01 12:00:00",
+      "finish_date": "2022-02-28 12:00:00"
+    },
+    {
+      "leader_email": "user6@example.com",
+      "team_name": "Team C",
+      "description": "This is Team C.",
+      "created_date": "2022-03-01 12:00:00",
+      "finish_date": "2022-03-31 12:00:00"
+    }
+  ]

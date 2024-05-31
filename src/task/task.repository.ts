@@ -135,6 +135,9 @@ export class TaskRepository {
       task.team = team;
       task.user_owner = userOwner;
 
+      const createdAt = new Date();
+      task.created = createdAt.toLocaleString();
+
       const newTask = this.taskRepository.create(task);
 
       await this.taskRepository.save(newTask);

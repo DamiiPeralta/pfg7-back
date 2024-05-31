@@ -1,0 +1,44 @@
+[
+    {
+      "name": "Mike Jones",
+      "nickname": "mikejones",
+      "email": "use4@example.com",
+      "password": "Password123!"
+    },
+    {
+      "name": "Jane Smith",
+      "nickname": "janesmith",
+      "email": "user2@example.com",
+      "password": "Password456!"
+    },
+    {
+      "name": "Michael Johnson",
+      "nickname": "mjohnson",
+      "email": "user3@example.com",
+      "password": "Password789!"
+    },
+    {
+      "name": "Emily Davis",
+      "nickname": "emydavis",
+      "email": "user4@example.com",
+      "password": "Password012!"
+    },
+    {
+      "name": "David Wilson",
+      "nickname": "dwilson",
+      "email": "user5@example.com",
+      "password": "Password345!"
+    },
+    {
+      "name": "Sarah Thompson",
+      "nickname": "sarahthompson",
+      "email": "user6@example.com",
+      "password": "Password678!"
+    },
+    {
+      "name": "Mark Anderson",
+      "nickname": "markanderson",
+      "email": "user7@example.com",
+      "password": "Password901!"
+    }
+  ]
