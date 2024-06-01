@@ -11,7 +11,7 @@ export class TeamService {
   }
 
   async getTeamById(id: string): Promise<Team> {
-    return await this.teamsRepository.findTeamById(id);
+      return await this.teamsRepository.findTeamById(id);
   }
 
   async createTeam(user_Id: string, teamDto: Partial<Team>): Promise<Team> {

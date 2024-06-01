@@ -75,8 +75,8 @@ export class TaskController {
 
   @Post()
   async create(
-    @Param('idTeam') teamId: string,
-    @Param('idUserOwner') userOwnerId: string,
+    @Query('idTeam') teamId: string,
+    @Query('idUserOwner') userOwnerId: string,
     @Body() newTask: CreateTaskDto,
   ) {
     try {
@@ -100,7 +100,7 @@ export class TaskController {
   async remove(@Param('id') id: string) {
     try {
       await this.taskService.deleteTask(id);
-      return { message: 'User deleted successfully' };
+      return { message: 'Task deleted successfully' };
     } catch (error) {
       throw new NotFoundException(error.message);
     }

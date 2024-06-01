@@ -71,14 +71,14 @@ export class Task {
    * One-to-many relationship with the User entity.
    * Each task has an owner.
    */
-  @ManyToOne(() => User, user => user.tasks, { cascade: true })
+  @ManyToOne(() => User, user => user.tasks, { cascade: true , nullable: true } )
   user_owner: User;
 
   /**
    * One-to-many relationship with the Team entity.
    * Each task belongs to a team.
    */
-  @ManyToOne(() => Team, team => team.tasks)
+  @ManyToOne(() => Team, team => team.tasks, {nullable: false})
   team: Team;
 
   @DeleteDateColumn()

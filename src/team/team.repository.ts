@@ -18,6 +18,8 @@ export class TeamRepository {
 
   async findTeamById(id: string): Promise<Team> {
     const team = await this.teamRepository.findOne({ where: { team_id: id },relations:['tasks', 'team_leader', 'team_users'] });
+    console.log(id)
+    console.log(team)
     if (!team) {
       throw new NotFoundException(`Team with ID ${id} not found`);
     }

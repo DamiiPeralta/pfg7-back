@@ -84,16 +84,17 @@ export class TaskService {
     teamId: string,
     userOwnerId: string,
   ): Promise<Task> {
-    const team = await this.teamService.getTeamById(teamId);
-    if (!team) {
+    console.log(task, teamId,userOwnerId)
+    let team;
+    team = await this.teamService.getTeamById(teamId);
+    if (team === undefined) {
       throw new NotFoundException(`Team with ID ${teamId} not found`);
     }
-
-    const userOwner = await this.userService.getUserById(userOwnerId);
-    if (!userOwner) {
-      throw new NotFoundException(`User with ID ${userOwnerId} not found`);
-    }
-
+  
+    let userOwner = await this.userService.getUserById(userOwnerId);
+        if (!userOwner) {
+          throw new NotFoundException(`User with ID ${userOwnerId} not found`);
+        }
     try {
       return await this.taskRepository.create(task, team, userOwner);
     } catch (error) {

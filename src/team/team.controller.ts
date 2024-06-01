@@ -10,11 +10,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 export class TeamController {
   constructor(private readonly teamsService: TeamService) {}
 
-  @Get()
-  async getTeams() {
-    return await this.teamsService.getTeams();
-  }
-
   @Get(':id')
   async findTeamById(@Param('id', ParseUUIDPipe) id: string) {
     try {
@@ -23,8 +18,14 @@ export class TeamController {
       throw new NotFoundException(error.message);
     }
   }
+  @Get()
+  async getTeams() {
+    return await this.teamsService.getTeams();
+  }
 
-  @Post()
+  
+
+  @Post(":id")
   async createTeam(@Param('id', ParseUUIDPipe) user_Id: string,@Body() teamDto: CreateTeamDto) {
     return await this.teamsService.createTeam(user_Id, teamDto);
   }

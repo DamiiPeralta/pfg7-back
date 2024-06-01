@@ -133,16 +133,22 @@ export class TaskRepository {
   ): Promise<Task> {
     try {
       task.team = team;
-      task.user_owner = userOwner;
+      if(userOwner != null)
+        {
+          task.user_owner = userOwner;
+        }
 
       const createdAt = new Date();
       task.created = createdAt.toLocaleString();
 
       const newTask = this.taskRepository.create(task);
-
+      
       await this.taskRepository.save(newTask);
-
-      return newTask;
+      const taskCreated = this.taskRepository.findOne({
+        where: { task_id: newTask.task_id },
+        relations: ['user_owner', 'team'],
+      })
+      return taskCreated;
     } catch (error) {
       throw new InternalServerErrorException('Failed to create task');
     }
