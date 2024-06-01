@@ -133,10 +133,9 @@ export class TaskRepository {
   ): Promise<Task> {
     try {
       task.team = team;
-      if(userOwner != null)
-        {
-          task.user_owner = userOwner;
-        }
+      if (userOwner != null) {
+        task.user_owner = userOwner;
+      }
 
       const createdAt = new Date();
       task.created = createdAt.toLocaleString();

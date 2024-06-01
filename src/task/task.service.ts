@@ -91,10 +91,13 @@ export class TaskService {
       throw new NotFoundException(`Team with ID ${teamId} not found`);
     }
   
-    let userOwner = await this.userService.getUserById(userOwnerId);
-        if (!userOwner) {
-          throw new NotFoundException(`User with ID ${userOwnerId} not found`);
-        }
+    let userOwner = null;
+    if (userOwnerId) {
+      userOwner = await this.userService.getUserById(userOwnerId);
+      if (!userOwner) {
+        throw new NotFoundException(`User with ID ${userOwnerId} not found`);
+      }
+    }
     try {
       return await this.taskRepository.create(task, team, userOwner);
     } catch (error) {

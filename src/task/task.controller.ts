@@ -75,8 +75,8 @@ export class TaskController {
 
   @Post()
   async create(
-    @Query('idTeam') teamId: string,
-    @Query('idUserOwner') userOwnerId: string,
+    @Query('idTeam', ParseUUIDPipe) teamId: string,
+    @Query('idUserOwner') userOwnerId: string | null,
     @Body() newTask: CreateTaskDto,
   ) {
     try {
