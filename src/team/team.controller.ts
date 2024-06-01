@@ -48,4 +48,15 @@ export class TeamController {
       throw new NotFoundException(error.message);
     }
   }
+  @Post(':teamId/users/:userId')
+  async addUserToTeam(
+    @Param('teamId', ParseUUIDPipe) teamId: string,
+    @Param('userId', ParseUUIDPipe) userId: string
+  ) {
+    try {
+      return await this.teamsService.addUserToTeam(userId, teamId);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
 }
