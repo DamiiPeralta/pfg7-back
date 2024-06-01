@@ -65,13 +65,13 @@ Our project focuses on the development of a task management and estimation platf
    Create a `.env` file in the root of the project and add the following variables:
 
    ```env
-   DATABASE_HOST=your_database_host
-   DATABASE_PORT=your_database_port
-   DATABASE_USERNAME=your_database_username
-   DATABASE_PASSWORD=your_database_password
-   DATABASE_NAME=your_database_name
+   DB_HOST=your_database_host
+   DB_PORT=your_database_port
+   DB_USERNAME=your_database_username
+   DB_PASSWORD=your_database_password
+   DB_NAME=your_database_name
    JWT_SECRET=your_jwt_secret
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_NAME=your_cloudinary_cloud_name
    CLOUDINARY_API_KEY=your_cloudinary_api_key
    CLOUDINARY_API_SECRET=your_cloudinary_api_secret
    ```
