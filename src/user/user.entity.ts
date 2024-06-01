@@ -74,6 +74,9 @@ last_login: string;
 @Column({ default: false })
 status: boolean;
 
+@Column({ default: null })
+profilePicture: string;
+
 /**
  * One-to-many relationship with the Task entity.
  * Each user can have multiple tasks.

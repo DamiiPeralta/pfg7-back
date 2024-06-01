@@ -11,7 +11,7 @@ import { UserRepository } from './user.repository';
 export class UserService {
   constructor(private readonly usersRepository: UserRepository) {}
 
-  async getAllUsers(): Promise<User[]> {
+  async getAllUsers(): Promise<Partial<User[]>> {
     try {
       return await this.usersRepository.getUsers();
     } catch (error) {
@@ -33,7 +33,7 @@ export class UserService {
       throw new InternalServerErrorException('Failed to retrieve the user');
     }
   }
-  async getUserByEmail(email: string): Promise<User> {
+  async getUserByEmail(email: string): Promise<Partial<User>> {
     try {
       const foundUser = await this.usersRepository.getUserByEmail(email);
 /*       if (!foundUser) {
@@ -57,7 +57,7 @@ export class UserService {
     }
   }
 
-  async updateUser(id: string, user: Partial<User>): Promise<User> {
+  async updateUser(id: string, user: Partial<User>): Promise<Partial<User>> {
     try {
       const existingUser = await this.usersRepository.findUserById(id);
       if (!existingUser) {

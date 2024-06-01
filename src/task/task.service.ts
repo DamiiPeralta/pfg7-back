@@ -84,7 +84,6 @@ export class TaskService {
     teamId: string,
     userOwnerId: string,
   ): Promise<Task> {
-    console.log(task, teamId,userOwnerId)
     let team;
     team = await this.teamService.getTeamById(teamId);
     if (team === undefined) {

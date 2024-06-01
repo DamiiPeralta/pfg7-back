@@ -16,9 +16,15 @@ export class UserRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getUsers(): Promise<User[]> {
+  async getUsers(): Promise <Partial<User[]>> {
     try {
-      return await this.userRepository.find({ relations: ['tasks', 'teams'] });
+      const users =  await this.userRepository.find({ relations: ['tasks', 'teams'] });
+      const usersWithoutPassword:any[] = [];
+        users.forEach(user => {
+            const { password, ...userWithoutPassword } = user;
+            usersWithoutPassword.push(userWithoutPassword);
+        });
+      return usersWithoutPassword;
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve users');
     }
@@ -42,7 +48,7 @@ export class UserRepository {
     }
   }
 
-  async getUserByEmail(email: string): Promise<User> {
+  async getUserByEmail(email: string): Promise<Partial<User>> {
     try {
       const user = await this.userRepository.findOne({
         where: { email: email },
@@ -51,7 +57,8 @@ export class UserRepository {
       if (!user) {
         throw new NotFoundException(`User with Email ${email} not found`);
       }
-      return user;
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
