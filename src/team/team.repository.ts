@@ -31,9 +31,12 @@ export class TeamRepository {
     Object.assign(team, teamDto);
     const createdAt = new Date();
     team.created_date = createdAt.toDateString();
-    const user = await this.userService.getUserById(user_Id);
+    let user = await this.userService.getUserById(user_Id);
     team.team_leader = user;
     const newTeam = this.teamRepository.create(team);
+    let userUpdated = user;
+    userUpdated.teams.push(newTeam);
+    this.userService.updateUser(user.user_id, userUpdated)
     return await this.teamRepository.save(newTeam);
   }
 

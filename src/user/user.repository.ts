@@ -18,7 +18,7 @@ export class UserRepository {
 
   async getUsers(): Promise<User[]> {
     try {
-      return await this.userRepository.find({ relations: ['tasks', 'teams'] });
+      return await this.userRepository.find({ relations: ['tasks', 'teams',''] });
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve users');
     }
