@@ -62,7 +62,7 @@ Our project focuses on the development of a task management and estimation platf
    ```
 
 3. **Set up the environment variables:**
-   Create a `.env` file in the root of the project and add the following variables:
+   Create a `.env.development` file in the root of the project and add the following variables:
 
    ```env
    DB_HOST=your_database_host
