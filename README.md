@@ -51,8 +51,8 @@ Our project focuses on the development of a task management and estimation platf
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/task-management-api.git
-   cd task-management-api
+   git clone https://github.com/DamiiPeralta/PFG7-Back
+   cd PFG7-Back
    ```
 
 2. **Install dependencies:**
@@ -83,7 +83,7 @@ Our project focuses on the development of a task management and estimation platf
 To start the server, run:
 
 ```bash
-npm run start
+npm run start:dev
 ```
 
 The server will be running on `http://localhost:3000`.
