@@ -11,11 +11,11 @@ async function bootstrap() {
 
   // Configuración de CORS
   app.enableCors({
-    origin: 'http://example.com', // Cambia esto por el origen permitido
+    origin: 'http://localhost:3001', // Cambia esto por el origen permitido
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
-  
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle("EasyTask - Back")
     .setDescription("Trabajo realizado por el back-team del grupo 07 - WEBFT 48")

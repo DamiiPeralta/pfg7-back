@@ -6,7 +6,7 @@ import { ApiTags } from '@nestjs/swagger'
 @ApiTags("Upload Image")
 export class FileUploadController {
     constructor(private readonly fileUploadServices: FileUploadService){}
-    @Post('profilePicture/:id')
+    @Post('profilePicture')
     @UseInterceptors(FileInterceptor('file'))
     uploadImage(
         @Query('id') userId: string,
