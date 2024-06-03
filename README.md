@@ -71,7 +71,7 @@ Our project focuses on the development of a task management and estimation platf
    DB_PASSWORD=your_database_password
    DB_NAME=your_database_name
    JWT_SECRET=your_jwt_secret
-   CLOUDINARY_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
    CLOUDINARY_API_KEY=your_cloudinary_api_key
    CLOUDINARY_API_SECRET=your_cloudinary_api_secret
    ```
