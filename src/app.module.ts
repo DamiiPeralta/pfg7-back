@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from "./config/typeorm"
-//import { FileUploadModule } from './file_upload/file_upload.module';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
 import { AuthModule } from './auth/auth.module';
 import { SeederModule } from './seeder/seeder.module';
+import { FileUploadModule } from './file_upload/file_upload.module';
 
 @Module({
   imports: [
@@ -27,7 +27,7 @@ import { SeederModule } from './seeder/seeder.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, SeederModule
+    AuthModule, UserModule, TaskModule, TeamModule, SeederModule, FileUploadModule
     ],
   controllers: [],
   providers: [],

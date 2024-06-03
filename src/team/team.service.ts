@@ -28,4 +28,7 @@ export class TeamService {
   async deleteTeam(id: string): Promise<void> {
     await this.teamsRepository.deleteTeam(id);
   }
+  async addUserToTeam(userId: string, teamId: string): Promise<Team> {
+    return await this.teamsRepository.addUserToTeam(userId, teamId);
+  }
 }

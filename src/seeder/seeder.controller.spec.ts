@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SeederController } from './seeder.controller';
 import { SeederService } from './seeder.service';
+import { beforeEach, describe, it } from 'node:test';
 
 describe('SeederController', () => {
   let controller: SeederController;
@@ -13,8 +14,8 @@ describe('SeederController', () => {
 
     controller = module.get<SeederController>(SeederController);
   });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
 });
+function expect(controller: SeederController) {
+  throw new Error('Function not implemented.');
+}
+

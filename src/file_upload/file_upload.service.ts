@@ -1,24 +1,24 @@
-// import { Injectable, NotFoundException } from '@nestjs/common';
-// import { FileUploadRepository } from './file_upload.repository';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Product } from 'src/products/products.entity';
-// import { Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
-// @Injectable()
-// export class FileUploadService {
-//     constructor (private readonly fileUploadRepository: FileUploadRepository,
-//         @InjectRepository(Product)
-//         private readonly productRepository: Repository<Product>,
-//     ){}
-//     async uploadImage(file: Express.Multer.File, productId:string){
-//         const idProduct= await this.productRepository.findOneBy({id: productId});
-//             if(!idProduct) throw new NotFoundException(`product with id ${productId} not found`);
-
-//         const response = await this.fileUploadRepository.uploadImage(file);
-//         await this.productRepository.update(productId, {
-//             imgUrl: response.secure_url,
-//         });
-//         const foundProduct=  await this.productRepository.findOneBy({id:productId}) 
-//         return foundProduct;
-//     }
-// }
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/user.entity';
+import { UserService } from 'src/user/user.service';
+import { FileUploadRepository } from './file_upload.repository';
+@Injectable()
+export class FileUploadService {
+    constructor (private readonly fileUploadRepository: FileUploadRepository,
+        private readonly userService: UserService,
+    ){}
+    async uploadImage(file: Express.Multer.File, id:string){
+        const idUser= await this.userService.getUserById(id);
+            if(!idUser){
+                throw new NotFoundException(`User with id ${id} not found`);
+            } 
+        const response = await this.fileUploadRepository.uploadImage(file);
+        await this.userService.updateUser(id, {
+            profilePicture: response.secure_url,
+        });
+        const foundProduct=  await this.userService.getUserById(id) 
+        return foundProduct;
+    }
+}
