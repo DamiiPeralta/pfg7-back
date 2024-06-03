@@ -24,31 +24,31 @@ export class SeederModule implements OnModuleInit{
     ) {}
 
     async onModuleInit() {
-      //try {
-      //  try {
-      //    console.log('Seeding users...');
-      //    await this.seederService.seedUsers();
-      //    console.log('Users seeded succesfuly!')
-      //  } catch (error) {
-      //    throw new ConflictException('Failed to seed users');
-      //  }
-      //  try {
-      //    console.log('Seeding teams...')
-      //    await this.seederService.seedTeams();
-      //    console.log('Teams seeded succesfuly!')
-      //  } catch (error) {
-      //    throw new ConflictException('Failed to seed teams');
-      //  }
-      //  try {
-      //    console.log('Seeding tasks...')
-      //    await this.seederService.seedTasks();
-      //    console.log('Tasks seeded succesfuly!')
-      //  } catch (error) {
-      //    throw new ConflictException('Failed to seed tasks');
-      //  }
-      //  
-      //} catch (error) {
-      //  throw new ConflictException('Failed to seed preload data');
-      //}
-    }
+      try {
+        try {
+          console.log('Seeding users...');
+          await this.seederService.seedUsers();
+          console.log('Users seeded succesfuly!')
+        } catch (error) {
+          throw new ConflictException('Failed to seed users');
+        }
+        try {
+          console.log('Seeding teams...')
+          await this.seederService.seedTeams();
+          console.log('Teams seeded succesfuly!')
+        } catch (error) {
+          throw new ConflictException('Failed to seed teams');
+        }
+        try {
+          console.log('Seeding tasks...')
+          await this.seederService.seedTasks();
+          console.log('Tasks seeded succesfuly!')
+        } catch (error) {
+          throw new ConflictException('Failed to seed tasks');
+        }
+        
+      } catch (error) {
+        throw new ConflictException('Failed to seed preload data');
+      }
+    }  
 }
