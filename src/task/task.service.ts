@@ -39,36 +39,6 @@ export class TaskService {
     }
   }
 
-  async getTaskByName(name: string): Promise<Task[]> {
-    try {
-      return await this.taskRepository.findByName(name);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to retrieve tasks by name',
-      );
-    }
-  }
-
-  async getTaskByUser(id: string): Promise<Task[]> {
-    try {
-      return await this.taskRepository.findByUser(id);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to retrieve tasks by user',
-      );
-    }
-  }
-
-  async getTaskByCollaborator(id: string): Promise<Task[]> {
-    try {
-      return await this.taskRepository.findByCollaborator(id);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to retrieve tasks by collaborator',
-      );
-    }
-  }
-
   async getTaskByTeam(id: string): Promise<Task[]> {
     try {
       return await this.taskRepository.findByTeam(id);
@@ -79,26 +49,14 @@ export class TaskService {
     }
   }
 
-  async createTask(
-    task: Partial<Task>,
-    teamId: string,
-    userOwnerId: string,
-  ): Promise<Task> {
-    let team;
-    team = await this.teamService.getTeamById(teamId);
+  async createTask(task: Partial<Task>, teamId: string): Promise<Task> {
+    const team = await this.teamService.getTeamById(teamId);
     if (team === undefined) {
       throw new NotFoundException(`Team with ID ${teamId} not found`);
     }
-  
-    let userOwner = null;
-    if (userOwnerId) {
-      userOwner = await this.userService.getUserById(userOwnerId);
-      if (!userOwner) {
-        throw new NotFoundException(`User with ID ${userOwnerId} not found`);
-      }
-    }
+
     try {
-      return await this.taskRepository.create(task, team, userOwner);
+      return await this.taskRepository.create(task, team);
     } catch (error) {
       throw new InternalServerErrorException('Failed to create task');
     }
