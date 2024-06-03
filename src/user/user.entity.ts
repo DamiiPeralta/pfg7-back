@@ -28,7 +28,7 @@ token: string;
  * The user's name must be a string of maximum 50 characters and cannot be null.
  * @example "Jhon Doe"
  */
-@Column({ unique: true, type: 'varchar', length: 50, nullable: false })
+@Column({ type: 'varchar', length: 50, nullable: false })
 name: string;
 
 /**
