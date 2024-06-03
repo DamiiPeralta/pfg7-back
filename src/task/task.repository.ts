@@ -1,24 +1,29 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Task } from './task.entity';
-import { User } from 'src/user/user.entity';
 import { Team } from 'src/team/team.entity';
+import { TeamRepository } from 'src/team/team.repository';
 
 @Injectable()
 export class TaskRepository {
   constructor(
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Team)
-    private readonly teamRepository: Repository<Team>,
+
+    private readonly teamRepository: TeamRepository,
   ) {}
 
   async findAll(): Promise<Task[]> {
     try {
-      const tasks: Task[] = await this.taskRepository.find();
+      const tasks: Task[] = await this.taskRepository.find({relations: {
+        user_owner: true,
+        team: true,
+      },});
       if (tasks.length === 0) {
         return [];
       }
@@ -42,111 +47,38 @@ export class TaskRepository {
     return task;
   }
 
-  async findByName(name: string): Promise<Task[]> {
-    const tasks = await this.taskRepository.find({
-      where: { name: Like(`%${name}%`) },
-      relations: ['team', 'user_owner', 'collaborators'],
-    });
-    if (tasks.length === 0) {
-      throw new NotFoundException(
-        `No tasks found with name containing "${name}"`,
-      );
-    }
-    return tasks;
-  }
-
-  async findByUser(id: string): Promise<Task[]> {
-    const user = await this.userRepository.findOne({
-      where: { user_id: id },
-      relations: ['teams', 'tasks'],
-    });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-    const userId: string = user.user_id;
-
-    const teamIds = user.teams.map((team) => team.team_id);
-
-    const tasks = await this.taskRepository.find({
-      where: {
-        team: { team_id: In(teamIds) },
-        user_owner: { user_id: userId },
-      },
-      relations: ['team', 'user_owner'],
-    });
-    if (tasks.length === 0) {
-      throw new NotFoundException(`User with ID ${id} has no tasks`);
-    }
-    return tasks;
-  }
-
-  async findByCollaborator(id: string): Promise<Task[]> {
-    const user = await this.userRepository.findOne({
-      where: { user_id: id },
-      relations: ['teams', 'tasks'],
-    });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-    const userId: string = user.user_id;
-
-    const teamIds = user.teams.map((team) => team.team_id);
-
-    const tasks = await this.taskRepository.find({
-      where: {
-        team: { team_id: In(teamIds) },
-        collaborators: { user_id: userId },
-      },
-      relations: ['team', 'collaborators'],
-    });
-    if (tasks.length === 0) {
-      throw new NotFoundException(`User with ID ${id} has no tasks`);
-    }
-    return tasks;
-  }
-
   async findByTeam(teamId: string): Promise<Task[]> {
-    const team = await this.teamRepository.findOne({
-      where: { team_id: teamId },
-      relations: [
-        'tasks',
-        'tasks.team',
-        'tasks.user_owner',
-        'tasks.collaborators',
-      ],
-    });
-    if (!team) {
-      throw new NotFoundException(`Team with ID ${teamId} not found`);
+    try {
+      const team = await this.teamRepository.findTeamById(teamId);
+      if (!team) {
+        throw new Error(`Team with ID ${teamId} not found`);
+      }
+  
+      const tasks = team.tasks;
+      if (tasks.length === 0) {
+        throw new NotFoundException(`Team with ID ${teamId} has no tasks`);
+      }
+      return tasks;
+    } catch (error) {
+        console.error(`Error in findByTeam: ${error.message}`);
+      throw error;
     }
-
-    const tasks = team.tasks;
-    if (tasks.length === 0) {
-      throw new NotFoundException(`Team with ID ${teamId} has no tasks`);
-    }
-    return tasks;
   }
 
-  async create(
-    task: Partial<Task>,
-    team: Team,
-    userOwner: User,
-  ): Promise<Task> {
+  async create(task: Partial<Task>, team: Team): Promise<Task> {
     try {
       task.team = team;
-      if (userOwner != null) {
-        task.user_owner = userOwner;
-      }
 
       const createdAt = new Date();
       task.created = createdAt.toLocaleString();
 
       const newTask = this.taskRepository.create(task);
-      
+
       await this.taskRepository.save(newTask);
       const taskCreated = this.taskRepository.findOne({
         where: { task_id: newTask.task_id },
-        relations: ['user_owner', 'team'],
-      })
+        relations: ['team'],
+      });
       return taskCreated;
     } catch (error) {
       throw new InternalServerErrorException('Failed to create task');

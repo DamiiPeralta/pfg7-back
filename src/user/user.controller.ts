@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 
 @ApiTags('Users')
@@ -11,6 +11,9 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all users, doesn´t expect any parameters (proximo a implementar)',
+    description: 'Get all users, doesn`t expect any parameters (proximo a implementar)'
+   })
   async getUsers() {
     try {
       return await this.userService.getAllUsers();

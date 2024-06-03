@@ -21,10 +21,13 @@ export class SeederModule implements OnModuleInit{
 
     constructor (
         private readonly seederService: SeederService,
+        private readonly taskService: TaskService,
     ) {}
 
     async onModuleInit() {
       try {
+        const dbTask = await this.taskService.getAllTask();
+        if(dbTask.length > 0) return console.log('Preload data already seeded');
         try {
           console.log('Seeding users...');
           await this.seederService.seedUsers();

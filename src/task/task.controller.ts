@@ -38,36 +38,11 @@ export class TaskController {
       throw new NotFoundException(error.message);
     }
   }
-  @Get('search/by-name')
-  async getTasksByName(@Query('name') taskName: string): Promise<Task[]> {
-    try {
-      return await this.taskService.getTaskByName(taskName);
-    } catch (error) {
-      throw new NotFoundException('Failed to fetch tasks by name');
-    }
-  }
-  @Get('user/:id')
-  async getTasksByUserOwner(@Param('id') userId: string): Promise<Task[]> {
-    try {
-      return await this.taskService.getTaskByUser(userId);
-    } catch (error) {
-      throw new NotFoundException('Failed to fetch tasks by user');
-    }
-  }
-
-  @Get('collaborator/:id')
-  async getTasksByCollaborator(@Param('id') userId: string): Promise<Task[]> {
-    try {
-      return await this.taskService.getTaskByCollaborator(userId);
-    } catch (error) {
-      throw new NotFoundException('Failed to fetch tasks by collaborator');
-    }
-  }
 
   @Get('team/:id')
-  async getTasksByTeam(@Param('id') teamId: string): Promise<Task[]> {
+  async getTasksByTeam(@Param('id', ParseUUIDPipe) id: string): Promise<Task[]> {
     try {
-      return await this.taskService.getTaskByTeam(teamId);
+      return await this.taskService.getTaskByTeam(id);
     } catch (error) {
       throw new NotFoundException('Failed to fetch tasks by team');
     }
@@ -76,11 +51,10 @@ export class TaskController {
   @Post()
   async create(
     @Query('idTeam', ParseUUIDPipe) teamId: string,
-    @Query('idUserOwner') userOwnerId: string | null,
     @Body() newTask: CreateTaskDto,
   ) {
     try {
-      const task = await this.taskService.createTask(newTask, teamId, userOwnerId);
+      const task = await this.taskService.createTask(newTask, teamId);
       return task;
     } catch (error) {
       throw new NotFoundException(error.message);
