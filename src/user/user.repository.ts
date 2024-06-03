@@ -56,9 +56,8 @@ export class UserRepository {
       });
       if (!user) {
         throw new NotFoundException(`User with Email ${email} not found`);
-      }
-      const { password, ...userWithoutPassword } = user;
-      return userWithoutPassword;
+      } 
+      return user;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
