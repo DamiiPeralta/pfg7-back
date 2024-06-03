@@ -18,7 +18,7 @@ export class AuthService {
     return await this.userService.createUser(user)
   }
 
-  async signIn(loginUserDto: LoginUserDto) {
+  async signIn(loginUserDto: Partial<User>) {
     try{
       const { email, password } = loginUserDto;
       const dbUser = await this.userService.getUserByEmail(email);

@@ -35,17 +35,6 @@ export class UserController {
     }
   }
 
-  @Post()
-  async createUser(@Body() userDto: CreateUserDto) {
-    try {
-      const user = await this.userService.createUser(userDto);
-      delete user.password;
-      return user;
-    } catch (error) {
-      throw new BadRequestException('Failed to create user');
-    }
-  }
-
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
     try {
