@@ -66,7 +66,7 @@ export class Team {
    * Each team can have multiple Sprints.
    */
   @OneToMany(() => Sprint, (sprint) => sprint.team, { cascade: true })
-  sprints: Sprint[];
+  sprints: Sprint[]=null;
   
  /**
    * One-to-many relationship with the Sprint entity.

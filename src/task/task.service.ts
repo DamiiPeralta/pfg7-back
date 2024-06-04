@@ -6,14 +6,12 @@ import {
 import { TaskRepository } from './task.repository';
 import { Task } from './task.entity';
 import { TeamService } from 'src/team/team.service';
-import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class TaskService {
   constructor(
     private readonly taskRepository: TaskRepository,
     private readonly teamService: TeamService,
-    private readonly userService: UserService,
   ) {}
 
   async getAllTask(): Promise<Task[]> {

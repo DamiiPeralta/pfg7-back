@@ -14,7 +14,6 @@ export class TaskRepository {
   constructor(
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
-
     private readonly teamRepository: TeamRepository,
   ) {}
 

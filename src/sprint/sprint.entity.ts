@@ -16,17 +16,20 @@ import {
   
     @Column({ type: 'varchar', length: 50, nullable: false })
     name: string;
+
+    @Column({ type: "text", nullable: true })
+    goal: string;
   
     @Column({ type: 'varchar', nullable: false })
-    fecha_inicio: string;
+    created: string;
   
-    @Column({ type: 'varchar', nullable: false })
-    fecha_fin: string;
+    @Column({ type: 'varchar', nullable: true })
+    deadline: string;
   
-    @Column({ type: 'varchar', length: 20, nullable: false })
-    estado: string;
+    @Column({ type: 'varchar', length: 20, nullable: true })
+    status: string;
   
-    @ManyToOne(() => Team, (team) => team.sprints, { nullable: false })
+    @ManyToOne(() => Team, (team) => team.sprints, { nullable: true })
     team: Team;
   
     @OneToMany(() => Task, (task) => task.sprint)

@@ -9,6 +9,7 @@ import { TeamModule } from './team/team.module';
 import { AuthModule } from './auth/auth.module';
 import { SeederModule } from './seeder/seeder.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
+import { SprintModule } from './sprint/sprint.module';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { FileUploadModule } from './file_upload/file_upload.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, SeederModule, FileUploadModule
+    AuthModule, UserModule, TaskModule, TeamModule, SeederModule, FileUploadModule, SprintModule
     ],
   controllers: [],
   providers: [],
