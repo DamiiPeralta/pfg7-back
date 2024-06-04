@@ -6,12 +6,14 @@ import {
 import { TaskRepository } from './task.repository';
 import { Task } from './task.entity';
 import { TeamService } from 'src/team/team.service';
+import { SprintService } from 'src/sprint/sprint.service';
 
 @Injectable()
 export class TaskService {
   constructor(
     private readonly taskRepository: TaskRepository,
     private readonly teamService: TeamService,
+    private readonly sprintService: SprintService
   ) {}
 
   async getAllTask(): Promise<Task[]> {
@@ -47,14 +49,18 @@ export class TaskService {
     }
   }
 
-  async createTask(task: Partial<Task>, teamId: string): Promise<Task> {
+  async createTask(task: Partial<Task>, teamId: string, sprintId: string): Promise<Task> {
     const team = await this.teamService.getTeamById(teamId);
     if (team === undefined) {
       throw new NotFoundException(`Team with ID ${teamId} not found`);
     }
+    const sprint = await this.sprintService.getSprintById(sprintId);
+    if (sprint === undefined) {
+      throw new NotFoundException(`Sprint with ID ${sprintId} not found`)
+    }
 
     try {
-      return await this.taskRepository.create(task, team);
+      return await this.taskRepository.create(task, team, sprint);
     } catch (error) {
       throw new InternalServerErrorException('Failed to create task');
     }

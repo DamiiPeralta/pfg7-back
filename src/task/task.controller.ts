@@ -54,10 +54,11 @@ export class TaskController {
   @Post()
   async create(
     @Query('idTeam', ParseUUIDPipe) teamId: string,
+    @Query('idSprint', ParseUUIDPipe) idSprint: string,
     @Body() newTask: CreateTaskDto,
   ) {
     try {
-      const task = await this.taskService.createTask(newTask, teamId);
+      const task = await this.taskService.createTask(newTask, teamId,idSprint);
       return task;
     } catch (error) {
       throw new NotFoundException(error.message);

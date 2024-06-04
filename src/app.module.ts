@@ -28,7 +28,7 @@ import { SprintModule } from './sprint/sprint.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, SeederModule, FileUploadModule, SprintModule
+    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule
     ],
   controllers: [],
   providers: [],

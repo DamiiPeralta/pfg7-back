@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { Team } from 'src/team/team.entity';
 import { TeamRepository } from 'src/team/team.repository';
+import { Sprint } from 'src/sprint/sprint.entity';
 
 @Injectable()
 export class TaskRepository {
@@ -22,6 +23,7 @@ export class TaskRepository {
       const tasks: Task[] = await this.taskRepository.find({relations: {
         user_owner: true,
         team: true,
+        sprint: true,
       },});
       if (tasks.length === 0) {
         return [];
@@ -38,6 +40,7 @@ export class TaskRepository {
       relations: {
         user_owner: true,
         team: true,
+        sprint: true,
       },
     });
     if (!task) {
@@ -64,10 +67,10 @@ export class TaskRepository {
     }
   }
 
-  async create(task: Partial<Task>, team: Team): Promise<Task> {
+  async create(task: Partial<Task>, team: Team, sprint: Sprint): Promise<Task> {
     try {
       task.team = team;
-
+      task.sprint = sprint;
       const createdAt = new Date();
       task.created = createdAt.toLocaleString();
 
@@ -76,7 +79,7 @@ export class TaskRepository {
       await this.taskRepository.save(newTask);
       const taskCreated = this.taskRepository.findOne({
         where: { task_id: newTask.task_id },
-        relations: ['team'],
+        relations: ['team','sprint'],
       });
       return taskCreated;
     } catch (error) {
