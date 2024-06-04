@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, DeleteDateColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 import { Team } from 'src/team/team.entity';
+import { Sprint } from 'src/sprint/sprint.entity';
 
 @Entity({ name: 'tasks' })
 export class Task {
@@ -80,6 +81,13 @@ export class Task {
    */
   @ManyToOne(() => Team, team => team.tasks, {nullable: false})
   team: Team;
+  
+  /**
+   * One-to-many relationship with the Sprint entity.
+   * Each task belongs to a Sprint.
+   */
+  @ManyToOne(() => Sprint, sprint => sprint.tasks, {nullable: true})
+  sprint: Sprint;
 
   @DeleteDateColumn()
   deletedAt?: Date;
