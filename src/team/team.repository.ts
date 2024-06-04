@@ -13,11 +13,11 @@ export class TeamRepository {
   ) {}
 
   async getTeams(): Promise<Team[]> {
-    return await this.teamRepository.find({relations:['tasks', 'team_leader', 'team_users']});
+    return await this.teamRepository.find({relations:['tasks', 'team_leader', 'team_users','sprints']});
   }
 
   async findTeamById(id: string): Promise<Team> {
-    const team = await this.teamRepository.findOne({ where: { team_id: id },relations:['tasks', 'team_leader', 'team_users'] });
+    const team = await this.teamRepository.findOne({ where: { team_id: id },relations:['tasks', 'team_leader', 'team_users','sprints'] });
     
     if (!team) {
       throw new NotFoundException(`Team with ID ${id} not found`);

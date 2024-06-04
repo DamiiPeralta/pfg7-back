@@ -6,7 +6,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TeamRepository } from 'src/team/team.repository';
 import { Team } from 'src/team/team.entity';
 
 @Injectable()
@@ -14,7 +13,8 @@ export class SprintRepository {
   constructor(
     @InjectRepository(Sprint)
     private readonly sprintRepository: Repository<Sprint>,
-    private readonly teamRepository: TeamRepository,
+    @InjectRepository(Team)
+    private readonly teamRepository: Repository<Team>,
   ) {}
 
   async findAll(): Promise<Sprint[]> {
@@ -50,45 +50,39 @@ export class SprintRepository {
 
   async findByTeam(teamId: string): Promise<Sprint[]> {
     try {
-      const team = await this.teamRepository.findTeamById(teamId);
-      console.log(team);
-      
+      const team = await this.teamRepository.findOne({
+        where: { team_id: teamId },
+        relations: ['sprints'],
+      });
+
       if (!team) {
-        throw new Error(`Team with ID ${teamId} not found`);
+        throw new NotFoundException(`Team with ID ${teamId} not found`);
       }
 
-      const sprints = team.sprints;
-      console.log(sprints);
-      
-      if (sprints.length === 0) {
+      if (!team.sprints || team.sprints.length === 0) {
         throw new NotFoundException(`Team with ID ${teamId} has no sprints`);
       }
-      console.log(3);
-      
-      return sprints;
+
+      return team.sprints;
     } catch (error) {
-      console.error(`Error in findByTeam: ${error.message}`);
-      throw error;
+      throw new InternalServerErrorException(
+        `Failed to retrieve sprints by team: ${error.message}`,
+      );
     }
   }
 
   async create(sprint: Partial<Sprint>, team: Team): Promise<Sprint> {
     try {
       sprint.team = team;
-      
-
-      const createdAt = new Date();
-      sprint.created = createdAt.toLocaleString();
+      sprint.created = new Date().toLocaleString();
 
       const newSprint = this.sprintRepository.create(sprint);
-
       await this.sprintRepository.save(newSprint);
 
-      const sprintCreated = this.sprintRepository.findOne({
+      return await this.sprintRepository.findOne({
         where: { sprint_id: newSprint.sprint_id },
         relations: ['team'],
       });
-      return sprintCreated;
     } catch (error) {
       throw new InternalServerErrorException('Failed to create sprint');
     }
@@ -98,7 +92,9 @@ export class SprintRepository {
     try {
       await this.sprintRepository.update(id, sprint);
 
-      const updatedSprint = await this.sprintRepository.findOneBy({ sprint_id: id });
+      const updatedSprint = await this.sprintRepository.findOneBy({
+        sprint_id: id,
+      });
 
       if (!updatedSprint) {
         throw new Error(`Sprint with ID ${id} not found after update`);

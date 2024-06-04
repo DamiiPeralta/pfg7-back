@@ -61,7 +61,6 @@ export class SprintController {
     } catch (error) {
       throw new NotFoundException(error.message);
     }
-    
   }
 
   @Put(':id')
