@@ -9,11 +9,13 @@ import {
   Body,
   NotFoundException,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
 import { Task } from './task.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Tasks')
 @ApiBearerAuth()
@@ -22,6 +24,7 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   async getTasks(): Promise<Task[]> {
     try {
       return await this.taskService.getAllTask();
