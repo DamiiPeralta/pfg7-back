@@ -23,7 +23,7 @@ export class SeederService {
       if(dbUsers.length > 0) {
         for (const dbUser of dbUsers) {
           for (const dataUser of dataUsers) {
-            if(dbUser.email === dataUser.email) {
+            if(dbUser.credentials.email === dataUser.email) {
               return 'Users already seeded';
             }
           }

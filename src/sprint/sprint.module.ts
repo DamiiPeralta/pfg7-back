@@ -13,9 +13,10 @@ import { TeamService } from 'src/team/team.service';
 import { UserService } from 'src/user/user.service';
 import { UserRepository } from 'src/user/user.repository';
 import { Sprint } from './sprint.entity';
+import { Credentials } from 'src/credentials/credentials.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task, User, Team, Sprint])],
+  imports: [TypeOrmModule.forFeature([Task, User, Team, Sprint, Credentials])],
   providers: [SprintService, SprintRepository, TaskService, TaskRepository,TeamService,TeamRepository, UserService,UserRepository],
   controllers: [SprintController],
 })

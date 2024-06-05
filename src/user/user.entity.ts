@@ -35,28 +35,6 @@ token: string;
 name: string;
 
 /**
- * Must be a string of maximum 20 characters and cannot be null.
- * @example "JhonDoe32"
- */
-
-@Column({ unique: true, type: 'varchar', length: 20, nullable: false })
-nickname: string;
-
-/**
- * Must be a string of maximum 50 characters, unique, have a valid structure according to the standard email addresses, and cannot be null.
- * @example useremail@example.com
- */
-@Column({ type: 'varchar', length: 50, unique: true, nullable: false })
-email: string;
-
-/**
- * Must be a hashed string of maximum 80 characters and cannot be null.
- * @example "$2y$10$PECeWgKwIoRUixQOk5AADOQIgqqGaQuQZ1LiZ1OP1UbrmcXU3B93S"
- */
-@Column({ type: 'varchar', length: 80, nullable: false })
-password: string;
-
-/**
  * Must be a string of maximum 30 characters and cannot be null.
  * @example "2022-01-01 12:00:00"
  */

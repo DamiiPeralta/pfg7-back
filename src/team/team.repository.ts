@@ -1,8 +1,9 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Like, Repository } from "typeorm";
 import { Team } from "./team.entity";
 import { UserService } from "src/user/user.service";
+import { User } from "src/user/user.entity";
 
 @Injectable()
 export class TeamRepository {
@@ -74,5 +75,37 @@ export class TeamRepository {
     } catch (error) {
       throw error; // Relanzar el error para que sea manejado por el controlador
     }
+  }
+  async removeUserFromTeam(userId: string, teamId: string): Promise<Team> {
+    const team = await this.findTeamById(teamId);
+    const user = await this.userService.getUserById(userId);
+    if (!team || !user) {
+      throw new NotFoundException(`Team or User not found`);
+    }
+  
+    team.team_users = team.team_users.filter(teamUser => teamUser.user_id !== userId);
+    return await this.teamRepository.save(team);
+  }
+  async updateTeamLeader(teamId: string, newLeaderId: string): Promise<Team> {
+    const team = await this.findTeamById(teamId);
+    const newLeader = await this.userService.getUserById(newLeaderId);
+    if (!team || !newLeader) {
+      throw new NotFoundException(`Team or User not found`);
+    }
+  
+    team.team_leader = newLeader;
+   
+    return await this.teamRepository.save(team);
+  }
+  async findTeamsByName(name: string): Promise<Team[]> {
+    return await this.teamRepository.find({
+      where: { team_name: Like(`%${name}%`) },
+      relations: ['tasks', 'team_leader', 'team_users', 'sprints'],
+    });
+  }
+
+  async getUsersByTeam(teamId: string): Promise<User[]> {
+    const team = await this.findTeamById(teamId);
+    return team.team_users;
   }
 }
