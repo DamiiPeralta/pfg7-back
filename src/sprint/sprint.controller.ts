@@ -10,7 +10,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SprintService } from './sprint.service';
 import { Sprint } from './sprint.entity';
 import { CreateSprintDto, UpdateSprintDto } from './sprint.dto';
@@ -22,6 +22,9 @@ export class SprintController {
   constructor(private readonly sprintService: SprintService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all sprints',
+  description: 'Doesn`t expect any parameters. Returns an array of Sprint objects.'
+ })
   async getSprints(): Promise<Sprint[]> {
     try {
       return await this.sprintService.getAllSprints();
@@ -31,6 +34,9 @@ export class SprintController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a single sprint by Id',
+    description: 'Expects an UUID through Params. Returns a single Sprint object.'
+   })
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Sprint> {
     try {
       return await this.sprintService.getSprintById(id);
@@ -40,6 +46,9 @@ export class SprintController {
   }
 
   @Get('team/:id')
+  @ApiOperation({ summary: 'Get all sprints by team Id', 
+    description: 'Expects an UUID through Params. Returns an array of Sprint objects belonging to a team.'
+  })
   async getSprintsByTeam(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<Sprint[]> {
@@ -51,6 +60,9 @@ export class SprintController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Creates a new sprint',
+    description: 'Expects the team ID as a query parameter and the sprint properties through the body. Returns the created Sprint object.'
+  })
   async create(
     @Query('idTeam', ParseUUIDPipe) teamId: string,
     @Body() newSprint: CreateSprintDto,
@@ -64,6 +76,9 @@ export class SprintController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Updates a sprint', 
+    description: 'Expects an UUID through Params and the sprint properties through the body. Returns the modified Sprint object.'
+  })
   async update(
     @Param('id') id: string,
     @Body() updateSprint: UpdateSprintDto,
@@ -76,6 +91,9 @@ export class SprintController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary:'Deletes a sprint',
+    description: 'Expects the UUID of the srint to delete through Params. Returns a succes or failure message.'
+  })
   async remove(@Param('id') id: string) {
     try {
       await this.sprintService.deleteSprint(id);

@@ -1,12 +1,15 @@
 import { Controller , FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file_upload.service';
-import { ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 @Controller('files')
 @ApiTags("Upload Image")
 export class FileUploadController {
     constructor(private readonly fileUploadServices: FileUploadService){}
     @Post('profilePicture')
+    @ApiOperation({ summary: 'Upload profile picture',
+        description:'Expects the user ID and the image in the form data. Returns the modified User object.'
+    })
     @UseInterceptors(FileInterceptor('file'))
     uploadImage(
         @Query('id') userId: string,
