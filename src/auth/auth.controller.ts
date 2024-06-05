@@ -9,7 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginUserDto } from '../user/user.dto';
 import { CreateUserDto } from '../user/user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController { //Mover logica para repository.
@@ -18,6 +18,9 @@ export class AuthController { //Mover logica para repository.
   ) {}
   private readonly logger = new Logger(AuthController.name);
   @Post('signup')
+  @ApiOperation({ summary: 'Create a new user.',
+  description: 'Expects all of the properties of the user through the Body. Returns the created User object.'
+ })
   async signUp(@Body() user: CreateUserDto) {
     try {
       return await this.authService.signUp(user);
@@ -42,6 +45,9 @@ export class AuthController { //Mover logica para repository.
     }
   }
   @Post('signin')
+  @ApiOperation({ summary: 'Logs in an existing user to create Token.',
+  description: 'Expects the credentials of the user, email and password, through the Body. Returns a status message, the token and the User object.'
+ })
   async signIn(@Body() loginUserDto: LoginUserDto) {
     try {
       const token = await this.authService.signIn(loginUserDto);
