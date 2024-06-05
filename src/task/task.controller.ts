@@ -9,11 +9,13 @@ import {
   Body,
   NotFoundException,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
 import { Task } from './task.entity';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Tasks')
 @ApiBearerAuth()
@@ -22,6 +24,7 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   async getTasks(): Promise<Task[]> {
     try {
       return await this.taskService.getAllTask();
@@ -38,36 +41,11 @@ export class TaskController {
       throw new NotFoundException(error.message);
     }
   }
-  @Get('search/by-name')
-  async getTasksByName(@Query('name') taskName: string): Promise<Task[]> {
-    try {
-      return await this.taskService.getTaskByName(taskName);
-    } catch (error) {
-      throw new NotFoundException('Failed to fetch tasks by name');
-    }
-  }
-  @Get('user/:id')
-  async getTasksByUserOwner(@Param('id') userId: string): Promise<Task[]> {
-    try {
-      return await this.taskService.getTaskByUser(userId);
-    } catch (error) {
-      throw new NotFoundException('Failed to fetch tasks by user');
-    }
-  }
-
-  @Get('collaborator/:id')
-  async getTasksByCollaborator(@Param('id') userId: string): Promise<Task[]> {
-    try {
-      return await this.taskService.getTaskByCollaborator(userId);
-    } catch (error) {
-      throw new NotFoundException('Failed to fetch tasks by collaborator');
-    }
-  }
 
   @Get('team/:id')
-  async getTasksByTeam(@Param('id') teamId: string): Promise<Task[]> {
+  async getTasksByTeam(@Param('id', ParseUUIDPipe) id: string): Promise<Task[]> {
     try {
-      return await this.taskService.getTaskByTeam(teamId);
+      return await this.taskService.getTaskByTeam(id);
     } catch (error) {
       throw new NotFoundException('Failed to fetch tasks by team');
     }
@@ -76,11 +54,11 @@ export class TaskController {
   @Post()
   async create(
     @Query('idTeam', ParseUUIDPipe) teamId: string,
-    @Query('idUserOwner') userOwnerId: string | null,
+    @Query('idSprint', ParseUUIDPipe) idSprint: string,
     @Body() newTask: CreateTaskDto,
   ) {
     try {
-      const task = await this.taskService.createTask(newTask, teamId, userOwnerId);
+      const task = await this.taskService.createTask(newTask, teamId,idSprint);
       return task;
     } catch (error) {
       throw new NotFoundException(error.message);

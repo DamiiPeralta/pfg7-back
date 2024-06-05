@@ -106,7 +106,7 @@ export class SeederService {
         task.status = element.status;
         task.priority = element.priority;
         task.story_points = element.story_points;
-        await this.taskService.createTask(task, team.team_id, userOwner.user_id);
+        //await this.taskService.createTask(task, team.team_id);
         
       }
       return 'Tasks seeded successfully';

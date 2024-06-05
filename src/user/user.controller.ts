@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 
 @ApiTags('Users')
@@ -11,6 +11,9 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all users',
+    description: 'Doesn`t expect any parameters. Returns an array of User objects.'
+   })
   async getUsers() {
     try {
       return await this.userService.getAllUsers();
@@ -20,6 +23,9 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a single user by Id',
+    description: 'Expects an UUID through Params. Returns a single User object.'
+   })
   async findUserById(@Param('id') id: string) {
     try {
       const user = await this.userService.getUserById(id);
@@ -36,6 +42,9 @@ export class UserController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Updates a user´s properties.',
+  description: 'Expects the UUID of the user to modify through Params and the properties to change through the Body. Returns the modified User object.'
+ })
   async updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
     try {
       const upUser = await this.userService.updateUser(id, user);
@@ -52,6 +61,9 @@ export class UserController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Deletes a user.',
+  description: 'Expects the UUID of the user to delete through Params. Returns a succes or failure message.'
+ })
   async deleteUser(@Param('id') id: string) {
     try {
       const result = await this.userService.deleteUser(id);

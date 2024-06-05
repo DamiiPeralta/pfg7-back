@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, OneToMany, DeleteDateColumn } from 'typeorm';
 import { User } from 'src/user/user.entity';
 import { Task } from 'src/task/task.entity';
+import { Sprint } from 'src/sprint/sprint.entity';
 
 @Entity({ name: 'teams' }) 
 export class Team {
@@ -61,10 +62,17 @@ export class Team {
   team_users: User[];
 
   /**
-   * One-to-many relationship with the Task entity.
-   * Each team can have multiple tasks.
+   * One-to-many relationship with the Sprint entity.
+   * Each team can have multiple Sprints.
    */
-  @OneToMany(() => Task, task => task.team, { cascade: true })
+  @OneToMany(() => Sprint, (sprint) => sprint.team, { cascade: true })
+  sprints: Sprint[]=null;
+  
+ /**
+   * One-to-many relationship with the Sprint entity.
+   * Each team can have multiple Sprints.
+   */
+  @OneToMany(() => Task, (task) => task.team, { cascade: true })
   tasks: Task[];
 
   @DeleteDateColumn()

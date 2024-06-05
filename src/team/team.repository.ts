@@ -13,11 +13,11 @@ export class TeamRepository {
   ) {}
 
   async getTeams(): Promise<Team[]> {
-    return await this.teamRepository.find({relations:['tasks', 'team_leader', 'team_users']});
+    return await this.teamRepository.find({relations:['tasks', 'team_leader', 'team_users','sprints']});
   }
 
   async findTeamById(id: string): Promise<Team> {
-    const team = await this.teamRepository.findOne({ where: { team_id: id },relations:['tasks', 'team_leader', 'team_users'] });
+    const team = await this.teamRepository.findOne({ where: { team_id: id },relations:['tasks', 'team_leader', 'team_users','sprints'] });
     
     if (!team) {
       throw new NotFoundException(`Team with ID ${id} not found`);
@@ -30,10 +30,10 @@ export class TeamRepository {
     Object.assign(team, teamDto);
     const createdAt = new Date();
     team.created_date = createdAt.toDateString();
-    let user = await this.userService.getUserById(user_Id);
+    const user = await this.userService.getUserById(user_Id);
     team.team_leader = user;
     const newTeam = this.teamRepository.create(team);
-    let userUpdated = user;
+    const userUpdated = user;
     userUpdated.teams.push(newTeam);
     this.userService.updateUser(user.user_id, userUpdated)
     return await this.teamRepository.save(newTeam);
