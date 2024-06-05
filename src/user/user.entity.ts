@@ -6,10 +6,13 @@ import {
   OneToMany,
   JoinTable,
   DeleteDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Task } from 'src/task/task.entity';
 import { Team } from 'src/team/team.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Credentials } from 'src/credentials/credentials.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -94,4 +97,8 @@ teams: Team[];
 
 @DeleteDateColumn()
 deletedAt?: Date;
+
+@OneToOne(() => Credentials, credentials => credentials.user, { cascade: true })
+@JoinColumn()
+credentials: Credentials;
 }
