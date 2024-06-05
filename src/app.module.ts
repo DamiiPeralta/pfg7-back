@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { SeederModule } from './seeder/seeder.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
 import { SprintModule } from './sprint/sprint.module';
+import { PaypalController } from './paypal/paypal.controller';
+import { PaypalService } from './paypal/paypal.service';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { SprintModule } from './sprint/sprint.module';
     }),
     AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule
     ],
-  controllers: [],
-  providers: [],
+  controllers: [PaypalController],
+  providers: [PaypalService],
 })
 export class AppModule {}
