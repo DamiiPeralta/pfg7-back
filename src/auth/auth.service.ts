@@ -54,11 +54,9 @@ export class AuthService {
       dbUser.token = token;
       dbUser.status = true;
       await this.userService.updateUser(dbUser.user_id, dbUser);
-      delete dbUser.credentials.password
-      delete dbUser.token
 
       // Si las credenciales son válidas, retornamos un token de autenticación (simulado)
-      return { success: 'User logged in successfully', token, dbUser };
+      return { success: 'User logged in successfully', token };
     }catch(error)
     {
       throw new BadRequestException('Invalid Credentials.');
