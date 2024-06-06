@@ -22,4 +22,4 @@
            context: .
            file: ./Dockerfile
            push: true
-           tags: ${{ secrets.DOCKERHUB_USERNAME }}/apideploy:latest
+           tags: ${{ secrets.DOCKERHUB_USERNAME }}/PFG7-Back:latest
