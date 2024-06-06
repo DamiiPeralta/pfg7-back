@@ -26,13 +26,15 @@
     "migration:show": "npm run typeorm -- -d ./src/config/typeorm.ts migration:show"
   },
   "dependencies": {
-    "@nestjs/common": "^10.0.0",
+    "@nestjs/axios": "^3.0.2",
+    "@nestjs/common": "^10.3.9",
     "@nestjs/config": "^3.2.2",
-    "@nestjs/core": "^10.0.0",
+    "@nestjs/core": "^10.3.9",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.3.1",
     "@nestjs/typeorm": "^10.0.2",
+    "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "buffer-to-stream": "^1.0.0",
     "class-transformer": "^0.5.1",
