@@ -7,7 +7,6 @@ import { UserModule } from './user/user.module';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
 import { AuthModule } from './auth/auth.module';
-import { SeederModule } from './seeder/seeder.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
 import { SprintModule } from './sprint/sprint.module';
 import { MailchimpModule } from './mailchimp/mailchimp.module';
