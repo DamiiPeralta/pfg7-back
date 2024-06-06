@@ -22,8 +22,4 @@
            context: .
            file: ./Dockerfile
            push: true
-<<<<<<< HEAD
-           tags: ${{ secrets.DOCKERHUB_USERNAME }}/PFG7-Back:latest
-=======
            tags: ${{ secrets.DOCKERHUB_USERNAME }}/pfg7-back:latest
->>>>>>> cfbbbc89ee90b6688a5252e2b8bd71c929d7f072
