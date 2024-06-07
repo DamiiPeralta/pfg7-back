@@ -1,4 +1,10 @@
-import { IsString, IsOptional, Length, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  Length,
+  IsNotEmpty,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateTeamDto {
   /**
@@ -71,4 +77,22 @@ export class UpdateTeamDto {
   @IsString()
   @Length(1, 50)
   finish_date?: string;
+}
+
+export class JoinTeamDto {
+  /**
+   * Must e the userId of the user to join the team.
+   * @example "UUIDexample"
+   */
+  @IsNotEmpty()
+  @IsUUID()
+  userid: string;
+
+  /**
+   * Must be a valid invitation code
+   * @example "InvitationCodeExample"
+   */
+  @IsNotEmpty()
+  @IsString()
+  code: string;
 }

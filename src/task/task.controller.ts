@@ -11,11 +11,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
 import { Task } from './task.entity';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/roles/roles.guard';
 
 @ApiTags('Tasks')
 @ApiBearerAuth()
@@ -24,7 +26,13 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get()
-  @UseGuards(AuthGuard)
+  //@Roles(Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Get all tasks',
+    description:
+      'Doesn`t expect any parameters. Returns an array of Task objects.',
+  })
   async getTasks(): Promise<Task[]> {
     try {
       return await this.taskService.getAllTask();
@@ -34,6 +42,13 @@ export class TaskController {
   }
 
   @Get(':id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Get task by ID',
+    description:
+      'Expects the task ID as a path parameter through params. Returns a Task object for the specified task.',
+  })
   async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Task> {
     try {
       return await this.taskService.getTaskById(id);
@@ -43,7 +58,16 @@ export class TaskController {
   }
 
   @Get('team/:id')
-  async getTasksByTeam(@Param('id', ParseUUIDPipe) id: string): Promise<Task[]> {
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Get tasks by team ID',
+    description:
+      'Expects the team ID as a query parameter through params. Returns an array of Task objects for the specified team.',
+  })
+  async getTasksByTeam(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<Task[]> {
     try {
       return await this.taskService.getTaskByTeam(id);
     } catch (error) {
@@ -52,13 +76,20 @@ export class TaskController {
   }
 
   @Post()
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Creates a new task',
+    description:
+      'Expects the team ID and sprint ID as query parameters through params and the task properties through the Body. Returns the created Task object.',
+  })
   async create(
     @Query('idTeam', ParseUUIDPipe) teamId: string,
     @Query('idSprint', ParseUUIDPipe) idSprint: string,
     @Body() newTask: CreateTaskDto,
   ) {
     try {
-      const task = await this.taskService.createTask(newTask, teamId,idSprint);
+      const task = await this.taskService.createTask(newTask, teamId, idSprint);
       return task;
     } catch (error) {
       throw new NotFoundException(error.message);
@@ -66,6 +97,13 @@ export class TaskController {
   }
 
   @Put(':id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Updates a task´s properties.',
+    description:
+      'Expects the UUID of the task to modify through Params and the properties to change through the Body. Returns the modified Task object.',
+  })
   async update(@Param('id') id: string, @Body() updateTask: UpdateTaskDto) {
     try {
       return await this.taskService.updateTask(id, updateTask);
@@ -75,6 +113,13 @@ export class TaskController {
   }
 
   @Delete(':id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Deletes a Task.',
+    description:
+      'Expects the UUID of the task to delete through Params. Returns a succes or failure message.',
+  })
   async remove(@Param('id') id: string) {
     try {
       await this.taskService.deleteTask(id);

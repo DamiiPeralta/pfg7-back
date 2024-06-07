@@ -1,39 +1,49 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AuthRepository } from '../auth/auth.repository';
-import { LoginUserDto } from '../user/user.dto';
+import { CreateUserDto, LoginUserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
+import { CredentialsDto } from 'src/credentials/credentials.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly authRepository: AuthRepository,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(user: Partial<User>) {
-    return await this.userService.createUser(user)
+  async signUp(createUserDto: CreateUserDto) {
+    return await this.userService.createUser(createUserDto);
   }
 
-  async signIn(loginUserDto: Partial<User>) {
+  async signIn(credentialsDto: CredentialsDto) {
     try{
-      const { email, password } = loginUserDto;
-      const dbUser = await this.userService.getUserByEmail(email);
-      if (!dbUser) {
-        throw new BadRequestException('Invalid Credentials.');
+      let dbUser;
+      const { nickname, email, password } = credentialsDto;
+      if(!email && !nickname){
+        throw new BadRequestException('Usuario con ese email y nickname');
       }
-
-      const isPasswordValid = await bcrypt.compare(password, dbUser.password);
+      if(email != null)
+        {
+          dbUser = await this.userService.getUserByEmail(email);
+        }
+      else if(nickname != null){
+         dbUser = await this.userService.getUserByNickname(nickname);
+        }
+      
+    
+      if (!dbUser) {
+        throw new BadRequestException('Usuario con ese email no existe');
+      }
+      const isPasswordValid = await bcrypt.compare(password, dbUser.credentials.password);
       if (!isPasswordValid) {
-        throw new BadRequestException('Invalid Credentials.');
+        throw new BadRequestException('password mal.');
       }
       const userPayload = {
         sub: dbUser.user_id,
         id: dbUser.user_id,
-        email: dbUser.email,
+        email: dbUser.credentials.email,
         //isAdmin: dbUser.isAdmin
         //roles: [dbUser.isAdmin ? Role.Admin : Role.User]
       };
@@ -44,11 +54,9 @@ export class AuthService {
       dbUser.token = token;
       dbUser.status = true;
       await this.userService.updateUser(dbUser.user_id, dbUser);
-      delete dbUser.password
-      delete dbUser.token
 
       // Si las credenciales son válidas, retornamos un token de autenticación (simulado)
-      return { success: 'User logged in successfully', token, dbUser };
+      return { success: 'User logged in successfully', token };
     }catch(error)
     {
       throw new BadRequestException('Invalid Credentials.');

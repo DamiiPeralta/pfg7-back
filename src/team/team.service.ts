@@ -31,4 +31,9 @@ export class TeamService {
   async addUserToTeam(userId: string, teamId: string): Promise<Team> {
     return await this.teamsRepository.addUserToTeam(userId, teamId);
   }
+
+  async joinTeam(userid: string, code: string) {
+    return await this.teamsRepository.joinTeam(userid, code);
+  }
+    
 }

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
+import { CreateUserDto } from './user.dto';
 
 @Injectable()
 export class UserService {
@@ -33,13 +34,24 @@ export class UserService {
       throw new InternalServerErrorException('Failed to retrieve the user');
     }
   }
-  async getUserByEmail(email: string): Promise<Partial<User>> {
+  async getUserByEmail(email: string): Promise<User> {
     try {
-      const foundUser = await this.usersRepository.getUserByEmail(email);
+      const user = await this.usersRepository.getUserByEmail(email);
 /*       if (!foundUser) {
         throw new NotFoundException(`User with email ${email} not found`);
       } */
-      return foundUser;
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to retrieve the user');
+    }
+  }
+  async getUserByNickname(nickname: string): Promise<User> {
+    try {
+      const user = await this.usersRepository.getUserByNickname(nickname);
+      return user;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -48,10 +60,9 @@ export class UserService {
     }
   }
 
-
-  async createUser(userDto: Partial<User>): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
-      return await this.usersRepository.createUser(userDto);
+      return await this.usersRepository.createUser(createUserDto);
     } catch (error) {
       throw new BadRequestException('Failed to create user');
     }

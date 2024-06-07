@@ -7,11 +7,8 @@ import { UserModule } from './user/user.module';
 import { TaskModule } from './task/task.module';
 import { TeamModule } from './team/team.module';
 import { AuthModule } from './auth/auth.module';
-import { SeederModule } from './seeder/seeder.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
 import { SprintModule } from './sprint/sprint.module';
-import { PaypalController } from './paypal/paypal.controller';
-import { PaypalService } from './paypal/paypal.service';
 
 @Module({
   imports: [
@@ -30,7 +27,7 @@ import { PaypalService } from './paypal/paypal.service';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule
+    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule
     ],
   controllers: [PaypalController],
   providers: [PaypalService],

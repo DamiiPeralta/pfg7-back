@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from '../user/user.dto';
 import { CreateUserDto } from '../user/user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CredentialsDto } from 'src/credentials/credentials.dto';
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController { //Mover logica para repository.
@@ -21,9 +22,9 @@ export class AuthController { //Mover logica para repository.
   @ApiOperation({ summary: 'Create a new user.',
   description: 'Expects all of the properties of the user through the Body. Returns the created User object.'
  })
-  async signUp(@Body() user: CreateUserDto) {
+  async signUp(@Body() createUserDto: CreateUserDto) {
     try {
-      return await this.authService.signUp(user);
+      return await this.authService.signUp(createUserDto);
     } catch (error) {
       if (error instanceof BadRequestException) {
         throw error; // Propagar excepción BadRequestException sin modificar
@@ -48,9 +49,9 @@ export class AuthController { //Mover logica para repository.
   @ApiOperation({ summary: 'Logs in an existing user to create Token.',
   description: 'Expects the credentials of the user, email and password, through the Body. Returns a status message, the token and the User object.'
  })
-  async signIn(@Body() loginUserDto: LoginUserDto) {
+  async signIn(@Body() credentialsDto: CredentialsDto) {
     try {
-      const token = await this.authService.signIn(loginUserDto);
+      const token = await this.authService.signIn(credentialsDto);
       return { token };
     } catch (error) {
       if (error instanceof BadRequestException) {
