@@ -18,6 +18,8 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 export class FileUploadController {
   constructor(private readonly fileUploadServices: FileUploadService) {}
   @Post('profilePicture')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Upload profile picture',
     description:
