@@ -121,7 +121,7 @@ export class SprintController {
   async remove(@Param('id') id: string) {
     try {
       await this.sprintService.deleteSprint(id);
-      return { message: 'Task deleted successfully' };
+      return { message: 'Sprint deleted successfully' };
     } catch (error) {
       throw new NotFoundException(error.message);
     }

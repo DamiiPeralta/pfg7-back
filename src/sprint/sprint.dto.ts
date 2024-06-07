@@ -1,33 +1,56 @@
-import { IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 
 export class CreateSprintDto {
-    @IsString()
-    @IsNotEmpty()
-    @Length(1, 50)
-    name: string;
+  /**
+   The name must be a non-empty string of maximum 50 characters.
+   @example "Example sprint"
+   */
+  @IsString()
+  @IsNotEmpty()
+  @Length(1, 50)
+  name: string;
 
-    @IsString()
-    @IsOptional()
-    @Length(1, 20)
-    goal: string;
+  /**
+   The goal must be an optional string of maximum 20 characters.
+   @example "Improve the quality of our code"
+   */
+  @IsString()
+  @IsOptional()
+  @Length(1, 20)
+  goal: string;
 
-    @IsOptional()
-    @IsString()
-    status: string;
-  
+  /**
+   The status must be an optional string.
+   @example "In progress"
+   */
+  @IsOptional()
+  @IsString()
+  status: string;
 }
 export class UpdateSprintDto {
-    @IsString()
-    @IsOptional()
-    @Length(1, 50)
-    name: string;
+  /**
+   The name must be a non-empty string of maximum 50 characters.
+   @example "Example sprint"
+   */
+  @IsString()
+  @IsOptional()
+  @Length(1, 50)
+  name: string;
 
-    @IsString()
-    @IsOptional()
-    @Length(1, 20)
-    goal: string;
+  /**
+   The goal must be an optional string of maximum 20 characters.
+   @example "Improve the quality of our code"
+   */
+  @IsString()
+  @IsOptional()
+  @Length(1, 20)
+  goal: string;
 
-    @IsOptional()
-    @IsString()
-    status: string;
+  /**
+   The status must be an optional string.
+   @example "In progress"
+   */
+  @IsOptional()
+  @IsString()
+  status: string;
 }
