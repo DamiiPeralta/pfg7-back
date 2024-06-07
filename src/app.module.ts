@@ -9,6 +9,9 @@ import { TeamModule } from './team/team.module';
 import { AuthModule } from './auth/auth.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
 import { SprintModule } from './sprint/sprint.module';
+import { MailchimpModule } from './mailchimp/mailchimp.module';
+import { PayPalModule } from './paypal/paypal.module';
+import { PayPalController } from './paypal/paypal.controller';
 
 @Module({
   imports: [
@@ -27,9 +30,9 @@ import { SprintModule } from './sprint/sprint.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule
+    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule,PayPalModule
     ],
-  controllers: [PaypalController],
-  providers: [PaypalService],
+  controllers: [PayPalController],
+  providers: [],
 })
 export class AppModule {}
