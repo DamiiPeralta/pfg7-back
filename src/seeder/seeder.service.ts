@@ -3,11 +3,14 @@ import { UserService } from 'src/user/user.service';
 import * as dataUsers from '../utils/dataUsers.json'
 import * as dataTeams from '../utils/dataTeams.json'
 import * as dataTasks from '../utils/dataTasks.json'
+import * as dataSprints from '../utils/dataSprints.json'
 import { CreateUserDto } from 'src/user/user.dto';
 import { TeamService } from 'src/team/team.service';
 import { CreateTeamDto } from 'src/team/team.dto';
 import { TaskService } from 'src/task/task.service';
 import { CreateTaskDto } from 'src/task/task.dto';
+import { SprintService } from 'src/sprint/sprint.service';
+import { CreateSprintDto } from 'src/sprint/sprint.dto';
 
 @Injectable()
 export class SeederService {
@@ -15,6 +18,7 @@ export class SeederService {
     private readonly userService: UserService,
     private readonly teamService: TeamService,
     private readonly taskService: TaskService,
+    private readonly sprintService: SprintService,
 
   ){}
   async seedUsers() {
@@ -75,6 +79,38 @@ export class SeederService {
       
     } catch (error) {
       throw new BadGatewayException('Failed to seed Teams');
+    }
+  }
+  async seedSprints(){
+    try {
+      const dbSprints = await this.sprintService.getAllSprints();
+      
+      if(dbSprints.length > 0) {
+        for (const dbSprint of dbSprints) {
+          for (const dataSprint of dataSprints) {
+            if(dbSprint.name === dataSprint.name) {
+              return 'Teams already seeded';
+            }
+          }
+        }
+      }
+
+      for (const element of dataSprints) {
+        const dbTeams = await this.userService.getAllUsers();
+        if(dbTeams.length = 0) throw new NotFoundException('No teams found'); 
+
+
+
+        const sprint = new CreateSprintDto();
+        sprint.name = element.name;
+        sprint.goal = element.goal;
+        sprint.status = element.status;
+        //await this.sprintService.createSprint(sprint, teamId)
+      }
+      return 'Sprints seeded successfully';
+      
+    } catch (error) {
+      throw new BadGatewayException('Failed to seed Sprints');
     }
   }
   async seedTasks(){

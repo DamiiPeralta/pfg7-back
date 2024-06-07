@@ -143,4 +143,20 @@ export class TeamController {
       throw new NotFoundException(error.message);
     }
   }
+
+  @Get(':id/leader')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Gets the teams a user is the leader of.',
+    description:
+      'Expects the UUID  the user through Params. Returns an array of Team objects.',
+  })
+  async getTeamsByLeaderId(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      return await this.teamsService.getTeamsByLeaderId(id);
+    } catch (error) {
+      throw new error ('Error in getTeamsByLeaderId: ' + error.message);
+    }
+  }
 }
