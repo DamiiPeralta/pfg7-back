@@ -23,7 +23,29 @@ export class TeamRepository {
   async getTeams(): Promise<Team[]> {
     return await this.teamRepository.find({
       relations: ['tasks', 'team_leader', 'team_users', 'sprints'],
-    });
+      select: {
+        team_id: true,
+        team_name: true,
+        description:true,
+        tasks: {
+            task_id: true,
+            name:true,
+            description:true
+        },
+        team_leader: {
+            user_id: true,
+            name: true,
+        },
+        team_users: {
+            user_id: true,
+            name: true,
+        },
+        sprints: {
+            sprint_id: true,
+            name: true,
+        }
+    }}
+  )
   }
 
   async findTeamById(id: string): Promise<Team> {
