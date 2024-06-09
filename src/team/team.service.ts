@@ -36,4 +36,7 @@ export class TeamService {
     return await this.teamsRepository.joinTeam(userid, code);
   }
     
+  async getTeamsByLeaderId(leaderId: string) {
+    return await this.teamsRepository.getTeamsByLeaderId(leaderId);
+  }
 }

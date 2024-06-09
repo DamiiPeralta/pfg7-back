@@ -11,10 +11,13 @@ import { TeamRepository } from 'src/team/team.repository';
 import { TaskRepository } from 'src/task/task.repository';
 import { TaskService } from 'src/task/task.service';
 import { Task } from 'src/task/task.entity';
+import { Sprint } from 'src/sprint/sprint.entity';
+import { SprintRepository } from 'src/sprint/sprint.repository';
+import { SprintService } from 'src/sprint/sprint.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Team, Task])],
-    providers: [SeederService, UserRepository, UserService, TeamRepository,TeamService, TaskRepository, TaskService],
+    imports: [TypeOrmModule.forFeature([User, Team, Task, Sprint, Credential])],
+    providers: [SeederService, UserRepository, UserService, TeamRepository,TeamService, TaskRepository, TaskService, SprintRepository, SprintService],
     controllers: [SeederController],
 })
 export class SeederModule implements OnModuleInit{

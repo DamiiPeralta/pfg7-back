@@ -177,4 +177,15 @@ export class TeamRepository {
 
     return team;
   }
+
+  getTeamsByLeaderId(leaderId: string): Promise<Team[]> {
+    const teams = this.teamRepository.find({
+      where: { team_leader: { user_id: leaderId } },
+      //relations: ['tasks', 'team_leader', 'team_users', 'sprints'],
+    });
+    if(!teams) {
+      throw new NotFoundException(`Teams with leader ID ${leaderId} not found`);
+    }
+    return teams;
+  }
 }
