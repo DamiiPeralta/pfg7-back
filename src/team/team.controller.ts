@@ -54,7 +54,8 @@ export class TeamController {
   //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Joins a team',
-    description: 'Expects the user ID and the team code. Returns the joined Team object.',
+    description:
+      'Expects the user ID and the team code. Returns the joined Team object.',
   })
   async joinTeam(@Body() joinTeamDto: JoinTeamDto) {
     const { userid, code } = joinTeamDto;
@@ -156,7 +157,21 @@ export class TeamController {
     try {
       return await this.teamsService.getTeamsByLeaderId(id);
     } catch (error) {
-      throw new error ('Error in getTeamsByLeaderId: ' + error.message);
+      throw new error('Error in getTeamsByLeaderId: ' + error.message);
+    }
+  }
+
+  @Get(':id/teams')
+  @ApiOperation({
+    summary: 'Get teams for a user',
+    description:
+      'Returns the teams where the user is a leader and the teams where the user is a collaborator.',
+  })
+  async getUserTeams(@Param('id', ParseUUIDPipe) userId: string) {
+    try{
+      return this.teamsService.getUserTeams(userId);
+    }catch(error){
+      throw new error('Error in getUserTeams: ' + error.message);
     }
   }
 }
