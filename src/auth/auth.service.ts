@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
 import { CredentialsDto } from 'src/credentials/credentials.dto';
+import { Role } from 'src/roles/roles.enum';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
 
   async signIn(credentialsDto: CredentialsDto) {
     try{
-      let dbUser;
+      let dbUser: User;
       const { nickname, email, password } = credentialsDto;
       if(!email && !nickname){
         throw new BadRequestException('Usuario con ese email y nickname');
@@ -34,19 +35,20 @@ export class AuthService {
       
     
       if (!dbUser) {
-        throw new BadRequestException('Usuario con ese email no existe');
+        throw new BadRequestException('Invalid Credentials.');
       }
       const isPasswordValid = await bcrypt.compare(password, dbUser.credentials.password);
       if (!isPasswordValid) {
-        throw new BadRequestException('password mal.');
+        throw new BadRequestException('Invalid Credentials.');
       }
       const userPayload = {
         sub: dbUser.user_id,
         id: dbUser.user_id,
         email: dbUser.credentials.email,
-        //isAdmin: dbUser.isAdmin
-        //roles: [dbUser.isAdmin ? Role.Admin : Role.User]
+        isAdmin: dbUser.is_admin,
+        roles: [dbUser.is_admin ? Role.Admin : Role.User]
       };
+      console.log(userPayload)
 
       const token = this.jwtService.sign(userPayload);
       const nowLogin = new Date();

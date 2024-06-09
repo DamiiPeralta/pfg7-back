@@ -9,11 +9,16 @@ import {
   NotFoundException,
   BadRequestException,
   InternalServerErrorException,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/roles/roles.guard';
 
 @ApiTags('Users')
 @ApiBearerAuth()
