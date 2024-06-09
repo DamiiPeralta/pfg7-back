@@ -12,7 +12,7 @@ export class CreateSprintDto {
 
   /**
    The goal must be an optional string of maximum 20 characters.
-   @example "Improve the quality of our code"
+   @example "First Goal"
    */
   @IsString()
   @IsOptional()
@@ -39,7 +39,7 @@ export class UpdateSprintDto {
 
   /**
    The goal must be an optional string of maximum 20 characters.
-   @example "Improve the quality of our code"
+   @example "Second Goal"
    */
   @IsString()
   @IsOptional()

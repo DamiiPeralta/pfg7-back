@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -104,9 +105,12 @@ export class SprintController {
     @Body() updateSprint: UpdateSprintDto,
   ): Promise<Sprint> {
     try {
+      if (Object.keys(updateSprint).length === 0) {
+        throw new BadRequestException('Invalid request body: Empty JSON object');
+      }
       return await this.sprintService.updateSprint(id, updateSprint);
     } catch (error) {
-      throw new NotFoundException(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
