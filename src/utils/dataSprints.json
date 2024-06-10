@@ -1,0 +1,27 @@
+[
+    {
+      "name": "Sprint Alpha",
+      "goal": "Deliver initial product features",
+      "status": "Planning"
+    },
+    {
+      "name": "Sprint Beta",
+      "goal": "Refine and test product features",
+      "status": "In Progress"
+    },
+    {
+      "name": "Sprint Gamma",
+      "goal": "Optimize and deploy the product",
+      "status": "Planning"
+    },
+    {
+      "name": "Sprint Delta",
+      "goal": "Enhance and iterate on product features",
+      "status": "In Progress"
+    },
+    {
+      "name": "Sprint Epsilon",
+      "goal": "Scale and support the product",
+      "status": "Planning"
+    }
+  ]

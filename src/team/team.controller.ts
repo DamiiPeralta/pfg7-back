@@ -12,8 +12,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { TeamService } from './team.service';
-import { CreateTeamDto, UpdateTeamDto } from './team.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateTeamDto, JoinTeamDto, UpdateTeamDto } from './team.dto';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Teams')
 @ApiBearerAuth()
@@ -22,6 +22,8 @@ export class TeamController {
   constructor(private readonly teamsService: TeamService) {}
 
   @Get(':id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Gets a team by its ID',
     description:
@@ -34,7 +36,10 @@ export class TeamController {
       throw new NotFoundException(error.message);
     }
   }
+
   @Get()
+  //@Roles(Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Gets all teams',
     description:
@@ -45,7 +50,14 @@ export class TeamController {
   }
 
   @Post('join')
-  async joinTeam(@Body() joinTeamDto) {
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Joins a team',
+    description:
+      'Expects the user ID and the team code. Returns the joined Team object.',
+  })
+  async joinTeam(@Body() joinTeamDto: JoinTeamDto) {
     const { userid, code } = joinTeamDto;
 
     try {
@@ -64,6 +76,8 @@ export class TeamController {
   }
 
   @Post(':id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Creates a new team',
     description:
@@ -77,6 +91,8 @@ export class TeamController {
   }
 
   @Put(':id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Updates a team´s properties.',
     description:
@@ -94,6 +110,8 @@ export class TeamController {
   }
 
   @Delete(':id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Deletes a Team.',
     description:
@@ -107,7 +125,10 @@ export class TeamController {
       throw new NotFoundException(error.message);
     }
   }
+
   @Post(':teamId/users/:userId')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Adds a user to a team.',
     description:
@@ -121,6 +142,36 @@ export class TeamController {
       return await this.teamsService.addUserToTeam(userId, teamId);
     } catch (error) {
       throw new NotFoundException(error.message);
+    }
+  }
+
+  @Get(':id/leader')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Gets the teams a user is the leader of.',
+    description:
+      'Expects the UUID  the user through Params. Returns an array of Team objects.',
+  })
+  async getTeamsByLeaderId(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      return await this.teamsService.getTeamsByLeaderId(id);
+    } catch (error) {
+      throw new error('Error in getTeamsByLeaderId: ' + error.message);
+    }
+  }
+
+  @Get(':id/teams')
+  @ApiOperation({
+    summary: 'Get teams for a user',
+    description:
+      'Returns the teams where the user is a leader and the teams where the user is a collaborator.',
+  })
+  async getUserTeams(@Param('id', ParseUUIDPipe) userId: string) {
+    try{
+      return this.teamsService.getUserTeams(userId);
+    }catch(error){
+      throw new error('Error in getUserTeams: ' + error.message);
     }
   }
 }

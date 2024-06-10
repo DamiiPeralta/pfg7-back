@@ -6,10 +6,6 @@ export class CreateUserDto {
    The name must be a non-empty string of maximum 80 characters.
    @example "John Doe"
    */
-  @ApiProperty({
-    description: "The name of the user",
-    example: "John Doe",
-  })
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
@@ -48,6 +44,10 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto{
+  /**
+   The name must be a non-empty string of maximum 80 characters.
+   @example "John Doe"
+   */
   @IsOptional()
   @IsString()
   @MinLength(3)

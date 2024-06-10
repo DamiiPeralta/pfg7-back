@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Team } from "./team.entity";
-import { TeamRepository } from "./team.repository";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Team } from './team.entity';
+import { TeamRepository } from './team.repository';
 
 @Injectable()
 export class TeamService {
@@ -11,7 +11,7 @@ export class TeamService {
   }
 
   async getTeamById(id: string): Promise<Team> {
-      return await this.teamsRepository.findTeamById(id);
+    return await this.teamsRepository.findTeamById(id);
   }
 
   async createTeam(user_Id: string, teamDto: Partial<Team>): Promise<Team> {
@@ -35,5 +35,12 @@ export class TeamService {
   async joinTeam(userid: string, code: string) {
     return await this.teamsRepository.joinTeam(userid, code);
   }
-    
+
+  async getTeamsByLeaderId(leaderId: string) {
+    return await this.teamsRepository.getTeamsByLeaderId(leaderId);
+  }
+
+  async getUserTeams(userId: string) {
+    return await this.teamsRepository.getUserTeams(userId);
+  }
 }

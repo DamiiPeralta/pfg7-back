@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,7 +23,29 @@ export class TeamRepository {
   async getTeams(): Promise<Team[]> {
     return await this.teamRepository.find({
       relations: ['tasks', 'team_leader', 'team_users', 'sprints'],
-    });
+      select: {
+        team_id: true,
+        team_name: true,
+        description:true,
+        tasks: {
+            task_id: true,
+            name:true,
+            description:true
+        },
+        team_leader: {
+            user_id: true,
+            name: true,
+        },
+        team_users: {
+            user_id: true,
+            name: true,
+        },
+        sprints: {
+            sprint_id: true,
+            name: true,
+        }
+    }}
+  )
   }
 
   async findTeamById(id: string): Promise<Team> {
@@ -176,5 +199,48 @@ export class TeamRepository {
     await this.teamRepository.save(team);
 
     return team;
+  }
+
+  getTeamsByLeaderId(leaderId: string): Promise<Team[]> {
+    const teams = this.teamRepository.find({
+      where: { team_leader: { user_id: leaderId } },
+      //relations: ['tasks', 'team_leader', 'team_users', 'sprints'],
+    });
+    if (!teams) {
+      throw new NotFoundException(`Teams with leader ID ${leaderId} not found`);
+    }
+    return teams;
+  }
+
+  async getUserTeams(userId: string): Promise<any> {
+    try {
+      // Obtener los equipos donde el usuario es líder
+      const leaderTeams = await this.getTeamsByLeaderId(userId);
+
+      // Obtener el usuario con sus equipos (donde es colaborador)
+      const user = await this.userService.getUserById(userId);
+      const allTeams = user.teams;
+
+      // Filtrar los equipos donde el usuario es colaborador, excluyendo aquellos donde es líder
+      const collaboratorTeams = allTeams.filter(
+        (team: Team) =>
+          !leaderTeams.some(
+            (leaderTeam: Team) => leaderTeam.team_id === team.team_id,
+          ),
+      );
+
+      // Crear el JSON de respuesta
+      const response = {
+        leaderTeams,
+        collaboratorTeams,
+      };
+
+      return response;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to retrieve user teams');
+    }
   }
 }

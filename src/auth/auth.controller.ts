@@ -13,7 +13,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CredentialsDto } from 'src/credentials/credentials.dto';
 @Controller('auth')
 @ApiTags('Auth')
-export class AuthController { //Mover logica para repository.
+export class AuthController { 
   constructor(
     private readonly authService: AuthService,
   ) {}
