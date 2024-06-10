@@ -107,4 +107,15 @@ export class UserController {
       throw new InternalServerErrorException('Failed to delete user');
     }
   }
+  @Post('/auth0')
+  async createWithAuth0(@Body() user: any) {
+    try {
+      return await this.userService.createUserAuth0(user);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to create user');
+    }
+  }
 }

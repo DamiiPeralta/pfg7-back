@@ -98,4 +98,13 @@ export class UserService {
       throw new InternalServerErrorException('Failed to delete user');
     }
   }
+
+  async createUserAuth0(user: any): Promise<User> {
+    try {
+      return await this.usersRepository.createWithAuth0(user);
+    } catch (error) {
+      throw new BadRequestException('Failed to create user');
+    }
+  }
+  
 }
