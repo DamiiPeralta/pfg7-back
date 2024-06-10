@@ -1,15 +1,16 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import {config as dotenvConfig} from "dotenv"
-dotenvConfig({path:".env.development"})
+import { config as dotenvConfig } from 'dotenv';
+dotenvConfig({ path: '.env.development' });
 
 @Injectable()
 export class MailchimpService {
   private readonly apiKey: string;
   private readonly serverPrefix: string;
   private readonly audienceId: string;
+  private readonly logger = new Logger(MailchimpService.name);
 
   constructor(
     private readonly httpService: HttpService,
@@ -30,18 +31,27 @@ export class MailchimpService {
       },
     };
 
+    const auth = Buffer.from(`anystring:${this.apiKey}`).toString('base64');
+    
+    this.logger.log(`Sending request to Mailchimp: ${url}`);
+    this.logger.debug(`Request data: ${JSON.stringify(data)}`);
+
     return this.httpService.post(url, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.apiKey}`,
+        Authorization: `Basic ${auth}`,
       },
     }).pipe(
-      map(response => ({
-        message: 'Subscriber added successfully',
-        data: response.data,
-      })),
+      map(response => {
+        this.logger.log('Subscriber added successfully');
+        return {
+          message: 'Subscriber added successfully',
+          data: response.data,
+        };
+      }),
       catchError(error => {
-        throw new InternalServerErrorException('Error adding subscriber to Mailchimp', error.message);
+        this.logger.error('Error adding subscriber to Mailchimp', error.response?.data || error.message);
+        throw new InternalServerErrorException('Error adding subscriber to Mailchimp', error.response?.data || error.message);
       }),
     );
   }
