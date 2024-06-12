@@ -29,7 +29,7 @@ import { SeederModule } from './seeder/seeder.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule, SeederModule
+    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule, /* SeederModule */
     ],
   controllers: [],
   providers: [],
