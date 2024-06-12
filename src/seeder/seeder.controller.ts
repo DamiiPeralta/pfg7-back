@@ -27,6 +27,9 @@ export class SeederController {
     description:
       'Doesn´t expect any parameters. Returns a success message, an error message or an already seeded message.',
   })
+  seedTeams() {
+    return this.seederService.seedTeams();
+  }
 
   @Post('/sprints')
   //@Roles(Role.User, Role.Admin)
@@ -37,13 +40,9 @@ export class SeederController {
       'Doesn´t expect any parameters. Returns a success message, an error message or an already seeded message.',
   })
   seedSprint() {
-    console.log('papas aqui');
-    //return this.seederService.seedTasks();
+    return this.seederService.seedSprints();
   }
 
-  seedTeams() {
-    return this.seederService.seedTeams();
-  }
   @Post('/tasks')
   //@Roles(Role.User, Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)

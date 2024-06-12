@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
 import { SprintModule } from './sprint/sprint.module';
 import { MailchimpModule } from './mailchimp/mailchimp.module';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { MailchimpModule } from './mailchimp/mailchimp.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule
+    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule, SeederModule
     ],
   controllers: [],
   providers: [],
