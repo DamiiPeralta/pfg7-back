@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto, LoginUserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -6,16 +6,33 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
 import { CredentialsDto } from 'src/credentials/credentials.dto';
 import { Role } from 'src/roles/roles.enum';
+import { EmailService } from 'src/email/services/email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   async signUp(createUserDto: CreateUserDto) {
-    return await this.userService.createUser(createUserDto);
+    const user = await this.userService.createUser(createUserDto);
+    
+    try {
+      await this.emailService.sendEmail({
+        from: "easytask@ethereal.email",
+        subjectEmail: "¡Cuenta creada con éxito!",
+        sendTo: user.credentials.email,
+        template: "signup",
+        params: { name: user.name }
+      })
+      
+    } catch (error) {
+      throw new HttpException('Failed to send email, user created successfully', HttpStatus.BAD_GATEWAY);
+    }
+
+    return user;
   }
 
   async signIn(credentialsDto: CredentialsDto) {
