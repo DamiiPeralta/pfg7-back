@@ -37,7 +37,7 @@ export class UserService {
   async getUserByEmail(email: string): Promise<User> {
     try {
       const user = await this.usersRepository.getUserByEmail(email);
-/*       if (!foundUser) {
+      /*       if (!foundUser) {
         throw new NotFoundException(`User with email ${email} not found`);
       } */
       return user;
@@ -99,6 +99,17 @@ export class UserService {
     }
   }
 
+  async restoreUser(id: string): Promise<User> {
+    try {
+      return await this.usersRepository.restoreUser(id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to restore user');
+    }
+  }
+
   async createUserAuth0(user: any): Promise<User> {
     try {
       return await this.usersRepository.createWithAuth0(user);
@@ -106,5 +117,4 @@ export class UserService {
       throw new BadRequestException('Failed to create user');
     }
   }
-  
 }

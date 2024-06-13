@@ -7,8 +7,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = [
-  'http://localhost:3001', // Origen permitido
-  'https://easy-task-cyan.vercel.app/',
+  'http://localhost:3001',
+  'https://easy-task-cyan.vercel.app',
   'http://localhost:3000'
 ];
 
@@ -45,7 +45,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("api", app, document);
 
-  await app.listen(PORT); 
+  await app.listen(PORT);
 }
 
 bootstrap();

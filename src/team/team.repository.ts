@@ -144,6 +144,7 @@ export class TeamRepository {
     );
     return await this.teamRepository.save(team);
   }
+  
   async updateTeamLeader(teamId: string, newLeaderId: string): Promise<Team> {
     const team = await this.findTeamById(teamId);
     const newLeader = await this.userService.getUserById(newLeaderId);

@@ -174,5 +174,24 @@ export class UserRepository {
     }
     return userExist;
   }
+
+  async restoreUser(id: string): Promise<User> {
+    try {
+      const softDeletedUser = await this.userRepository.findOne({
+        withDeleted: true,
+        where: { user_id: id },
+      });
+      if (!softDeletedUser) {
+        throw new NotFoundException(`Soft-deleted user with ID ${id} not found`);
+      }
+      await this.userRepository.recover(softDeletedUser); 
+      return softDeletedUser;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to restore user');
+    }
+  }
   
 }
