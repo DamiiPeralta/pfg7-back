@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   'http://localhost:3001', // Origen permitido
   'https://easy-task-cyan.vercel.app/',
+  'http://localhost:3000'
 ];
 
 async function bootstrap() {
