@@ -12,6 +12,7 @@ import { CreateTaskDto } from 'src/task/task.dto';
 import { SprintService } from 'src/sprint/sprint.service';
 import { CreateSprintDto } from 'src/sprint/sprint.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { statusTask } from 'src/task/task.enum';
 
 @Injectable()
 export class SeederService {
@@ -149,7 +150,7 @@ export class SeederService {
         const task = new CreateTaskDto();
         task.name = element.name;
         task.description = element.description;
-        task.status = element.status;
+        task.status = statusTask.open;
         task.priority = element.priority;
         task.story_points = element.story_points;
         await this.taskService.createTask(task, team.team_id, sprint.sprint_id);

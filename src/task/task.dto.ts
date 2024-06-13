@@ -5,6 +5,7 @@ import {
   IsInt,
   IsNotEmpty,
 } from 'class-validator';
+import { statusTask } from './task.enum';
 
 export class CreateTaskDto {
   /**
@@ -30,7 +31,7 @@ export class CreateTaskDto {
    */
   @IsOptional()
   @IsString()
-  status: string;
+  status: statusTask;
 
   /**
    * The priority must be an integer and can be optional.
@@ -73,7 +74,7 @@ export class UpdateTaskDto{
    */
   @IsOptional()
   @IsString()
-  status: string;
+  status: statusTask;
 
   /**
    * The priority must be an integer and can be optional.

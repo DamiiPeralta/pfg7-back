@@ -73,6 +73,7 @@ export class TaskRepository {
       task.sprint = sprint;
       const createdAt = new Date();
       task.created = createdAt.toLocaleString();
+     
 
       const newTask = this.taskRepository.create(task);
 
