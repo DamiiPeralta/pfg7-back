@@ -12,7 +12,7 @@ import { CreateTaskDto } from 'src/task/task.dto';
 import { SprintService } from 'src/sprint/sprint.service';
 import { CreateSprintDto } from 'src/sprint/sprint.dto';
 import { AuthService } from 'src/auth/auth.service';
-import { statusTask } from 'src/task/task.enum';
+import { statusTask } from 'src/enum/task.enum';
 
 @Injectable()
 export class SeederService {

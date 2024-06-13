@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, DeleteDa
 import { User } from 'src/user/user.entity';
 import { Team } from 'src/team/team.entity';
 import { Sprint } from 'src/sprint/sprint.entity';
-import { statusTask } from './task.enum';
+import { statusTask } from '../enum/task.enum';
 
 @Entity({ name: 'tasks' })
 export class Task {

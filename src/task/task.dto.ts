@@ -5,7 +5,7 @@ import {
   IsInt,
   IsNotEmpty,
 } from 'class-validator';
-import { statusTask } from './task.enum';
+import { statusTask } from '../enum/task.enum';
 
 export class CreateTaskDto {
   /**
