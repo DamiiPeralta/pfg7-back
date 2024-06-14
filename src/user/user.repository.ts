@@ -40,6 +40,7 @@ export class UserRepository {
           },
           credentials: {
             email: true,
+            nickname: true,
           },
         },
       });
