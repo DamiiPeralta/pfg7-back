@@ -23,7 +23,25 @@ export class UserRepository {
   async getUsers(): Promise<Partial<User[]>> {
     try {
       const users = await this.userRepository.find({
-        relations: ['tasks', 'teams'],
+        relations: ['tasks', 'teams', 'credentials'],
+        select: {
+          name: true,
+          created: true,
+          last_login: true,
+          status: true,
+          profilePicture: true,
+          is_admin: true,
+          tasks: {
+            name: true,
+            description: true,
+          },
+          teams: {
+            team_name: true,
+          },
+          credentials: {
+            email: true,
+          },
+        },
       });
       //const usersWithoutPassword:any[] = [];
       //  users.forEach(user => {
@@ -145,12 +163,12 @@ export class UserRepository {
   }
   async createWithAuth0(user: any): Promise<User> {
     const { email, nickname, name, picture } = user;
-  
+
     const userExist = await this.userRepository.findOne({
       where: { credentials: { email: email } }, // Utiliza la relación credentials
       relations: ['credentials'],
     });
-  
+
     if (!userExist) {
       try {
         const userToCreate = new User();
@@ -164,12 +182,15 @@ export class UserRepository {
         userToCreate.credentials = credentials;
         userToCreate.name = name;
         userToCreate.profilePicture = picture;
-  
+
         const newUser = this.userRepository.create(userToCreate);
         return await this.userRepository.save(newUser);
       } catch (error) {
         console.error('Error while creating user:', error);
-        throw new InternalServerErrorException('Failed to create user', error.message);
+        throw new InternalServerErrorException(
+          'Failed to create user',
+          error.message,
+        );
       }
     }
     return userExist;
@@ -182,9 +203,11 @@ export class UserRepository {
         where: { user_id: id },
       });
       if (!softDeletedUser) {
-        throw new NotFoundException(`Soft-deleted user with ID ${id} not found`);
+        throw new NotFoundException(
+          `Soft-deleted user with ID ${id} not found`,
+        );
       }
-      await this.userRepository.recover(softDeletedUser); 
+      await this.userRepository.recover(softDeletedUser);
       return softDeletedUser;
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -193,5 +216,4 @@ export class UserRepository {
       throw new InternalServerErrorException('Failed to restore user');
     }
   }
-  
 }

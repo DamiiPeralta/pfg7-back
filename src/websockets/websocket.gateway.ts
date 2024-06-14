@@ -26,6 +26,7 @@ export class WebsocketGateway
   @SubscribeMessage('mensaje')
   handleMessage(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
     console.log(data);
-    this.server.emit('mensajeserver', data)
+    //this.server.emit('mensajeserver', data)
+    client.broadcast.emit('mensaje', data)//función para el admin
   }
 }
