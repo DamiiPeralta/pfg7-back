@@ -50,7 +50,7 @@ export const fillTemplate = (body: SendEmailDto) => {
 		<p class="text">Estimado/a ${params.name},</p>
 		<p class="text">Le damos la bienvenida a la plataforma de EasyTask™. Su cuenta ha sido creada con éxito y ya puede acceder con su dirección de correo electrónico y contraseña.</p>
 		<p class="text">Para acceder a su cuenta, haga clic en el siguiente enlace:</p>
-		<a href="https://pfg7-back.onrender.com/api#/Auth/AuthController_signIn" class="button">Iniciar sesión</a>
+		<a href="https://easy-task-cyan.vercel.app/login" class="button">Iniciar sesión</a>
 		<p class="text">Si tiene alguna pregunta o necesita ayuda, no dude en ponerse en contacto con nosotros.</p>
 		<p class="text">Atentamente,</p>
 		<p class="text">Equipo de EasyTask™</p>
