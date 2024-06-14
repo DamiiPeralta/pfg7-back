@@ -1,5 +1,5 @@
 import {
-    ConnectedSocket,
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -9,7 +9,13 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: 'http://localhost:3001', // URL del frontend
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+})
 export class WebsocketGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -23,10 +29,16 @@ export class WebsocketGateway
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
   }
-  @SubscribeMessage('mensaje')
-  handleMessage(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-    console.log(data);
-    //this.server.emit('mensajeserver', data)
-    client.broadcast.emit('mensaje', data)//función para el admin
+
+  @SubscribeMessage('message')
+  handleMessage(
+    @MessageBody() message: string,
+    @ConnectedSocket() client: Socket,
+  ): void {
+    // Aquí puedes manejar la lógica para guardar el mensaje en la base de datos, etc.
+    console.log(`Message received from client ${client.id}: ${message}`);
+
+    // Emitir el mensaje a todos los clientes conectados excepto al cliente que lo envió
+    client.broadcast.emit('message', message);
   }
 }
