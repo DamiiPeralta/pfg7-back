@@ -65,7 +65,6 @@ export class AuthService {
         isAdmin: dbUser.is_admin,
         roles: [dbUser.is_admin ? Role.Admin : Role.User]
       };
-      console.log(userPayload)
 
       const token = this.jwtService.sign(userPayload);
       const nowLogin = new Date();

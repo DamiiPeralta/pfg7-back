@@ -26,26 +26,26 @@ export class TeamRepository {
       select: {
         team_id: true,
         team_name: true,
-        description:true,
+        description: true,
         tasks: {
-            task_id: true,
-            name:true,
-            description:true
+          task_id: true,
+          name: true,
+          description: true,
         },
         team_leader: {
-            user_id: true,
-            name: true,
+          user_id: true,
+          name: true,
         },
         team_users: {
-            user_id: true,
-            name: true,
+          user_id: true,
+          name: true,
         },
         sprints: {
-            sprint_id: true,
-            name: true,
-        }
-    }}
-  )
+          sprint_id: true,
+          name: true,
+        },
+      },
+    });
   }
 
   async findTeamById(id: string): Promise<Team> {
@@ -144,7 +144,7 @@ export class TeamRepository {
     );
     return await this.teamRepository.save(team);
   }
-  
+
   async updateTeamLeader(teamId: string, newLeaderId: string): Promise<Team> {
     const team = await this.findTeamById(teamId);
     const newLeader = await this.userService.getUserById(newLeaderId);
@@ -243,5 +243,25 @@ export class TeamRepository {
       }
       throw new InternalServerErrorException('Failed to retrieve user teams');
     }
+  }
+
+  async getNameByTeam(id: string) {
+    const team = await this.teamRepository.findOne({
+      where: { team_id: id },
+      relations: ['team_users'],
+      select: {
+        team_id: true,
+        team_name: true,
+        team_users: {
+          user_id: true,
+          name: true,
+        },
+      },
+    });
+
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${id} not found`);
+    }
+    return team;
   }
 }

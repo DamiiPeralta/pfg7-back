@@ -43,4 +43,8 @@ export class TeamService {
   async getUserTeams(userId: string) {
     return await this.teamsRepository.getUserTeams(userId);
   }
+
+  async getUserByTeam(id: string) {
+    return await this.teamsRepository.getNameByTeam(id);
+  }
 }

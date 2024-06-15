@@ -21,6 +21,21 @@ import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 export class TeamController {
   constructor(private readonly teamsService: TeamService) {}
 
+  @Get('users/:id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Gets a team by its ID',
+    description:
+      'Expects the UUID of the team to get through Params. Returns the found Team object.',
+  })
+  async getUsersByTeam(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      return await this.teamsService.getUserByTeam(id);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
   @Get(':id')
   //@Roles(Role.User, Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)
