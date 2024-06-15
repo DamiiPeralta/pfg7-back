@@ -13,6 +13,7 @@ import { MailchimpModule } from './mailchimp/mailchimp.module';
 import { SeederModule } from './seeder/seeder.module';
 import { EmailModule } from './email/email.module';
 import { WebsocketsModule } from './websockets/websocket.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { WebsocketsModule } from './websockets/websocket.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule, EmailModule, WebsocketsModule, /* SeederModule */
+    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule, EmailModule, WebsocketsModule, MessageModule, /* SeederModule */
     ],
   controllers: [],
   providers: [],

@@ -8,6 +8,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { MessageService } from 'src/message/message.service';
 
 @WebSocketGateway({
   cors: {
@@ -21,6 +22,10 @@ export class WebsocketGateway
 {
   @WebSocketServer()
   server: Server;
+
+  constructor(
+    private readonly messageService: MessageService, 
+  ) {}
 
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
@@ -40,5 +45,19 @@ export class WebsocketGateway
 
     // Emitir el mensaje a todos los clientes conectados excepto al cliente que lo envió
     client.broadcast.emit('message', message);
+  }
+
+  @SubscribeMessage('sendMessage')
+  async handleSendMessage(
+    @MessageBody() { senderId, receiverId, content }: { senderId: string; receiverId: string; content: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const message = await this.messageService.sendMessage(senderId, receiverId, content);
+    this.server.to(receiverId.toString()).emit('message', message);
+  }
+
+  @SubscribeMessage('join')
+  handleJoin(@MessageBody() userId: string, @ConnectedSocket() client: Socket) {
+    client.join(userId.toString());
   }
 }

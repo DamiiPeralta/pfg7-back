@@ -117,4 +117,8 @@ export class UserService {
       throw new BadRequestException('Failed to create user');
     }
   }
+
+  async searchFriends(id: string): Promise<User[]>{
+    return await this.usersRepository.searchFriends(id);
+  }
 }

@@ -11,6 +11,7 @@ import {
   InternalServerErrorException,
   UseGuards,
   ParseUUIDPipe,
+  Request,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
@@ -41,6 +42,17 @@ export class UserController {
     } catch (error) {
       throw new InternalServerErrorException('Failed to retrieve users');
     }
+  }
+  @Get('friends/:id')
+   //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Get a friends at user by Id',
+    description:
+      'Expects an UUID through Params. Returns a single User object.',
+  })
+  async getFriends(@Param('id') id: string) {
+    return this.userService.searchFriends(id);
   }
 
   @Get(':id')
@@ -139,4 +151,6 @@ export class UserController {
       throw new InternalServerErrorException('Failed to update user');
     }
   }
+
+
 }

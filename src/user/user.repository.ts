@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './user.dto';
 import { Credentials } from 'src/credentials/credentials.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { Team } from 'src/team/team.entity';
 @Injectable()
 export class UserRepository {
   constructor(
@@ -18,6 +19,8 @@ export class UserRepository {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Credentials)
     private readonly credentialsRepository: Repository<Credentials>,
+    @InjectRepository(Team)
+    private readonly teamRepository: Repository<Team>
   ) {}
 
   async getUsers(): Promise<Partial<User[]>> {
@@ -25,6 +28,7 @@ export class UserRepository {
       const users = await this.userRepository.find({
         relations: ['tasks', 'teams', 'credentials'],
         select: {
+          user_id: true,
           name: true,
           created: true,
           last_login: true,
@@ -215,6 +219,42 @@ export class UserRepository {
         throw error;
       }
       throw new InternalServerErrorException('Failed to restore user');
+    }
+  }
+
+  async searchFriends(id: string): Promise<User[]> {
+    try {
+      const user = await this.userRepository.findOne({ where: { user_id: id }, relations: ['teams'] });
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+
+      const teams = await this.teamRepository.find({
+        where: [
+          { team_leader: user },
+          { team_users: user },
+        ],
+        relations: ['team_leader', 'team_users']
+      });
+
+      // Crear un array de usuarios únicos
+      const usersSet = new Set<User>();
+
+      // Agrega a los líderes y miembros de los equipos al conjunto
+      teams.forEach(team => {
+        usersSet.add(team.team_leader);
+        team.team_users.forEach(member => usersSet.add(member));
+      });
+
+      // Convertir el conjunto a un array
+      const usersArray = Array.from(usersSet);
+
+      return usersArray;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to search friends');
     }
   }
 }

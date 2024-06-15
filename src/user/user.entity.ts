@@ -13,6 +13,7 @@ import { Task } from 'src/task/task.entity';
 import { Team } from 'src/team/team.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Credentials } from 'src/credentials/credentials.entity';
+import { Message } from 'src/message/message.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -82,4 +83,10 @@ deletedAt?: Date;
 @OneToOne(() => Credentials, credentials => credentials.user, { cascade: true })
 @JoinColumn()
 credentials: Credentials;
+
+@OneToMany(() => Message, (message) => message.sender)
+sentMessages: Message[];
+
+@OneToMany(() => Message, (message) => message.receiver)
+receivedMessages: Message[];
 }

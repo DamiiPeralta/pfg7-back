@@ -8,9 +8,19 @@ import { UserService } from 'src/user/user.service';
 import { UserRepository } from 'src/user/user.repository';
 import { User } from 'src/user/user.entity';
 import { Credentials } from 'src/credentials/credentials.entity';
+import { Team } from 'src/team/team.entity'; // Asegúrate de importar Team si es necesario
+
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Credentials])],
+  imports: [
+    TypeOrmModule.forFeature([User, Credentials, Team]), // Incluye Team si es necesario
+  ],
   controllers: [FileUploadController],
-  providers: [FileUploadService, CloudinaryConfig , FileUploadRepository, UserService,UserRepository]
+  providers: [
+    FileUploadService,
+    CloudinaryConfig,
+    FileUploadRepository,
+    UserService,
+    UserRepository,
+  ],
 })
 export class FileUploadModule {}

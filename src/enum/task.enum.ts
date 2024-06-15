@@ -1,6 +1,6 @@
 export enum statusTask {
-    open = "Open",
-    inProgress = "In progress",
-    testing = "Testing",
-    done = "Done",
-}
+    open = 'open',
+    inProgress = 'inProgress',
+    testing = 'testing',
+    done = 'done',
+  }
