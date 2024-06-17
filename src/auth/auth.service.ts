@@ -1,4 +1,9 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -18,43 +23,45 @@ export class AuthService {
 
   async signUp(createUserDto: CreateUserDto) {
     const user = await this.userService.createUser(createUserDto);
-    
+
     try {
       await this.emailService.sendEmail({
-        from: "easytask@ethereal.email",
-        subjectEmail: "¡Cuenta creada con éxito!",
+        from: 'easytask@ethereal.email',
+        subjectEmail: '¡Cuenta creada con éxito!',
         sendTo: user.credentials.email,
-        template: "signup",
-        params: { name: user.name }
-      })
-      
+        template: 'signup',
+        params: { name: user.name },
+      });
     } catch (error) {
-      throw new HttpException('Failed to send email, user created successfully', HttpStatus.BAD_GATEWAY);
+      throw new HttpException(
+        'Failed to send email, user created successfully',
+        HttpStatus.BAD_GATEWAY,
+      );
     }
 
-    return user;
+    return { success: `User ${createUserDto.name} created in successfully` };
   }
 
   async signIn(credentialsDto: CredentialsDto) {
-    try{
+    try {
       let dbUser: User;
       const { nickname, email, password } = credentialsDto;
-      if(!email && !nickname){
+      if (!email && !nickname) {
         throw new BadRequestException('Usuario con ese email y nickname');
       }
-      if(email != null)
-        {
-          dbUser = await this.userService.getUserByEmail(email);
-        }
-      else if(nickname != null){
-         dbUser = await this.userService.getUserByNickname(nickname);
-        }
-      
-    
+      if (email != null) {
+        dbUser = await this.userService.getUserByEmail(email);
+      } else if (nickname != null) {
+        dbUser = await this.userService.getUserByNickname(nickname);
+      }
+
       if (!dbUser) {
         throw new BadRequestException('Invalid Credentials.');
       }
-      const isPasswordValid = await bcrypt.compare(password, dbUser.credentials.password);
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        dbUser.credentials.password,
+      );
       if (!isPasswordValid) {
         throw new BadRequestException('Invalid Credentials.');
       }
@@ -63,7 +70,7 @@ export class AuthService {
         id: dbUser.user_id,
         email: dbUser.credentials.email,
         isAdmin: dbUser.is_admin,
-        roles: [dbUser.is_admin ? Role.Admin : Role.User]
+        roles: [dbUser.is_admin ? Role.Admin : Role.User],
       };
 
       const token = this.jwtService.sign(userPayload);
@@ -75,8 +82,7 @@ export class AuthService {
 
       // Si las credenciales son válidas, retornamos un token de autenticación (simulado)
       return { success: 'User logged in successfully', token };
-    }catch(error)
-    {
+    } catch (error) {
       throw new BadRequestException('Invalid Credentials.');
     }
   }

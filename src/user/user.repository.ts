@@ -78,69 +78,42 @@ export class UserRepository {
 
   async getUserByEmail(email: string): Promise<User> {
     try {
-      const credential = await this.credentialsRepository.findOne({
-        where: { email: email },
-        relations: ['user'],
+      return await this.userRepository.findOne({
+        where: { credentials: { email: email } },
       });
-      if (!credential) {
-        throw new NotFoundException(`User with Email ${email} not found`);
-      }
-      const userCred = credential.user;
-      const user = await this.userRepository.findOne({
-        where: { user_id: userCred.user_id },
-        relations: ['credentials'],
-      });
-      return user;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to retrieve the user');
+      throw new NotFoundException(`User with email ${email} not found`);
     }
   }
   async getUserByNickname(nickname: string): Promise<User> {
     try {
-      const credential = await this.credentialsRepository.findOne({
-        where: { nickname: nickname },
-        relations: ['user'],
+      return await this.userRepository.findOne({
+        where: { credentials: { nickname: nickname } },
       });
-      if (!credential) {
-        throw new NotFoundException(`User with nickname ${nickname} not found`);
-      }
-      const userCred = credential.user;
-      const user = await this.userRepository.findOne({
-        where: { user_id: userCred.user_id },
-        relations: ['credentials'],
-      });
-      return user;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to retrieve the user');
+      throw new NotFoundException(`User with nickname ${nickname} not found`);
     }
   }
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { email, nickname, password, name } = createUserDto;
+    const emailExist = await this.getUserByEmail(createUserDto.email);
 
-    const emailExist = await this.getUserByEmail(email);
     if (emailExist) {
       throw new BadRequestException('That email is already registered');
     }
 
-    const nicknameExist = await this.getUserByNickname(nickname);
+    const nicknameExist = await this.getUserByNickname(createUserDto.nickname);
     if (nicknameExist) {
       throw new BadRequestException('That nickname is already registered');
     }
 
     const userToCreate: User = new User();
     const credentials: Credentials = new Credentials();
-    credentials.email = email;
-    credentials.password = await bcrypt.hash(password, 10);
-    credentials.nickname = nickname;
+    credentials.email = createUserDto.email;
+    credentials.password = await bcrypt.hash(createUserDto.password, 10);
+    credentials.nickname = createUserDto.nickname;
     userToCreate.created = new Date().toISOString();
     userToCreate.credentials = credentials;
-    userToCreate.name = name;
+    userToCreate.name = createUserDto.name;
 
     try {
       const newUser = this.userRepository.create(userToCreate);

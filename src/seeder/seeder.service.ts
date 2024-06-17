@@ -13,6 +13,7 @@ import { SprintService } from 'src/sprint/sprint.service';
 import { CreateSprintDto } from 'src/sprint/sprint.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { statusTask } from 'src/enum/task.enum';
+import { statusSprint } from 'src/enum/sprint.enum';
 
 @Injectable()
 export class SeederService {
@@ -112,7 +113,7 @@ export class SeederService {
         const sprint = new CreateSprintDto();
         sprint.name = element.name;
         sprint.goal = element.goal;
-        sprint.status = element.status;
+        sprint.status = statusSprint.inProgress;
         await this.sprintService.createSprint(sprint, team.team_id)
       }
       return 'Sprints seeded successfully';

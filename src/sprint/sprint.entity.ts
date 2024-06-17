@@ -8,7 +8,8 @@ import {
 } from 'typeorm';
 import { Task } from 'src/task/task.entity';
 import { Team } from 'src/team/team.entity';
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { statusSprint } from 'src/enum/sprint.enum';
 
 @Entity({ name: 'sprints' })
 export class Sprint {
@@ -30,9 +31,11 @@ export class Sprint {
    The goal must be an optional string of maximum 20 characters.
    @example "Improve the quality of our code"
    */
-  @Column({ type: 'text', nullable: true })
-  @IsOptional()
-  goal: string;
+   @Column({ type: 'text', nullable: true, default: '' })
+   @IsOptional()
+   @IsString()
+   @MaxLength(20)
+   goal: string;
 
   /**
    * Must be a valid date, in the format YYYY-MM-DD. It cannot be null.
@@ -51,9 +54,9 @@ export class Sprint {
    The status must be an optional string.
    @example "In progress"
    */
-  @Column({ type: 'varchar', length: 20, nullable: true })
+  @Column({ type: "enum", enum: statusSprint, nullable: true })
   @IsOptional()
-  status: string;
+  status: statusSprint;
 
   @ManyToOne(() => Team, (team) => team.sprints, { nullable: true })
   team: Team;
