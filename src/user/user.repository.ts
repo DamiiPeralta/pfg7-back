@@ -78,6 +78,28 @@ export class UserRepository {
 
   async getUserByEmail(email: string): Promise<User> {
     try {
+      const credential = await this.credentialsRepository.findOne({
+        where: { email: email },
+        relations: ['user'],
+      });
+      if (!credential) {
+        throw new NotFoundException(`User with Email ${email} not found`);
+      }
+      const userCred = credential.user;
+      const user = await this.userRepository.findOne({
+        where: { user_id: userCred.user_id },
+        relations: ['credentials'],
+      });
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to retrieve the user');
+    }
+  }
+  async getUserByEmailCreate(email: string): Promise<User> {
+    try {
       return await this.userRepository.findOne({
         where: { credentials: { email: email } },
       });
@@ -95,7 +117,7 @@ export class UserRepository {
     }
   }
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const emailExist = await this.getUserByEmail(createUserDto.email);
+    const emailExist = await this.getUserByEmailCreate(createUserDto.email);
 
     if (emailExist) {
       throw new BadRequestException('That email is already registered');
