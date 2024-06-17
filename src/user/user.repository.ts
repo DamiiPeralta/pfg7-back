@@ -264,7 +264,7 @@ export class UserRepository {
       newUser.status = true;
       await this.userRepository.save(newUser);
 
-      return { success: 'User logged in successfully', token };
+      return { token };
     } catch (error) {
       console.error('Error while creating user:', error);
       throw new InternalServerErrorException(
