@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Task } from 'src/task/task.entity';
 import { Team } from 'src/team/team.entity';
+import { IsOptional } from 'class-validator';
 
 @Entity({ name: 'sprints' })
 export class Sprint {
@@ -30,7 +31,9 @@ export class Sprint {
    @example "Improve the quality of our code"
    */
   @Column({ type: 'text', nullable: true })
+  @IsOptional()
   goal: string;
+
   /**
    * Must be a valid date, in the format YYYY-MM-DD. It cannot be null.
    */
@@ -41,6 +44,7 @@ export class Sprint {
    * Must be a string, in the format YYYY-MM-DD.
    */
   @Column({ type: 'varchar', nullable: true })
+  @IsOptional()
   deadline: string;
 
   /**
@@ -48,6 +52,7 @@ export class Sprint {
    @example "In progress"
    */
   @Column({ type: 'varchar', length: 20, nullable: true })
+  @IsOptional()
   status: string;
 
   @ManyToOne(() => Team, (team) => team.sprints, { nullable: true })
