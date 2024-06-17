@@ -81,7 +81,7 @@ export class AuthService {
       await this.userService.updateUser(dbUser.user_id, dbUser);
 
       // Si las credenciales son válidas, retornamos un token de autenticación (simulado)
-      return { success: 'User logged in successfully', token };
+      return { token };
     } catch (error) {
       throw new BadRequestException('Invalid Credentials.');
     }
