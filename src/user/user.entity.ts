@@ -14,6 +14,7 @@ import { Team } from 'src/team/team.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Credentials } from 'src/credentials/credentials.entity';
 import { Message } from 'src/message/message.entity';
+import { Donation } from 'src/donation/donation.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -89,4 +90,7 @@ sentMessages: Message[];
 
 @OneToMany(() => Message, (message) => message.receiver)
 receivedMessages: Message[];
+
+@OneToMany(() => Donation, (donation) => donation.user)
+donations: Donation[];
 }

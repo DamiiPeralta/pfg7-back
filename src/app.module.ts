@@ -14,6 +14,7 @@ import { SeederModule } from './seeder/seeder.module';
 import { EmailModule } from './email/email.module';
 import { WebsocketsModule } from './websockets/websocket.module';
 import { MessageModule } from './message/message.module';
+import { DonationModule } from './donation/donation.module';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { MessageModule } from './message/message.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     }),
-    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule, EmailModule, WebsocketsModule, MessageModule, /* SeederModule */
+    AuthModule, UserModule, TaskModule, TeamModule, FileUploadModule, SprintModule,MailchimpModule, EmailModule, WebsocketsModule, MessageModule, DonationModule, /* SeederModule */
     ],
   controllers: [],
   providers: [],
