@@ -141,6 +141,26 @@ export class TeamController {
     }
   }
 
+  @Put(':teamId/:userId')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Remove user to team.',
+    description:
+      'Expects the UUID of the user and team to remove through Params',
+  })
+  async removeUserFromTeam(
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Param('teamId', ParseUUIDPipe) teamId: string,
+  ) {
+    try {
+      await this.teamsService.removeUserToTeam(userId, teamId);
+      return { message: 'Remove user to team successfully' };
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
   @Post(':teamId/users/:userId')
   //@Roles(Role.User, Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)
@@ -183,9 +203,9 @@ export class TeamController {
       'Returns the teams where the user is a leader and the teams where the user is a collaborator.',
   })
   async getUserTeams(@Param('id', ParseUUIDPipe) userId: string) {
-    try{
+    try {
       return this.teamsService.getUserTeams(userId);
-    }catch(error){
+    } catch (error) {
       throw new error('Error in getUserTeams: ' + error.message);
     }
   }

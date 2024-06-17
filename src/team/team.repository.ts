@@ -27,6 +27,7 @@ export class TeamRepository {
         team_id: true,
         team_name: true,
         description: true,
+        invitation_code: true,
         tasks: {
           task_id: true,
           name: true,

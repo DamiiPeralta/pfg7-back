@@ -47,4 +47,8 @@ export class TeamService {
   async getUserByTeam(id: string) {
     return await this.teamsRepository.getNameByTeam(id);
   }
+
+  async removeUserToTeam(userId: string, teamId: string): Promise<Team> {
+    return await this.teamsRepository.removeUserFromTeam(userId, teamId);
+  }
 }
