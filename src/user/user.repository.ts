@@ -167,23 +167,48 @@ export class UserRepository {
     }
   }
   async createWithAuth0(user: any): Promise<User> {
-    const { email, nickname, name, picture } = user;
+    const { email, name, picture } = user;
 
     const userExist = await this.userRepository.findOne({
-      where: { credentials: { email: email } }, // Utiliza la relación credentials
+      where: { credentials: { email: email } }, 
       relations: ['credentials'],
     });
 
-    if (!userExist) {
+    if (userExist) {
+      try {
+        userExist.name = name;
+        userExist.profilePicture = picture;
+        return await this.userRepository.save(userExist);
+      } catch (error) {
+        console.error('Error while updating user:', error);
+        throw new InternalServerErrorException(
+          'Failed to update user',
+          error.message,
+        );
+      }
+    } else {
       try {
         const userToCreate = new User();
         const credentials = new Credentials();
         credentials.email = email;
+
+        let nickname = name.split(' ').join('');
+        let isNicknameUnique = false;
+        while (!isNicknameUnique) {
+          const existingUser = await this.credentialsRepository.findOne({
+            where: { nickname: nickname },
+          });
+          if (existingUser) {
+            nickname = `${nickname}${Math.floor(Math.random() * 10000)}`;
+          } else {
+            isNicknameUnique = true;
+          }
+        }
         credentials.nickname = nickname;
         const password = uuidv4();
         const hashedPassword = await bcrypt.hash(password, 10);
         credentials.password = hashedPassword;
-        userToCreate.created = new Date().toDateString();
+        userToCreate.created = new Date().toISOString();
         userToCreate.credentials = credentials;
         userToCreate.name = name;
         userToCreate.profilePicture = picture;
@@ -198,7 +223,6 @@ export class UserRepository {
         );
       }
     }
-    return userExist;
   }
 
   async restoreUser(id: string): Promise<User> {
