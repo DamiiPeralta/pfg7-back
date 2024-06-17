@@ -27,7 +27,7 @@ export class CreateTaskDto {
 
   /**
    * The status must be a string and can be optional.
-   * @example "In Progress"
+   * @example "inProgress"
    */
   @IsOptional()
   @IsString()
@@ -50,7 +50,7 @@ export class CreateTaskDto {
   story_points: number;
 }
 
-export class UpdateTaskDto{
+export class UpdateTaskDto {
   /**
    * The name must be a non-empty string of maximum 50 characters.
    * @example "Example Task"

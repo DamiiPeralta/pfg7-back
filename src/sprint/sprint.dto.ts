@@ -49,7 +49,7 @@ export class UpdateSprintDto {
 
   /**
    The status must be an optional string.
-   @example "In progress"
+   @example "inProgress"
    */
   @IsOptional()
   @IsString()
