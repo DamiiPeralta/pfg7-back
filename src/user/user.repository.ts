@@ -209,7 +209,7 @@ export class UserRepository {
       existingUser.status = true;
       await this.userRepository.save(existingUser);
 
-      return { success: 'User logged in successfully', token };
+      return  token ;
     } catch (error) {
       console.error('Error while updating user:', error);
       throw new InternalServerErrorException(
