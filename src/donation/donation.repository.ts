@@ -24,7 +24,7 @@ export class DonationRepository {
     try {
       console.log('before')
       const donations = await this.donationRepository.find({
-        relations: ['user'],
+        relations: ['user', 'user.credentials'],
         select: {
           donation_id: true,
           amount: true,

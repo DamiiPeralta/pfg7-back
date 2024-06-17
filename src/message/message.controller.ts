@@ -1,6 +1,8 @@
 import { Controller, Post, Get, Put, Body, Param, ParseUUIDPipe } from '@nestjs/common';
 import { MessageService } from './message.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Messages')
 @Controller('messages')
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
