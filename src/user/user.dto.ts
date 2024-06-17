@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
 import { IsNotEmpty, IsEmail, IsString, IsBoolean, IsOptional, MaxLength, MinLength, Matches } from 'class-validator';
 
 export class CreateUserDto {
@@ -101,4 +101,10 @@ export class LoginUserDto {
   @MaxLength(15)
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/)
   password: string;
+}
+
+export class Auth0Dto extends PickType(CreateUserDto, ['email', 'name']) {
+  @IsOptional()
+  @IsString()
+  picture: string;
 }

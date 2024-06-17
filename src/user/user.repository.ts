@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from './user.dto';
+import { Auth0Dto, CreateUserDto } from './user.dto';
 import { Credentials } from 'src/credentials/credentials.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { Team } from 'src/team/team.entity';
@@ -147,7 +147,7 @@ export class UserRepository {
       throw new InternalServerErrorException('Failed to delete user');
     }
   }
-  async createWithAuth0(user: any) {
+  async createWithAuth0(user: Auth0Dto) {
     const { email, name, picture } = user;
 
     const existingUser = await this.userRepository.findOne({
