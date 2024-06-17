@@ -110,7 +110,7 @@ export class UserService {
     }
   }
 
-  async createUserAuth0(user: any): Promise<User> {
+  async createUserAuth0(user: any) {
     try {
       return await this.usersRepository.createWithAuth0(user);
     } catch (error) {
