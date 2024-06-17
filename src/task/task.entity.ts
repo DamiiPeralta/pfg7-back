@@ -67,7 +67,7 @@ export class Task {
    * Each task can have multiple collaborators.
    */
   @ManyToMany(() => User, { cascade: true })
-  collaborators: User[];
+  collaborator: User;
 
   /**
    * One-to-many relationship with the User entity.

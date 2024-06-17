@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 import { statusTask } from '../enum/task.enum';
+import { User } from 'src/user/user.entity';
 
 export class CreateTaskDto {
   /**
@@ -48,6 +49,13 @@ export class CreateTaskDto {
   @IsOptional()
   @IsInt()
   story_points: number;
+
+  /**
+   * The user owner can be optional.
+   * @example id user owner
+   */
+  @IsOptional()
+  user_owner: User;
 }
 
 export class UpdateTaskDto {
@@ -91,4 +99,17 @@ export class UpdateTaskDto {
   @IsOptional()
   @IsInt()
   story_points: number;
+
+  /**
+   * The user owner can be optional.
+   * @example id user owner
+   */
+  @IsOptional()
+  user_owner: User;
+  /**
+   * The collaborators can be optional.
+   * @example id user collaborator
+   */
+  @IsOptional()
+  collaborator: User;
 }
