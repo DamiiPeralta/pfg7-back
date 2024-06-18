@@ -83,7 +83,7 @@ export class AuthController {
     try {
       return await this.authService.changePassword(changePasswordDto)
     } catch (error) {
-      
+      throw new BadRequestException(error.message)
     }
    }
 }
