@@ -14,6 +14,7 @@ import { User } from 'src/user/user.entity';
 import {
   ChangePasswordDto,
   CredentialsDto,
+  ForgotPasswordDto
 } from 'src/credentials/credentials.dto';
 import { Role } from 'src/roles/roles.enum';
 import { EmailService } from 'src/email/services/email/email.service';
@@ -31,7 +32,6 @@ export class AuthService {
 
     try {
       await this.emailService.sendEmail({
-        from: 'easytask@ethereal.email',
         subjectEmail: '¡Cuenta creada con éxito!',
         sendTo: user.credentials.email,
         template: 'signup',
@@ -111,7 +111,16 @@ export class AuthService {
       await this.userService.updateUser(user.user_id, user);
       return 'Password changed successfully';
     } catch (error) {
-      throw new BadGatewayException('Failed to change password')
+      throw new BadGatewayException('Failed to change password');
+    }
+  }
+
+  async forgotPassword(body: ForgotPasswordDto){
+    try {
+      return ('No implementado todavia')
+    } catch (error) {
+      return ('No implementado todavia')
+      
     }
   }
 }

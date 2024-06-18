@@ -11,7 +11,8 @@ export class EmailService {
 
     async sendEmail(body: SendEmailDto){
         try {
-            const { from, subjectEmail, sendTo } = body
+            const { subjectEmail, sendTo } = body
+            const from = "easytasktm@gmail.com"
             const html = this.getTemplate(body)
             await this.emailProvider.sendEmail(from, subjectEmail, sendTo, html)
             return true

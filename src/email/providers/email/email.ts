@@ -33,7 +33,7 @@ export class Email {
       try {
 
           const info = await this.transporter.sendMail({
-          from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>', // sender address
+          from: '"Easy Task Team" <easytasktm@gmail.com>', // sender address
           to: "bar@example.com, baz@example.com", // list of receivers
           subject: 'Email de prueba', // Subject line
           html: '<b>Test Email</b>', // html body
