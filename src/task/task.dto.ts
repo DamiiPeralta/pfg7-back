@@ -5,6 +5,8 @@ import {
   IsInt,
   IsNotEmpty,
 } from 'class-validator';
+import { statusTask } from '../enum/task.enum';
+import { User } from 'src/user/user.entity';
 
 export class CreateTaskDto {
   /**
@@ -26,11 +28,11 @@ export class CreateTaskDto {
 
   /**
    * The status must be a string and can be optional.
-   * @example "In Progress"
+   * @example "inProgress"
    */
   @IsOptional()
   @IsString()
-  status: string;
+  status: statusTask;
 
   /**
    * The priority must be an integer and can be optional.
@@ -47,9 +49,16 @@ export class CreateTaskDto {
   @IsOptional()
   @IsInt()
   story_points: number;
+
+  /**
+   * The user owner can be optional.
+   * @example id user owner
+   */
+  @IsOptional()
+  user_owner: User;
 }
 
-export class UpdateTaskDto{
+export class UpdateTaskDto {
   /**
    * The name must be a non-empty string of maximum 50 characters.
    * @example "Example Task"
@@ -73,7 +82,7 @@ export class UpdateTaskDto{
    */
   @IsOptional()
   @IsString()
-  status: string;
+  status: statusTask;
 
   /**
    * The priority must be an integer and can be optional.
@@ -90,4 +99,17 @@ export class UpdateTaskDto{
   @IsOptional()
   @IsInt()
   story_points: number;
+
+  /**
+   * The user owner can be optional.
+   * @example id user owner
+   */
+  @IsOptional()
+  user_owner: User;
+  /**
+   * The collaborators can be optional.
+   * @example id user collaborator
+   */
+  @IsOptional()
+  collaborator: User;
 }

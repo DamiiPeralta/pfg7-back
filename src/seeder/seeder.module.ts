@@ -14,10 +14,12 @@ import { Task } from 'src/task/task.entity';
 import { Sprint } from 'src/sprint/sprint.entity';
 import { SprintRepository } from 'src/sprint/sprint.repository';
 import { SprintService } from 'src/sprint/sprint.service';
+import { Credentials } from 'src/credentials/credentials.entity';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Team, Task, Sprint, Credential])],
-    providers: [SeederService, UserRepository, UserService, TeamRepository,TeamService, TaskRepository, TaskService, SprintRepository, SprintService],
+    imports: [TypeOrmModule.forFeature([User, Team, Task, Sprint, Credentials])],
+    providers: [SeederService, UserRepository, UserService, AuthService, TeamRepository,TeamService, TaskRepository, TaskService, SprintRepository, SprintService],
     controllers: [SeederController],
 })
 export class SeederModule implements OnModuleInit{
@@ -28,7 +30,7 @@ export class SeederModule implements OnModuleInit{
     ) {}
 
     async onModuleInit() {
-      try {
+      /* try {
         const dbTask = await this.taskService.getAllTask();
         if(dbTask.length > 0) return console.log('Preload data already seeded');
         try {
@@ -55,6 +57,6 @@ export class SeederModule implements OnModuleInit{
         
       } catch (error) {
         throw new ConflictException('Failed to seed preload data');
-      }
+      } */
     }  
 }

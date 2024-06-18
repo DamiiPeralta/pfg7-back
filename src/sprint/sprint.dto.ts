@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
+import { statusSprint } from 'src/enum/sprint.enum';
 
 export class CreateSprintDto {
   /**
@@ -25,7 +26,7 @@ export class CreateSprintDto {
    */
   @IsOptional()
   @IsString()
-  status: string;
+  status: statusSprint;
 }
 export class UpdateSprintDto {
   /**
@@ -48,9 +49,9 @@ export class UpdateSprintDto {
 
   /**
    The status must be an optional string.
-   @example "In progress"
+   @example "inProgress"
    */
   @IsOptional()
   @IsString()
-  status: string;
+  status: statusSprint;
 }

@@ -73,7 +73,6 @@ export class TaskRepository {
       task.sprint = sprint;
       const createdAt = new Date();
       task.created = createdAt.toLocaleString();
-
       const newTask = this.taskRepository.create(task);
 
       await this.taskRepository.save(newTask);
@@ -110,4 +109,30 @@ export class TaskRepository {
     }
     await this.taskRepository.softRemove(task);
   }
-}
+
+  async assignTask(id: string, idUser: string): Promise<void> {
+    try {
+      const task = await this.findById(id);
+  console.log(task);
+  
+      const userTeam = await this.teamRepository.getUsersByTeam(task.team.team_id);
+  console.log(userTeam);
+  
+      const user = userTeam.find(user => user.user_id === idUser);
+  console.log(user);
+  
+      if (user) {
+        task.user_owner = user;
+        await this.taskRepository.save(task);
+        return Promise.resolve();
+      } else {
+        throw new Error(`User with id ${idUser} is not part of the team for this task.`);
+      }
+    } catch (error) {
+      throw new Error(`Failed to assign user as owner: ${error.message}`);
+    }
+  }
+  
+  
+  }
+  

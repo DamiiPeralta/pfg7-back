@@ -96,6 +96,26 @@ export class TaskController {
     }
   }
 
+  @Put(':taskId/assign/:userId')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Assign user owner.',
+    description:
+      'Assigns a user as the owner of a task. Expects taskId and userId as parameters.',
+  })
+  async assignTask(
+    @Param('taskId') taskId: string,
+    @Param('userId') userId: string,
+  ): Promise<{ message: string }> {
+    try {
+      await this.taskService.assignTask(taskId, userId);
+      return { message: 'User assigned successfully' };
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
   @Put(':id')
   //@Roles(Role.User, Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)

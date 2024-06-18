@@ -1,43 +1,72 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateUserDto, LoginUserDto } from '../user/user.dto';
+import {
+  BadGatewayException,
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { CreateUserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
-import { CredentialsDto } from 'src/credentials/credentials.dto';
+import {
+  ChangePasswordDto,
+  CredentialsDto,
+  ForgotPasswordDto
+} from 'src/credentials/credentials.dto';
 import { Role } from 'src/roles/roles.enum';
+import { EmailService } from 'src/email/services/email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   async signUp(createUserDto: CreateUserDto) {
-    return await this.userService.createUser(createUserDto);
+    const user = await this.userService.createUser(createUserDto);
+
+    try {
+      await this.emailService.sendEmail({
+        subjectEmail: '¡Cuenta creada con éxito!',
+        sendTo: user.credentials.email,
+        template: 'signup',
+        params: { name: user.name },
+      });
+    } catch (error) {
+      throw new HttpException(
+        'Failed to send email, user created successfully',
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
+
+    return { success: `User ${createUserDto.name} created in successfully` };
   }
 
   async signIn(credentialsDto: CredentialsDto) {
-    try{
+    try {
       let dbUser: User;
       const { nickname, email, password } = credentialsDto;
-      if(!email && !nickname){
+      if (!email && !nickname) {
         throw new BadRequestException('Usuario con ese email y nickname');
       }
-      if(email != null)
-        {
-          dbUser = await this.userService.getUserByEmail(email);
-        }
-      else if(nickname != null){
-         dbUser = await this.userService.getUserByNickname(nickname);
-        }
-      
-    
+      if (email != null) {
+        dbUser = await this.userService.getUserByEmail(email);
+      } else if (nickname != null) {
+        dbUser = await this.userService.getUserByNickname(nickname);
+      }
+
       if (!dbUser) {
         throw new BadRequestException('Invalid Credentials.');
       }
-      const isPasswordValid = await bcrypt.compare(password, dbUser.credentials.password);
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        dbUser.credentials.password,
+      );
       if (!isPasswordValid) {
         throw new BadRequestException('Invalid Credentials.');
       }
@@ -46,9 +75,8 @@ export class AuthService {
         id: dbUser.user_id,
         email: dbUser.credentials.email,
         isAdmin: dbUser.is_admin,
-        roles: [dbUser.is_admin ? Role.Admin : Role.User]
+        roles: [dbUser.is_admin ? Role.Admin : Role.User],
       };
-      console.log(userPayload)
 
       const token = this.jwtService.sign(userPayload);
       const nowLogin = new Date();
@@ -58,10 +86,41 @@ export class AuthService {
       await this.userService.updateUser(dbUser.user_id, dbUser);
 
       // Si las credenciales son válidas, retornamos un token de autenticación (simulado)
-      return { success: 'User logged in successfully', token };
-    }catch(error)
-    {
+      return token;
+    } catch (error) {
       throw new BadRequestException('Invalid Credentials.');
+    }
+  }
+
+  async changePassword(body: ChangePasswordDto) {
+    try {
+      const { email, password, newPassword } = body;
+      const user: User = await this.userService.getUserByEmail(email);
+
+      if (!user) throw new NotFoundException('Invalid Credentials');
+
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        user.credentials.password,
+      );
+      if (!isPasswordValid)
+        throw new BadRequestException('Invalid Credentials');
+
+      user.credentials.password = await bcrypt.hash(newPassword, 10);
+      console.log(user);
+      await this.userService.updateUser(user.user_id, user);
+      return 'Password changed successfully';
+    } catch (error) {
+      throw new BadGatewayException('Failed to change password');
+    }
+  }
+
+  async forgotPassword(body: ForgotPasswordDto){
+    try {
+      return ('No implementado todavia')
+    } catch (error) {
+      return ('No implementado todavia')
+      
     }
   }
 }

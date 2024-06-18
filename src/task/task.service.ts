@@ -91,4 +91,15 @@ export class TaskService {
       throw new InternalServerErrorException('Failed to delete task');
     }
   }
+
+  async assignTask(id: string, idUser: string): Promise<void> {
+    try {
+      await this.taskRepository.assignTask(id, idUser);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to assing task');
+    }
+  }
 }

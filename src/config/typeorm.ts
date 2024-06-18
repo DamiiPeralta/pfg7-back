@@ -18,6 +18,6 @@ const config = {
     entities: ["dist/**/*.entity{.ts,.js}"],
     migrations:["dist/migrations/*{.js,.ts"],
 }
-export default registerAs("typeorm", () => config)
+export default registerAs("typeorm", () => config) 
 
 export const connectionSource = new DataSource(config as DataSourceOptions)

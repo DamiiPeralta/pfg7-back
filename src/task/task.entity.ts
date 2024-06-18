@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, DeleteDa
 import { User } from 'src/user/user.entity';
 import { Team } from 'src/team/team.entity';
 import { Sprint } from 'src/sprint/sprint.entity';
+import { statusTask } from '../enum/task.enum';
 
 @Entity({ name: 'tasks' })
 export class Task {
@@ -44,8 +45,8 @@ export class Task {
    * The status must be a string and can be null.
    * @example "In Progress"
    */
-  @Column({ type: "varchar", nullable: true })
-  status: string;
+  @Column({ type: "enum",enum: statusTask, nullable: true })
+  status: statusTask;
 
   /**
    * The priority must be an integer and can be null.
@@ -66,7 +67,7 @@ export class Task {
    * Each task can have multiple collaborators.
    */
   @ManyToMany(() => User, { cascade: true })
-  collaborators: User[];
+  collaborator: User;
 
   /**
    * One-to-many relationship with the User entity.

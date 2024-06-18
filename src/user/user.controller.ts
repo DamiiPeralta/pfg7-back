@@ -10,6 +10,8 @@ import {
   BadRequestException,
   InternalServerErrorException,
   UseGuards,
+  ParseUUIDPipe,
+  Request,
 } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
@@ -41,6 +43,17 @@ export class UserController {
       throw new InternalServerErrorException('Failed to retrieve users');
     }
   }
+  @Get('friends/:id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Get a friends at user by Id',
+    description:
+      'Expects an UUID through Params. Returns a single User object.',
+  })
+  async getFriends(@Param('id') id: string) {
+    return this.userService.searchFriends(id);
+  }
 
   @Get(':id')
   //@Roles(Role.User, Role.Admin)
@@ -65,6 +78,57 @@ export class UserController {
     }
   }
 
+  @Delete(':id')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Deletes a user.',
+    description:
+      'Expects the UUID of the user to delete through Params. Returns a succes or failure message.',
+  })
+  async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      const result = await this.userService.deleteUser(id);
+      return { message: 'User deleted successfully' };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to delete user');
+    }
+  }
+  @Put(':id/restore')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Restore a user.',
+    description:
+      'Expects the UUID of the user to restore through Params. Returns a succes or failure message.',
+  })
+  async restoreUser(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      await this.userService.restoreUser(id);
+      return { message: 'User restore successfully' };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to restore user');
+    }
+  }
+
+  @Post('/auth0')
+  async createWithAuth0(@Body() user: any) {
+    try {
+      return await this.userService.createUserAuth0(user);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to create user');
+    }
+  }
+
   @Put(':id')
   //@Roles(Role.User, Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)
@@ -85,37 +149,6 @@ export class UserController {
         throw error;
       }
       throw new InternalServerErrorException('Failed to update user');
-    }
-  }
-
-  @Delete(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
-  @ApiOperation({
-    summary: 'Deletes a user.',
-    description:
-      'Expects the UUID of the user to delete through Params. Returns a succes or failure message.',
-  })
-  async deleteUser(@Param('id') id: string) {
-    try {
-      const result = await this.userService.deleteUser(id);
-      return { message: 'User deleted successfully' };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to delete user');
-    }
-  }
-  @Post('/auth0')
-  async createWithAuth0(@Body() user: any) {
-    try {
-      return await this.userService.createUserAuth0(user);
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to create user');
     }
   }
 }

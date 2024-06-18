@@ -1,25 +1,30 @@
 [
     {
+      "team_name": "Team A",
       "name": "Sprint Alpha",
       "goal": "Deliver initial product features",
-      "status": "Planning"
+      "status": "Finished"
     },
     {
+      "team_name": "Team A",
       "name": "Sprint Beta",
       "goal": "Refine and test product features",
       "status": "In Progress"
     },
     {
+      "team_name":"Team B",
       "name": "Sprint Gamma",
       "goal": "Optimize and deploy the product",
       "status": "Planning"
     },
     {
+      "team_name":"Team B",
       "name": "Sprint Delta",
       "goal": "Enhance and iterate on product features",
       "status": "In Progress"
     },
     {
+      "team_name":"Team C",
       "name": "Sprint Epsilon",
       "goal": "Scale and support the product",
       "status": "Planning"
