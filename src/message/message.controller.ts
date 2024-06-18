@@ -36,8 +36,7 @@ export class MessageController {
   //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get messages',
-    description:
-      "Waits for the user's UUID to get their messages.",
+    description: "Waits for the user's UUID to get their messages.",
   })
   async getMessages(@Param('userId', ParseUUIDPipe) userId: string) {
     return this.messageService.getMessages(userId);
@@ -48,8 +47,7 @@ export class MessageController {
   //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Mark as read',
-    description:
-      'Mark a message as read',
+    description: 'Mark a message as read',
   })
   async markAsRead(@Param('messageId', ParseUUIDPipe) messageId: string) {
     return this.messageService.markAsRead(messageId);

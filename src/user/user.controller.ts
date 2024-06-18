@@ -43,6 +43,22 @@ export class UserController {
       throw new InternalServerErrorException('Failed to retrieve users');
     }
   }
+
+  @Get('deleted')
+  //@Roles(Role.User, Role.Admin)
+  //@UseGuards(AuthGuard, RolesGuard)
+  @ApiOperation({
+    summary: 'Get all deleted users',
+    description: 'Returns an array of User objects that have been soft deleted.',
+  })
+  async getDeletedUsers(): Promise<User[]> {
+    try {
+      return await this.userService.getDeletedUsers();
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to get deleted users');
+    }
+  }
+
   @Get('friends/:id')
   //@Roles(Role.User, Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)

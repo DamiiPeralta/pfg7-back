@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Auth0Dto, CreateUserDto } from './user.dto';
 import { Credentials } from 'src/credentials/credentials.entity';
@@ -169,6 +169,22 @@ export class UserRepository {
       throw new InternalServerErrorException('Failed to delete user');
     }
   }
+
+  async getDeletedUsers(): Promise<User[]> {
+    try {
+      const deletedUsers = await this.userRepository.find({
+        withDeleted: true,  // Incluir usuarios eliminados
+        where: {
+          deletedAt: Not(IsNull()),
+        },
+      });
+      return deletedUsers;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to get deleted users');
+    }
+  }
+
+
   async createWithAuth0(user: Auth0Dto) {
     const { email, name, picture } = user;
 

@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { loggerGlobal } from './midldleware/logger.middelware';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,14 +15,9 @@ const allowedOrigins = [
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Middleware global para logs
-  app.use(loggerGlobal);
-
-  // Middleware de validación global
   app.useGlobalPipes(new ValidationPipe());
 
-  // Configuración de CORS
-  app.enableCors({
+  const corsOptions: CorsOptions = {
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -32,9 +27,9 @@ async function bootstrap() {
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-  });
+  };
+  app.enableCors(corsOptions);
 
-  // Configuración de Swagger
   const swaggerConfig = new DocumentBuilder()
     .setTitle("EasyTask - Back")
     .setDescription("Trabajo realizado por el back-team del grupo 07 - WEBFT 48")

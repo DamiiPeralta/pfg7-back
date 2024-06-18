@@ -118,4 +118,8 @@ export class UserService {
   async searchFriends(id: string): Promise<User[]>{
     return await this.usersRepository.searchFriends(id);
   }
+
+  async getDeletedUsers(): Promise<User[]>{
+    return await this.usersRepository.getDeletedUsers();
+  }
 }

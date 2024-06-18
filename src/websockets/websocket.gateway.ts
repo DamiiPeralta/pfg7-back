@@ -1,4 +1,3 @@
-// websocket.gateway.ts
 import {
   ConnectedSocket,
   MessageBody,
@@ -13,12 +12,14 @@ import { MessageService } from 'src/message/message.service';
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3001', // URL del frontend
+    origin: 'http://localhost:3001',
     methods: ['GET', 'POST'],
     credentials: true,
   },
 })
-export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class WebsocketGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server: Server;
 
@@ -30,16 +31,6 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
-  }
-
-  @SubscribeMessage('message')
-  handleMessage(
-    @MessageBody() message: string,
-    @ConnectedSocket() client: Socket,
-  ): void {
-    console.log(`Message received from client ${client.id}: ${message}`);
-
-    client.broadcast.emit('message', message);
   }
 
   @SubscribeMessage('sendMessage')
@@ -57,11 +48,18 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
       receiverId,
       content,
     );
-    this.server.to(receiverId.toString()).emit('message', message);
+
+    // Emitir el mensaje solo a la sala del receptor (receiverId)
+    client.to(receiverId).emit('message', message);
+
+    console.log('Message sent:', message);
   }
 
   @SubscribeMessage('join')
   handleJoin(@MessageBody() userId: string, @ConnectedSocket() client: Socket) {
+    // Unir al cliente a la sala correspondiente al userId
     client.join(userId.toString());
+    console.log(`Client ${client.id} joined room ${userId}`);
   }
+  
 }

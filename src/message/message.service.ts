@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Message } from './message.entity';
 import { User } from 'src/user/user.entity';
 
-
 @Injectable()
 export class MessageService {
   constructor(
@@ -14,17 +13,39 @@ export class MessageService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async sendMessage(senderId: string, receiverId: string, content: string): Promise<Message> {
-    const sender = await this.usersRepository.findOne({ where: { user_id: senderId } });
-    const receiver = await this.usersRepository.findOne({ where: { user_id: receiverId } });
+  async sendMessage(
+    senderId: string,
+    receiverId: string,
+    content: string,
+  ): Promise<Message> {
+    const sender = await this.usersRepository.findOne({
+      where: { user_id: senderId },
+    });
+    if (!sender) {
+      throw new Error(`Sender with id ${senderId} not found`);
+    }
 
-    const message = this.messagesRepository.create({ sender, receiver, content });
+    const receiver = await this.usersRepository.findOne({
+      where: { user_id: receiverId },
+    });
+    if (!receiver) {
+      throw new Error(`Receiver with id ${receiverId} not found`);
+    }
+
+    const message = this.messagesRepository.create({
+      sender,
+      receiver,
+      content,
+    });
     return this.messagesRepository.save(message);
   }
 
   async getMessages(userId: string): Promise<Message[]> {
     return this.messagesRepository.find({
-      where: [{ sender: { user_id: userId } }, { receiver: { user_id: userId } }],
+      where: [
+        { sender: { user_id: userId } },
+        { receiver: { user_id: userId } },
+      ],
       relations: ['sender', 'receiver'],
       order: { createdAt: 'DESC' },
     });
