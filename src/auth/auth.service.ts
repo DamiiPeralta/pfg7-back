@@ -1,15 +1,20 @@
 import {
+  BadGatewayException,
   BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../user/user.dto';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/user.entity';
-import { CredentialsDto } from 'src/credentials/credentials.dto';
+import {
+  ChangePasswordDto,
+  CredentialsDto,
+} from 'src/credentials/credentials.dto';
 import { Role } from 'src/roles/roles.enum';
 import { EmailService } from 'src/email/services/email/email.service';
 
@@ -84,6 +89,29 @@ export class AuthService {
       return token;
     } catch (error) {
       throw new BadRequestException('Invalid Credentials.');
+    }
+  }
+
+  async changePassword(body: ChangePasswordDto) {
+    try {
+      const { email, password, newPassword } = body;
+      const user: User = await this.userService.getUserByEmail(email);
+
+      if (!user) throw new NotFoundException('Invalid Credentials');
+
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        user.credentials.password,
+      );
+      if (!isPasswordValid)
+        throw new BadRequestException('Invalid Credentials');
+
+      user.credentials.password = await bcrypt.hash(newPassword, 10);
+      console.log(user);
+      await this.userService.updateUser(user.user_id, user);
+      return 'Password changed successfully';
+    } catch (error) {
+      throw new BadGatewayException('Failed to change password')
     }
   }
 }
