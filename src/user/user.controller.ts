@@ -44,7 +44,7 @@ export class UserController {
     }
   }
   @Get('friends/:id')
-   //@Roles(Role.User, Role.Admin)
+  //@Roles(Role.User, Role.Admin)
   //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get a friends at user by Id',
@@ -151,6 +151,4 @@ export class UserController {
       throw new InternalServerErrorException('Failed to update user');
     }
   }
-
-
 }

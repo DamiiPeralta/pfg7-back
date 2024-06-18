@@ -310,17 +310,23 @@ export class UserRepository {
         relations: ['team_leader', 'team_users'],
       });
 
-      // Crear un array de usuarios únicos
-      const usersSet = new Set<User>();
+      // Crear un Map para almacenar usuarios únicos basados en su user_id
+      const usersMap = new Map<string, User>();
 
-      // Agrega a los líderes y miembros de los equipos al conjunto
+      // Agregar líderes y miembros de equipos al Map, excluyendo al usuario actual
       teams.forEach((team) => {
-        usersSet.add(team.team_leader);
-        team.team_users.forEach((member) => usersSet.add(member));
+        if (team.team_leader.user_id !== id) {
+          usersMap.set(team.team_leader.user_id, team.team_leader);
+        }
+        team.team_users.forEach((member) => {
+          if (member.user_id !== id) {
+            usersMap.set(member.user_id, member);
+          }
+        });
       });
 
-      // Convertir el conjunto a un array
-      const usersArray = Array.from(usersSet);
+      // Convertir el Map a un array
+      const usersArray = Array.from(usersMap.values());
 
       return usersArray;
     } catch (error) {

@@ -1,3 +1,4 @@
+// websocket.gateway.ts
 import {
   ConnectedSocket,
   MessageBody,
@@ -17,15 +18,11 @@ import { MessageService } from 'src/message/message.service';
     credentials: true,
   },
 })
-export class WebsocketGateway
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  constructor(
-    private readonly messageService: MessageService, 
-  ) {}
+  constructor(private readonly messageService: MessageService) {}
 
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
@@ -40,19 +37,26 @@ export class WebsocketGateway
     @MessageBody() message: string,
     @ConnectedSocket() client: Socket,
   ): void {
-    // Aquí puedes manejar la lógica para guardar el mensaje en la base de datos, etc.
     console.log(`Message received from client ${client.id}: ${message}`);
 
-    // Emitir el mensaje a todos los clientes conectados excepto al cliente que lo envió
     client.broadcast.emit('message', message);
   }
 
   @SubscribeMessage('sendMessage')
   async handleSendMessage(
-    @MessageBody() { senderId, receiverId, content }: { senderId: string; receiverId: string; content: string },
+    @MessageBody()
+    {
+      senderId,
+      receiverId,
+      content,
+    }: { senderId: string; receiverId: string; content: string },
     @ConnectedSocket() client: Socket,
   ) {
-    const message = await this.messageService.sendMessage(senderId, receiverId, content);
+    const message = await this.messageService.sendMessage(
+      senderId,
+      receiverId,
+      content,
+    );
     this.server.to(receiverId.toString()).emit('message', message);
   }
 
