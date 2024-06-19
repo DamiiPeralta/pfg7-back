@@ -119,7 +119,7 @@ export class AuthService {
   async forgotPassword(body: ForgotPasswordDto) {
     try {
             return ('Ruta no implementada')
-      const user = await this.userService.getUserByEmail(body.email);
+/*       const user = await this.userService.getUserByEmail(body.email);
       if (!user) throw new NotFoundException('Invalid Credentials');
 
       const token = this.jwtService.sign({
@@ -130,16 +130,16 @@ export class AuthService {
       user.resetToken = token;
 
       try {
-        /* await this.emailService.sendEmail({
+         await this.emailService.sendEmail({
           subjectEmail: 'Solicitud de cambio de contraseña',
           sendTo: user.credentials.email,
           template: 'changePassword',
           params: { name: user.name, link: verificationLink },
-        }); */
+        }); 
         return ('Email sent. Check your email inbox to reset your password' + token);
       } catch (error) {
         throw new BadGatewayException('Failed to send Email');
-      }
+      } */
     } catch (error) {
       throw new BadGatewayException(error.message);
     }
@@ -150,14 +150,14 @@ export class AuthService {
 
     try {
       return ('Ruta no implementada')
-      let jwtPayload = this.jwtService.verify(resetToken);
+      /* let jwtPayload = this.jwtService.verify(resetToken);
       let user = await this.userService.getUserById(jwtPayload.user_id);
 
       user.credentials.password = await bcrypt.hash(newPassword, 10);
       user.resetToken = null;
       await this.userService.updateUser(user.user_id, user);
 
-      return 'Password changed successfully';
+      return 'Password changed successfully'; */
     } catch (error) {
       throw new BadGatewayException('Something went wrong');
     }
