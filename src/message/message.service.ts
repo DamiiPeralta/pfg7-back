@@ -50,8 +50,4 @@ export class MessageService {
       order: { createdAt: 'DESC' },
     });
   }
-
-  async markAsRead(messageId: string): Promise<void> {
-    await this.messagesRepository.update(messageId, { read: true });
-  }
 }
