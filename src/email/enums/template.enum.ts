@@ -1,4 +1,5 @@
 export enum Template {
     WELCOME = 'welcome',
-    SIGNUP = 'signup'
+    SIGNUP = 'signup',
+    CHANGEPASSWORD = 'changePassword',
 }

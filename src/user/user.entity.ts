@@ -63,6 +63,9 @@ profilePicture: string;
 @Column({default: false})
 is_admin: boolean;
 
+@Column({default: ''})
+resetToken: string;
+
 /**
  * One-to-many relationship with the Task entity.
  * Each user can have multiple tasks.

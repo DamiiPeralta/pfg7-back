@@ -1,5 +1,5 @@
 // src/dto/credentials.dto.ts
-import { IsString, IsNotEmpty, IsOptional, Matches } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, Matches, IsEmail } from 'class-validator';
 
 export class CredentialsDto {
   /**
@@ -61,15 +61,18 @@ export class ForgotPasswordDto {
    * @example "user@example.com"
    */
   @IsString()
+  @IsEmail()
   @IsOptional()
   email: string;
+}
 
-  /**
+export class ResetPasswordDto {
+    /**
    * The new password must be a non-empty string of minimum 8 characters, maximum 15 characters, and must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.
    * @example "NewPassword%789"
    */
-  @IsString()
-  @IsNotEmpty()
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.])/)
-  newPassword: string;
+    @IsString()
+    @IsNotEmpty()
+    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.])/)
+    newPassword: string;
 }
