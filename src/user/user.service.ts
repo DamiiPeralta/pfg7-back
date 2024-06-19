@@ -122,4 +122,8 @@ export class UserService {
   async getDeletedUsers(): Promise<User[]>{
     return await this.usersRepository.getDeletedUsers();
   }
+
+  async makeAdmin(adminCredential: string){
+    return await this.usersRepository.makeAdmin(adminCredential)
+  }
 }

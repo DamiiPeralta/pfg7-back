@@ -352,4 +352,10 @@ export class UserRepository {
       throw new InternalServerErrorException('Failed to search friends');
     }
   }
+  async makeAdmin(adminCredential: string){
+    const admin = await this.userRepository.findOne({where: { credentials: { email: adminCredential }}})
+    admin.is_admin = true; 
+    await this.userRepository.save(admin);
+    return admin
+  }
 }
