@@ -28,12 +28,15 @@ export class MessageController {
     return this.messageService.sendMessage(senderId, receiverId, content);
   }
 
-  @Get(':userId')
+  @Get(':senderId/:receiverId')
   @ApiOperation({
-    summary: 'Get messages',
-    description: "Waits for the user's UUID to get their messages.",
+    summary: 'Get messages between two users',
+    description: 'Waits for the sender UUID and receiver UUID to get their messages.',
   })
-  async getMessages(@Param('userId', ParseUUIDPipe) userId: string) {
-    return this.messageService.getMessages(userId);
+  async getMessages(
+    @Param('senderId', ParseUUIDPipe) senderId: string,
+    @Param('receiverId', ParseUUIDPipe) receiverId: string,
+  ) {
+    return this.messageService.getMessages(senderId, receiverId);
   }
 }

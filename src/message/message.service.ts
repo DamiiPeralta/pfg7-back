@@ -18,19 +18,13 @@ export class MessageService {
     receiverId: string,
     content: string,
   ): Promise<Message> {
-    const sender = await this.usersRepository.findOne({
+    const sender = await this.usersRepository.findOneOrFail({
       where: { user_id: senderId },
     });
-    if (!sender) {
-      throw new Error(`Sender with id ${senderId} not found`);
-    }
 
-    const receiver = await this.usersRepository.findOne({
+    const receiver = await this.usersRepository.findOneOrFail({
       where: { user_id: receiverId },
     });
-    if (!receiver) {
-      throw new Error(`Receiver with id ${receiverId} not found`);
-    }
 
     const message = this.messagesRepository.create({
       sender,
@@ -40,14 +34,14 @@ export class MessageService {
     return this.messagesRepository.save(message);
   }
 
-  async getMessages(userId: string): Promise<Message[]> {
+  async getMessages(senderId: string, receiverId: string): Promise<Message[]> {
     return this.messagesRepository.find({
       where: [
-        { sender: { user_id: userId } },
-        { receiver: { user_id: userId } },
+        { sender: { user_id: senderId }, receiver: { user_id: receiverId } },
+        { sender: { user_id: receiverId }, receiver: { user_id: senderId } },
       ],
       relations: ['sender', 'receiver'],
-      order: { createdAt: 'DESC' },
+      order: { createdAt: 'ASC' }, // Cambiado a ASC para mostrar los mensajes más antiguos arriba
     });
   }
 }
