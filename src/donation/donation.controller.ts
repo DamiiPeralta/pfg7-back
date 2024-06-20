@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DonationService } from './donation.service';
 import { CreateDonationDto } from './donation.dto';
-import {  AdminGuard} from '../auth/auth.guard';
+import { AdminGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Donation')
 @Controller('donation')
