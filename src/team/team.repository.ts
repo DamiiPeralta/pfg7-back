@@ -80,22 +80,18 @@ export class TeamRepository {
         const createdAt = new Date();
         team.created_date = createdAt.toDateString();
         team.invitation_code = invitation_code;
+        const user = await this.userService.getUserById(user_Id);
 
-        const user = await this.userRepository.findOne({
-          where: { user_id: user_Id },
-        });
         if (!user) {
           throw new NotFoundException(`User with ID ${user_Id} not found`);
         }
+        team.team_leader = user;
 
-        if (!user.teams) {
-          user.teams = [];
-        }
-        user.teams.push(team);
+        const newTeam = this.teamRepository.create(team);
+        user.teams.push(newTeam);
+        await this.userService.updateUser(user.user_id, user); // Asegúrate de actualizar el usuario
 
-        await this.userService.updateUser(user.user_id, user);
-
-        return await this.teamRepository.save(team);
+        return await this.teamRepository.save(newTeam);
       }
     }
   }
