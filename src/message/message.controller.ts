@@ -1,4 +1,11 @@
-import { Controller, Post, Get, Body, Param, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { MessageService } from './message.service';
 import { Message } from './message.entity';
 

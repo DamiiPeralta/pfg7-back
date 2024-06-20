@@ -93,7 +93,7 @@ export class UserController {
   })
   async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     try {
-      const result = await this.userService.deleteUser(id);
+      await this.userService.deleteUser(id);
       return { message: 'User deleted successfully' };
     } catch (error) {
       if (error instanceof NotFoundException) {

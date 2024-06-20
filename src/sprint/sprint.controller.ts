@@ -99,7 +99,9 @@ export class SprintController {
   ): Promise<Sprint> {
     try {
       if (Object.keys(updateSprint).length === 0) {
-        throw new BadRequestException('Invalid request body: Empty JSON object');
+        throw new BadRequestException(
+          'Invalid request body: Empty JSON object',
+        );
       }
       return await this.sprintService.updateSprint(id, updateSprint);
     } catch (error) {
