@@ -13,8 +13,8 @@ export class MailchimpController {
   constructor(private readonly mailchimpService: MailchimpService) {}
 
   @Post('subscribe')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Suscribes a user to the Newsletter',
     description:

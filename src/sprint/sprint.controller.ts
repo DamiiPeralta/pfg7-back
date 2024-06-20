@@ -10,11 +10,17 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SprintService } from './sprint.service';
 import { Sprint } from './sprint.entity';
 import { CreateSprintDto, UpdateSprintDto } from './sprint.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
+import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from 'src/roles/roles.guard';
+
 
 @ApiTags('Sprint')
 @ApiBearerAuth()
@@ -23,8 +29,8 @@ export class SprintController {
   constructor(private readonly sprintService: SprintService) {}
 
   @Get()
-  //@Roles(Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get all sprints',
     description:
@@ -39,8 +45,8 @@ export class SprintController {
   }
 
   @Get(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get a single sprint by Id',
     description:
@@ -55,8 +61,8 @@ export class SprintController {
   }
 
   @Get('team/:id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get all sprints by team Id',
     description:
@@ -73,8 +79,8 @@ export class SprintController {
   }
 
   @Post()
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Creates a new sprint',
     description:
@@ -93,8 +99,8 @@ export class SprintController {
   }
 
   @Put(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Updates a sprint',
     description:
@@ -115,8 +121,8 @@ export class SprintController {
   }
 
   @Delete(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Deletes a sprint',
     description:

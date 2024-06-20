@@ -19,6 +19,7 @@ import {
 } from 'src/credentials/credentials.dto';
 import { Role } from 'src/roles/roles.enum';
 import { EmailService } from 'src/email/services/email/email.service';
+import { Credentials } from 'src/credentials/credentials.entity';
 
 @Injectable()
 export class AuthService {
@@ -119,7 +120,8 @@ export class AuthService {
   async forgotPassword(body: ForgotPasswordDto) {
     try {
             return ('Ruta no implementada')
-/*       const user = await this.userService.getUserByEmail(body.email);
+        /* 
+      const user = await this.userService.getUserByEmail(body.email);
       if (!user) throw new NotFoundException('Invalid Credentials');
 
       const token = this.jwtService.sign({
@@ -128,7 +130,7 @@ export class AuthService {
       });
       let verificationLink = `http://localhost:3000/auth/resetPassword/${token}`;
       user.resetToken = token;
-
+      return token
       try {
          await this.emailService.sendEmail({
           subjectEmail: 'Solicitud de cambio de contraseña',
@@ -145,21 +147,32 @@ export class AuthService {
     }
   }
   async resetPassword(newPassword: string, resetToken: string) {
-    if (!(newPassword && resetToken))
+    if (!(newPassword && resetToken)) {
       throw new NotFoundException('Missing fields');
-
+    }
+  
     try {
       return ('Ruta no implementada')
-      /* let jwtPayload = this.jwtService.verify(resetToken);
-      let user = await this.userService.getUserById(jwtPayload.user_id);
+      /* 
+      const jwtPayload = this.jwtService.verify(resetToken);
+      const user = await this.userService.getUserById(jwtPayload.user_id);
+  
+      const newHash = await bcrypt.hash(newPassword, 10);
+      console.log(user.credentials
 
-      user.credentials.password = await bcrypt.hash(newPassword, 10);
-      user.resetToken = null;
-      await this.userService.updateUser(user.user_id, user);
-
-      return 'Password changed successfully'; */
+      )
+      const newCredentials = new Credentials(); 
+      newCredentials.password = newHash;
+      newCredentials.user = user
+      newCredentials.id = user.credentials.id
+      newCredentials.email = user.credentials.email
+      newCredentials.nickname = user.credentials.nickname
+      console.log('exito credenciales nuevas', newCredentials)
+  
+      const response = await this.userService.updateUser(user.user_id, user);
+      return response; */
     } catch (error) {
-      throw new BadGatewayException('Something went wrong');
+      throw new BadGatewayException(error.message);
     }
   }
 }
