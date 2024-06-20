@@ -11,16 +11,11 @@ import {
   BadRequestException,
   InternalServerErrorException,
   UseGuards,
-
 } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { CreateTeamDto, JoinTeamDto, UpdateTeamDto } from './team.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from 'src/roles/roles.enum';
-import { AuthGuard } from '../auth/auth.guard';
-import { RolesGuard } from 'src/roles/roles.guard';
-
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AdminGuard } from '../auth/auth.guard';
 
 @ApiTags('Teams')
 @ApiBearerAuth()
@@ -29,8 +24,6 @@ export class TeamController {
   constructor(private readonly teamsService: TeamService) {}
 
   @Get('users/:id')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Gets a team by its ID',
     description:
@@ -44,8 +37,6 @@ export class TeamController {
     }
   }
   @Get(':id')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Gets a team by its ID',
     description:
@@ -60,8 +51,7 @@ export class TeamController {
   }
 
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Gets all teams',
     description:
@@ -72,8 +62,6 @@ export class TeamController {
   }
 
   @Post('join')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Joins a team',
     description:
@@ -98,8 +86,6 @@ export class TeamController {
   }
 
   @Post(':id')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Creates a new team',
     description:
@@ -113,8 +99,6 @@ export class TeamController {
   }
 
   @Put(':id')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Updates a team´s properties.',
     description:
@@ -132,8 +116,6 @@ export class TeamController {
   }
 
   @Delete(':id')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Deletes a Team.',
     description:
@@ -149,8 +131,6 @@ export class TeamController {
   }
 
   @Put(':teamId/:userId')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Remove user to team.',
     description:
@@ -169,8 +149,6 @@ export class TeamController {
   }
 
   @Post(':teamId/users/:userId')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Adds a user to a team.',
     description:
@@ -188,8 +166,6 @@ export class TeamController {
   }
 
   @Get(':id/leader')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Gets the teams a user is the leader of.',
     description:

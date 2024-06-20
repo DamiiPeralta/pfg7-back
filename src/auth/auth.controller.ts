@@ -9,7 +9,6 @@ import {
   Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginUserDto } from '../user/user.dto';
 import { CreateUserDto } from '../user/user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {

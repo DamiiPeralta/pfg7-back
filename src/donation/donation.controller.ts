@@ -11,11 +11,7 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DonationService } from './donation.service';
 import { CreateDonationDto } from './donation.dto';
-import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from 'src/roles/roles.enum';
-import { AuthGuard } from '../auth/auth.guard';
-import { RolesGuard } from 'src/roles/roles.guard';
-
+import {  AdminGuard} from '../auth/auth.guard';
 
 @ApiTags('Donation')
 @Controller('donation')
@@ -23,8 +19,7 @@ export class DonationController {
   constructor(private readonly donationService: DonationService) {}
 
   @Get()
-  // @Roles(Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Get all donations',
     description:
@@ -39,8 +34,6 @@ export class DonationController {
   }
 
   @Get(':id')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Gets donations by the user´s ID',
     description:
@@ -55,8 +48,6 @@ export class DonationController {
   }
 
   @Post('')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Creates a new donation',
     description:
