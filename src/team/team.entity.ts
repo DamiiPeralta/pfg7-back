@@ -1,9 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, OneToMany, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  ManyToMany,
+  OneToMany,
+  DeleteDateColumn,
+} from 'typeorm';
 import { User } from 'src/user/user.entity';
 import { Task } from 'src/task/task.entity';
 import { Sprint } from 'src/sprint/sprint.entity';
 
-@Entity({ name: 'teams' }) 
+@Entity({ name: 'teams' })
 export class Team {
   /**
    * Must be a generated automatically in UUID format. It cannot be null and acts as the primary key of the entity.
@@ -51,14 +59,14 @@ export class Team {
    * One-to-many relationship with the User entity.
    * Each team has a team leader.
    */
-  @ManyToOne(() => User, user => user.teams)
+  @ManyToOne(() => User, (user) => user.teams)
   team_leader: User;
 
   /**
    * Many-to-many relationship with the User entity.
    * Each team can have multiple team members.
    */
-  @ManyToMany(() => User, user => user.teams)
+  @ManyToMany(() => User, (user) => user.teams)
   team_users: User[];
 
   /**
@@ -66,9 +74,9 @@ export class Team {
    * Each team can have multiple Sprints.
    */
   @OneToMany(() => Sprint, (sprint) => sprint.team, { cascade: true })
-  sprints: Sprint[]=null;
-  
- /**
+  sprints: Sprint[] = null;
+
+  /**
    * One-to-many relationship with the Sprint entity.
    * Each team can have multiple Sprints.
    */

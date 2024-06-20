@@ -102,24 +102,6 @@ export class UserController {
       throw new InternalServerErrorException('Failed to delete user');
     }
   }
-  @Put(':id/restore')
-  // @UseGuards(AdminGuard)
-  @ApiOperation({
-    summary: 'Restore a user.',
-    description:
-      'Expects the UUID of the user to restore through Params. Returns a succes or failure message.',
-  })
-  async restoreUser(@Param('id', ParseUUIDPipe) id: string) {
-    try {
-      await this.userService.restoreUser(id);
-      return { message: 'User restore successfully' };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to restore user');
-    }
-  }
 
   @Post('/auth0')
   async createWithAuth0(@Body() user: any) {
@@ -151,6 +133,25 @@ export class UserController {
         throw error;
       }
       throw new InternalServerErrorException('Failed to update user');
+    }
+  }
+
+  @Put(':id/restore')
+  // @UseGuards(AdminGuard)
+  @ApiOperation({
+    summary: 'Restore a user.',
+    description:
+      'Expects the UUID of the user to restore through Params. Returns a succes or failure message.',
+  })
+  async restoreUser(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      await this.userService.restoreUser(id);
+      return { message: 'User restore successfully' };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to restore user');
     }
   }
 }

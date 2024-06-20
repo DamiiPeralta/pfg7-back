@@ -167,8 +167,13 @@ export class UserRepository {
 
   async updateUser(id: string, user: Partial<User>): Promise<User> {
     try {
-      const upUser = await this.findUserById(id);
-      Object.assign(upUser, user); // Update only provided fields
+      const upUser = await this.userRepository.findOne({
+        where: { user_id: id },
+      });
+      if (!upUser) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+      Object.assign(upUser, user); // Actualizar solo los campos proporcionados
       return await this.userRepository.save(upUser);
     } catch (error) {
       if (error instanceof NotFoundException) {
