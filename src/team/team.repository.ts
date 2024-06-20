@@ -17,6 +17,8 @@ export class TeamRepository {
   constructor(
     @InjectRepository(Team)
     private readonly teamRepository: Repository<Team>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly userService: UserService,
   ) {}
 
@@ -66,7 +68,7 @@ export class TeamRepository {
     let uniqueCodeGenerated = false;
 
     while (!uniqueCodeGenerated) {
-      const invitation_code = uuidv4(); // Genera un UUID único y aleatorio
+      const invitation_code = uuidv4(); 
       const existingTeam = await this.teamRepository.findOne({
         where: { invitation_code },
       });
@@ -79,25 +81,28 @@ export class TeamRepository {
         team.created_date = createdAt.toDateString();
         team.invitation_code = invitation_code;
 
-        const user = await this.userService.getUserById(user_Id);
+        const user = await this.userRepository.findOne({
+          where: { user_id: user_Id },
+        });
         if (!user) {
           throw new NotFoundException(`User with ID ${user_Id} not found`);
         }
-        team.team_leader = user;
 
-        const newTeam = this.teamRepository.create(team);
-        user.teams.push(newTeam);
+        if (!user.teams) {
+          user.teams = [];
+        }
+        user.teams.push(team);
 
-        await this.userService.updateUser(user.user_id, user); // Asegúrate de actualizar el usuario
+        await this.userService.updateUser(user.user_id, user); 
 
-        return await this.teamRepository.save(newTeam);
+        return await this.teamRepository.save(team);
       }
     }
   }
 
   async updateTeam(id: string, team: Partial<Team>): Promise<Team> {
     const upTeam = await this.findTeamById(id);
-    Object.assign(upTeam, team); // Update only provided fields
+    Object.assign(upTeam, team); 
     return await this.teamRepository.save(team);
   }
 
@@ -117,20 +122,17 @@ export class TeamRepository {
         throw new NotFoundException(`Team or User not found`);
       }
 
-      // Verificar si el usuario ya está en el equipo
       const userExistsInTeam = team.team_users.some(
         (teamUser) => teamUser.user_id === userId,
       );
       if (userExistsInTeam) {
-        // Si el usuario ya está en el equipo, lanzar una excepción de conflicto
         throw new ConflictException(`User ${userId} is already in the team`);
       }
 
-      // Si el usuario no está en el equipo, agregarlo
       team.team_users.push(user);
       return await this.teamRepository.save(team);
     } catch (error) {
-      throw error; // Relanzar el error para que sea manejado por el controlador
+      throw error; 
     }
   }
   async removeUserFromTeam(userId: string, teamId: string): Promise<Team> {
@@ -206,7 +208,6 @@ export class TeamRepository {
   getTeamsByLeaderId(leaderId: string): Promise<Team[]> {
     const teams = this.teamRepository.find({
       where: { team_leader: { user_id: leaderId } },
-      //relations: ['tasks', 'team_leader', 'team_users', 'sprints'],
     });
     if (!teams) {
       throw new NotFoundException(`Teams with leader ID ${leaderId} not found`);
@@ -216,22 +217,17 @@ export class TeamRepository {
 
   async getUserTeams(userId: string): Promise<any> {
     try {
-      // Obtener los equipos donde el usuario es líder
       const leaderTeams = await this.getTeamsByLeaderId(userId);
 
-      // Obtener el usuario con sus equipos (donde es colaborador)
       const user = await this.userService.getUserById(userId);
       const allTeams = user.teams;
 
-      // Filtrar los equipos donde el usuario es colaborador, excluyendo aquellos donde es líder
       const collaboratorTeams = allTeams.filter(
         (team: Team) =>
           !leaderTeams.some(
             (leaderTeam: Team) => leaderTeam.team_id === team.team_id,
           ),
       );
-
-      // Crear el JSON de respuesta
       const response = {
         leaderTeams,
         collaboratorTeams,
