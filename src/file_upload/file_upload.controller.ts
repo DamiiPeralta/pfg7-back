@@ -25,8 +25,8 @@ export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
   @Post('profilePicture')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Upload profile picture',
     description:

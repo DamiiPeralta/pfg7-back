@@ -29,8 +29,8 @@ export class SprintController {
   constructor(private readonly sprintService: SprintService) {}
 
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get all sprints',
     description:
@@ -45,8 +45,8 @@ export class SprintController {
   }
 
   @Get(':id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get a single sprint by Id',
     description:
@@ -61,8 +61,8 @@ export class SprintController {
   }
 
   @Get('team/:id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get all sprints by team Id',
     description:
@@ -79,8 +79,8 @@ export class SprintController {
   }
 
   @Post()
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Creates a new sprint',
     description:
@@ -99,8 +99,8 @@ export class SprintController {
   }
 
   @Put(':id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Updates a sprint',
     description:
@@ -121,8 +121,8 @@ export class SprintController {
   }
 
   @Delete(':id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Deletes a sprint',
     description:

@@ -29,8 +29,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get all users',
     description:
@@ -45,11 +45,12 @@ export class UserController {
   }
 
   @Get('deleted')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get all deleted users',
-    description: 'Returns an array of User objects that have been soft deleted.',
+    description:
+      'Returns an array of User objects that have been soft deleted.',
   })
   async getDeletedUsers(): Promise<User[]> {
     try {
@@ -60,8 +61,8 @@ export class UserController {
   }
 
   @Get('friends/:id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get a friends at user by Id',
     description:
@@ -72,8 +73,8 @@ export class UserController {
   }
 
   @Get(':id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get a single user by Id',
     description:
@@ -95,8 +96,8 @@ export class UserController {
   }
 
   @Delete(':id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Deletes a user.',
     description:
@@ -114,8 +115,8 @@ export class UserController {
     }
   }
   @Put(':id/restore')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Restore a user.',
     description:
@@ -146,8 +147,8 @@ export class UserController {
   }
 
   @Put(':id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Updates a user´s properties.',
     description:

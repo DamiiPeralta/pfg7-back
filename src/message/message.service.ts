@@ -13,24 +13,16 @@ export class MessageService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
-  async sendMessage(
-    senderId: string,
-    receiverId: string,
-    content: string,
-  ): Promise<Message> {
-    const sender = await this.usersRepository.findOneOrFail({
-      where: { user_id: senderId },
-    });
-
-    const receiver = await this.usersRepository.findOneOrFail({
-      where: { user_id: receiverId },
-    });
+  async sendMessage(senderId: string, receiverId: string, content: string): Promise<Message> {
+    const sender = await this.usersRepository.findOneOrFail({ where: { user_id: senderId } });
+    const receiver = await this.usersRepository.findOneOrFail({ where: { user_id: receiverId } });
 
     const message = this.messagesRepository.create({
       sender,
       receiver,
       content,
     });
+
     return this.messagesRepository.save(message);
   }
 
@@ -41,7 +33,7 @@ export class MessageService {
         { sender: { user_id: receiverId }, receiver: { user_id: senderId } },
       ],
       relations: ['sender', 'receiver'],
-      order: { createdAt: 'ASC' }, // Cambiado a ASC para mostrar los mensajes más antiguos arriba
+      order: { createdAt: 'ASC' },
     });
   }
 }

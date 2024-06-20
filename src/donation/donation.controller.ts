@@ -23,8 +23,8 @@ export class DonationController {
   constructor(private readonly donationService: DonationService) {}
 
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get all donations',
     description:
@@ -39,8 +39,8 @@ export class DonationController {
   }
 
   @Get(':id')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Gets donations by the user´s ID',
     description:
@@ -55,8 +55,8 @@ export class DonationController {
   }
 
   @Post('')
-  @Roles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.User, Role.Admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Creates a new donation',
     description:

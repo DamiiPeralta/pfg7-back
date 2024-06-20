@@ -1,20 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { MessageService } from '../message/message.service';
-import { Message } from '../message/message.entity';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class ChatService {
-    constructor(private readonly messageService: MessageService) {}
-
-    async sendMessage(
-        senderId: string,
-        receiverId: string,
-        content: string,
-    ): Promise<Message> {
-        return this.messageService.sendMessage(senderId, receiverId, content);
-    }
-
-    async getMessagesBetweenUsers(senderId: string, receiverId: string): Promise<Message[]> {
-        return this.messageService.getMessages(senderId, receiverId);
-    }
+  private users: Record<string, Partial<User>> = {};
+  //agrega a los que se conectan
+  onUserConnected(user: User) {
+    this.users[user.user_id] = user;
+  }
+  //saca a los que se desconectan
+  onUserDisconnected(id: string) {
+    delete this.users[id];
+  }
+  //trae a todos los users
+  getUsers() {
+    return Object.values(this.users);
+  }
 }

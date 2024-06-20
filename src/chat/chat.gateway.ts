@@ -1,75 +1,50 @@
-import {
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-  OnGatewayInit,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-} from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
-import { Socket, Server } from 'socket.io';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { OnModuleInit } from '@nestjs/common';
+import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import { User } from 'src/user/user.entity';
+import { Message } from 'src/message/message.entity';
 
-@WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
-})
-export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer() server: Server;
-  private logger: Logger = new Logger('ChatGateway');
-  private activeUsers: Map<string, string> = new Map();
+@WebSocketGateway({ cors: true })
+export class ChatGateway implements OnModuleInit {
+
+  @WebSocketServer()
+  public server: Server;
 
   constructor(private readonly chatService: ChatService) {}
 
-  @SubscribeMessage('join')
-  handleJoin(client: Socket, userId: string): void {
-    this.activeUsers.set(userId, client.id);
-    client.join(userId); // Unir al usuario a una sala con su ID de usuario
-    this.logger.log(`User joined: ${userId}, Socket ID: ${client.id}`);
-  }
-
-  @SubscribeMessage('message')
-  async handleMessage(client: Socket, payload: { senderId: string; receiverId: string; content: string }): Promise<void> {
-    const { senderId, receiverId, content } = payload;
-
-    try {
-      const message = await this.chatService.sendMessage(senderId, receiverId, content);
-
-      // Emitir el mensaje al receptor específico
-      this.server.to(receiverId).emit('message', message);
-
-      // También emitir el mensaje al remitente si lo deseas (opcional)
-      this.server.to(senderId).emit('message', message);
-    } catch (error) {
-      this.logger.error(`Error sending message: ${error.message}`);
-    }
-  }
-
-  afterInit(server: Server) {
-    this.logger.log('WebSocket Gateway initialized');
-  }
-
-  handleDisconnect(client: Socket) {
-    const userId = this.findUserIdBySocketId(client.id);
-    if (userId) {
-      this.activeUsers.delete(userId);
-      this.logger.log(`Client disconnected: ${client.id} (User ID: ${userId})`);
-    } else {
-      this.logger.log(`Client disconnected: ${client.id} (Unknown User)`);
-    }
-  }
-
-  handleConnection(client: Socket, ...args: any[]) {
-    this.logger.log(`Client connected: ${client.id}`);
-  }
-
-  private findUserIdBySocketId(socketId: string): string | undefined {
-    for (const [userId, id] of this.activeUsers) {
-      if (id === socketId) {
-        return userId;
+  onModuleInit() {
+    this.server.on('connection', (socket: Socket) => {
+      const { name, user_id, token } = socket.handshake.auth;
+      if (!name || !user_id || !token) {
+        socket.disconnect();
+        return;
       }
+
+      this.chatService.onUserConnected({ user_id, name, token } as User);
+
+      socket.on('join-room', (roomId: string) => {
+        socket.join(roomId);
+        socket.emit('welcome-message', `Bienvenido a la sala ${roomId}`);
+      });
+
+      socket.on('disconnect', () => {
+        this.chatService.onUserDisconnected(socket.id);
+      });
+    });
+  }
+
+  @SubscribeMessage('send-message')
+  handleMessage(
+    @MessageBody() message: Message,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    const { name, token } = socket.handshake.auth;
+    if (!message.content || !name || !token) {
+      return;
     }
-    return undefined;
+    
+    // Enviar el mensaje solo al socket del receptor específico
+    this.server.to(socket.id).emit('on-message', message);
   }
 }
