@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Team } from './team.entity';
 import { TeamRepository } from './team.repository';
 

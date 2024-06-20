@@ -68,7 +68,7 @@ export class TeamRepository {
     let uniqueCodeGenerated = false;
 
     while (!uniqueCodeGenerated) {
-      const invitation_code = uuidv4(); 
+      const invitation_code = uuidv4();
       const existingTeam = await this.teamRepository.findOne({
         where: { invitation_code },
       });
@@ -93,7 +93,7 @@ export class TeamRepository {
         }
         user.teams.push(team);
 
-        await this.userService.updateUser(user.user_id, user); 
+        await this.userService.updateUser(user.user_id, user);
 
         return await this.teamRepository.save(team);
       }
@@ -102,7 +102,7 @@ export class TeamRepository {
 
   async updateTeam(id: string, team: Partial<Team>): Promise<Team> {
     const upTeam = await this.findTeamById(id);
-    Object.assign(upTeam, team); 
+    Object.assign(upTeam, team);
     return await this.teamRepository.save(team);
   }
 
@@ -132,7 +132,7 @@ export class TeamRepository {
       team.team_users.push(user);
       return await this.teamRepository.save(team);
     } catch (error) {
-      throw error; 
+      throw error;
     }
   }
   async removeUserFromTeam(userId: string, teamId: string): Promise<Team> {
@@ -219,7 +219,10 @@ export class TeamRepository {
     try {
       const leaderTeams = await this.getTeamsByLeaderId(userId);
 
-      const user = await this.userService.getUserById(userId);
+      const user = await this.userRepository.findOne({
+        where: { user_id: userId },
+        relations: ['teams'], // Assuming 'teams' is a relation in your user entity
+      });
       const allTeams = user.teams;
 
       const collaboratorTeams = allTeams.filter(
