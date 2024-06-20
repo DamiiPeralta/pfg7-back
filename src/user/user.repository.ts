@@ -199,6 +199,27 @@ export class UserRepository {
     try {
       const deletedUsers = await this.userRepository.find({
         withDeleted: true, // Incluir usuarios eliminados
+        relations: ['tasks', 'teams', 'credentials'],
+        select: {
+          user_id: true,
+          name: true,
+          created: true,
+          last_login: true,
+          status: true,
+          profilePicture: true,
+          is_admin: true,
+          tasks: {
+            name: true,
+            description: true,
+          },
+          teams: {
+            team_name: true,
+          },
+          credentials: {
+            email: true,
+            nickname: true,
+          },
+        },
         where: {
           deletedAt: Not(IsNull()),
         },
