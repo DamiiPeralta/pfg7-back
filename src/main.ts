@@ -6,27 +6,13 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 
 const PORT = process.env.PORT || 3000;
 
-const allowedOrigins = [
-  'http://localhost:3001',
-  'https://easy-task-cyan.vercel.app',
-  'http://localhost:3000'
-];
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
 
   const corsOptions: CorsOptions = {
-    origin: (origin, callback) => {
-      console.log('Origin:', origin); // Log para depuración
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.error('No permitido por CORS:', origin); // Log para depuración
-        callback(new Error('No permitido por CORS'));
-      }
-    },
+    origin: true, // Permite cualquier origen
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   };
