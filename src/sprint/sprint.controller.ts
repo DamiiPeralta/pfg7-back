@@ -10,13 +10,13 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SprintService } from './sprint.service';
 import { Sprint } from './sprint.entity';
 import { CreateSprintDto, UpdateSprintDto } from './sprint.dto';
-import { AdminGuard } from '../auth/auth.guard';
+// import { AdminGuard } from '../auth/auth.guard';
 
 @ApiTags('Sprint')
 @ApiBearerAuth()
@@ -25,7 +25,7 @@ export class SprintController {
   constructor(private readonly sprintService: SprintService) {}
 
   @Get()
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Get all sprints',
     description:

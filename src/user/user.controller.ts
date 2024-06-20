@@ -8,14 +8,14 @@ import {
   Body,
   NotFoundException,
   InternalServerErrorException,
-  UseGuards,
+  //UseGuards,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
-import { AdminGuard } from 'src/auth/auth.guard';
+//import { AdminGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -24,7 +24,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Get all users',
     description:
@@ -39,7 +39,7 @@ export class UserController {
   }
 
   @Get('deleted')
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Get all deleted users',
     description:
@@ -85,7 +85,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Deletes a user.',
     description:
@@ -103,7 +103,7 @@ export class UserController {
     }
   }
   @Put(':id/restore')
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Restore a user.',
     description:

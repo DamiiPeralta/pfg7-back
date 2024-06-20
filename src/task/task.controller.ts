@@ -9,13 +9,13 @@ import {
   Body,
   NotFoundException,
   Query,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
 import { Task } from './task.entity';
-import { AdminGuard } from 'src/auth/auth.guard';
+// import { AdminGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Tasks')
 @ApiBearerAuth()
@@ -24,7 +24,7 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get()
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Get all tasks',
     description:

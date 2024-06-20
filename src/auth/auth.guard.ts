@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -14,7 +20,9 @@ export class AdminGuard implements CanActivate {
     }
 
     try {
-      const payload = this.jwtService.verify(token, { secret: process.env.JWT_SECRET || 'yourSecretKey' });
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET || 'yourSecretKey',
+      });
       if (!payload.isAdmin) {
         throw new ForbiddenException('Access denied');
       }

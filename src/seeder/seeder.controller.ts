@@ -1,7 +1,7 @@
-import { Controller, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { SeederService } from './seeder.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from '../auth/auth.guard';
+// import { AdminGuard } from '../auth/auth.guard';
 
 @ApiTags('Seeder')
 @Controller('seeder')
@@ -9,7 +9,7 @@ export class SeederController {
   constructor(private readonly seederService: SeederService) {}
 
   @Post('/users')
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Seed Users',
     description:
@@ -20,7 +20,7 @@ export class SeederController {
   }
 
   @Post('/teams')
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Seed Teams',
     description:
@@ -31,7 +31,7 @@ export class SeederController {
   }
 
   @Post('/sprints')
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Seed Sprints',
     description:
@@ -42,7 +42,7 @@ export class SeederController {
   }
 
   @Post('/tasks')
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Seed Tasks',
     description:

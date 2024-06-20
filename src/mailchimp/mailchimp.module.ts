@@ -10,4 +10,3 @@ import { MailchimpController } from './mailchimp.controller';
   controllers: [MailchimpController],
 })
 export class MailchimpModule {}
-

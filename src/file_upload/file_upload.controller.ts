@@ -38,7 +38,7 @@ export class FileUploadController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('image')) // Asegúrate de que el campo coincide con el nombre en la APIBody
+  @UseInterceptors(FileInterceptor('image'))
   uploadImage(
     @Query('id') userId: string,
     @UploadedFile(

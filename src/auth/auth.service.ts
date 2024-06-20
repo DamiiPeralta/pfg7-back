@@ -87,7 +87,6 @@ export class AuthService {
       dbUser.status = true;
       await this.userService.updateUser(dbUser.user_id, dbUser);
 
-      // Si las credenciales son válidas, retornamos un token de autenticación (simulado)
       return token;
     } catch (error) {
       throw new BadRequestException('Invalid Credentials.');
@@ -119,8 +118,8 @@ export class AuthService {
 
   async forgotPassword(body: ForgotPasswordDto) {
     try {
-            return ('Ruta no implementada')
-        /* 
+      return 'Ruta no implementada';
+      /* 
       const user = await this.userService.getUserByEmail(body.email);
       if (!user) throw new NotFoundException('Invalid Credentials');
 
@@ -150,9 +149,9 @@ export class AuthService {
     if (!(newPassword && resetToken)) {
       throw new NotFoundException('Missing fields');
     }
-  
+
     try {
-      return ('Ruta no implementada')
+      return 'Ruta no implementada';
       /* 
       const jwtPayload = this.jwtService.verify(resetToken);
       const user = await this.userService.getUserById(jwtPayload.user_id);

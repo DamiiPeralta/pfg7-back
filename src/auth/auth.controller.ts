@@ -33,19 +33,17 @@ export class AuthController {
       return await this.authService.signUp(createUserDto);
     } catch (error) {
       if (error instanceof BadRequestException) {
-        throw error; // Propagar excepción BadRequestException sin modificar
+        throw error;
       } else if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        // Si el error proviene de una respuesta HTTP (por ejemplo, una solicitud a un servicio externo)
         this.logger.error(
           `External request error: ${error.response.data.message}`,
         );
         throw new InternalServerErrorException('Internal server error.');
       } else {
-        // Otros errores no manejados
         this.logger.error(`Error no manejado: ${error.message}`);
         throw new InternalServerErrorException('Internal server error.');
       }
@@ -63,19 +61,17 @@ export class AuthController {
       return { token };
     } catch (error) {
       if (error instanceof BadRequestException) {
-        throw error; // Propagar excepción BadRequestException sin modificar
+        throw error;
       } else if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        // Si el error proviene de una respuesta HTTP (por ejemplo, una solicitud a un servicio externo)
         this.logger.error(
           `External request error: ${error.response.data.message}`,
         );
         throw new InternalServerErrorException('Internal server error.');
       } else {
-        // Otros errores no manejados
         this.logger.error(`Error no manejado: ${error.message}`);
         throw new InternalServerErrorException('Internal server error.');
       }

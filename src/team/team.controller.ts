@@ -10,12 +10,12 @@ import {
   ParseUUIDPipe,
   BadRequestException,
   InternalServerErrorException,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { CreateTeamDto, JoinTeamDto, UpdateTeamDto } from './team.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AdminGuard } from '../auth/auth.guard';
+// import { AdminGuard } from '../auth/auth.guard';
 
 @ApiTags('Teams')
 @ApiBearerAuth()
@@ -51,7 +51,7 @@ export class TeamController {
   }
 
   @Get()
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Gets all teams',
     description:
