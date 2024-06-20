@@ -62,7 +62,27 @@ export class UserRepository {
     try {
       const user = await this.userRepository.findOne({
         where: { user_id: id },
-        relations: ['tasks', 'teams'],
+        relations: ['tasks', 'teams', 'credentials'],
+        select: {
+          user_id: true,
+          name: true,
+          created: true,
+          last_login: true,
+          status: true,
+          profilePicture: true,
+          is_admin: true,
+          tasks: {
+            name: true,
+            description: true,
+          },
+          teams: {
+            team_name: true,
+          },
+          credentials: {
+            email: true,
+            nickname: true,
+          },
+        },
       });
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found`);
@@ -173,7 +193,7 @@ export class UserRepository {
   async getDeletedUsers(): Promise<User[]> {
     try {
       const deletedUsers = await this.userRepository.find({
-        withDeleted: true,  // Incluir usuarios eliminados
+        withDeleted: true, // Incluir usuarios eliminados
         where: {
           deletedAt: Not(IsNull()),
         },
@@ -183,7 +203,6 @@ export class UserRepository {
       throw new InternalServerErrorException('Failed to get deleted users');
     }
   }
-
 
   async createWithAuth0(user: Auth0Dto) {
     const { email, name, picture } = user;
@@ -352,10 +371,12 @@ export class UserRepository {
       throw new InternalServerErrorException('Failed to search friends');
     }
   }
-  async makeAdmin(adminCredential: string){
-    const admin = await this.userRepository.findOne({where: { credentials: { email: adminCredential }}})
-    admin.is_admin = true; 
+  async makeAdmin(adminCredential: string) {
+    const admin = await this.userRepository.findOne({
+      where: { credentials: { email: adminCredential } },
+    });
+    admin.is_admin = true;
     await this.userRepository.save(admin);
-    return admin
+    return admin;
   }
 }
