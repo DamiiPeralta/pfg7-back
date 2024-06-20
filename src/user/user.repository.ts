@@ -63,26 +63,6 @@ export class UserRepository {
       const user = await this.userRepository.findOne({
         where: { user_id: id },
         relations: ['tasks', 'teams', 'credentials'],
-        select: {
-          user_id: true,
-          name: true,
-          created: true,
-          last_login: true,
-          status: true,
-          profilePicture: true,
-          is_admin: true,
-          tasks: {
-            name: true,
-            description: true,
-          },
-          teams: {
-            team_name: true,
-          },
-          credentials: {
-            email: true,
-            nickname: true,
-          },
-        },
       });
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found`);
