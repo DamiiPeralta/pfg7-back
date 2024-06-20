@@ -6,10 +6,12 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  // UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DonationService } from './donation.service';
 import { CreateDonationDto } from './donation.dto';
+// import { AdminGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Donation')
 @Controller('donation')
@@ -17,8 +19,7 @@ export class DonationController {
   constructor(private readonly donationService: DonationService) {}
 
   @Get()
-  //@Roles(Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Get all donations',
     description:
@@ -33,8 +34,6 @@ export class DonationController {
   }
 
   @Get(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Gets donations by the user´s ID',
     description:
@@ -49,8 +48,6 @@ export class DonationController {
   }
 
   @Post('')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Creates a new donation',
     description:

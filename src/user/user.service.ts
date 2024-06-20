@@ -65,14 +65,9 @@ export class UserService {
     }
   }
 
-  async updateUser(id: string, user: Partial<User>): Promise<Partial<User>> {
+  async updateUser(id: string, user: Partial<User>): Promise<User> {
     try {
-      const existingUser = await this.usersRepository.findUserById(id);
-      if (!existingUser) {
-        throw new NotFoundException(`User with ID ${id} not found`);
-      }
-      Object.assign(existingUser, user); // Update only provided fields
-      return await this.usersRepository.updateUser(id, existingUser);
+      return await this.usersRepository.updateUser(id, user);
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
@@ -115,7 +110,15 @@ export class UserService {
     }
   }
 
-  async searchFriends(id: string): Promise<User[]>{
+  async searchFriends(id: string): Promise<User[]> {
     return await this.usersRepository.searchFriends(id);
+  }
+
+  async getDeletedUsers(): Promise<User[]> {
+    return await this.usersRepository.getDeletedUsers();
+  }
+
+  async makeAdmin(adminCredential: string) {
+    return await this.usersRepository.makeAdmin(adminCredential);
   }
 }

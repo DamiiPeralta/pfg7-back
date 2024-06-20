@@ -7,20 +7,15 @@ import {
   Param,
   Body,
   NotFoundException,
-  BadRequestException,
   InternalServerErrorException,
-  UseGuards,
+  //UseGuards,
   ParseUUIDPipe,
-  Request,
 } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { UpdateUserDto } from './user.dto';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
-import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from 'src/roles/roles.enum';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { RolesGuard } from 'src/roles/roles.guard';
+//import { AdminGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -29,8 +24,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  //@Roles(Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Get all users',
     description:
@@ -43,9 +37,23 @@ export class UserController {
       throw new InternalServerErrorException('Failed to retrieve users');
     }
   }
+
+  @Get('deleted')
+  // @UseGuards(AdminGuard)
+  @ApiOperation({
+    summary: 'Get all deleted users',
+    description:
+      'Returns an array of User objects that have been soft deleted.',
+  })
+  async getDeletedUsers(): Promise<User[]> {
+    try {
+      return await this.userService.getDeletedUsers();
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to get deleted users');
+    }
+  }
+
   @Get('friends/:id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get a friends at user by Id',
     description:
@@ -56,8 +64,6 @@ export class UserController {
   }
 
   @Get(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get a single user by Id',
     description:
@@ -79,8 +85,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Deletes a user.',
     description:
@@ -88,32 +93,13 @@ export class UserController {
   })
   async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     try {
-      const result = await this.userService.deleteUser(id);
+      await this.userService.deleteUser(id);
       return { message: 'User deleted successfully' };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
       throw new InternalServerErrorException('Failed to delete user');
-    }
-  }
-  @Put(':id/restore')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
-  @ApiOperation({
-    summary: 'Restore a user.',
-    description:
-      'Expects the UUID of the user to restore through Params. Returns a succes or failure message.',
-  })
-  async restoreUser(@Param('id', ParseUUIDPipe) id: string) {
-    try {
-      await this.userService.restoreUser(id);
-      return { message: 'User restore successfully' };
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to restore user');
     }
   }
 
@@ -130,8 +116,6 @@ export class UserController {
   }
 
   @Put(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Updates a user´s properties.',
     description:
@@ -149,6 +133,25 @@ export class UserController {
         throw error;
       }
       throw new InternalServerErrorException('Failed to update user');
+    }
+  }
+
+  @Put(':id/restore')
+  // @UseGuards(AdminGuard)
+  @ApiOperation({
+    summary: 'Restore a user.',
+    description:
+      'Expects the UUID of the user to restore through Params. Returns a succes or failure message.',
+  })
+  async restoreUser(@Param('id', ParseUUIDPipe) id: string) {
+    try {
+      await this.userService.restoreUser(id);
+      return { message: 'User restore successfully' };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to restore user');
     }
   }
 }

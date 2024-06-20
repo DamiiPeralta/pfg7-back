@@ -2,12 +2,10 @@ import {
   Controller,
   FileTypeValidator,
   MaxFileSizeValidator,
-  Param,
   ParseFilePipe,
   Post,
   Query,
   UploadedFile,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -20,8 +18,6 @@ export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
   @Post('profilePicture')
-  // @Roles(Role.User, Role.Admin)
-  // @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Upload profile picture',
     description:
@@ -42,7 +38,7 @@ export class FileUploadController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('image')) // Asegúrate de que el campo coincide con el nombre en la APIBody
+  @UseInterceptors(FileInterceptor('image'))
   uploadImage(
     @Query('id') userId: string,
     @UploadedFile(

@@ -1,13 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
-import { User } from '../user/user.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+import { User } from 'src/user/user.entity';
 
 @Entity()
 export class Message {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  content: string;
 
   @ManyToOne(() => User, (user) => user.sentMessages)
   sender: User;
@@ -15,9 +18,9 @@ export class Message {
   @ManyToOne(() => User, (user) => user.receivedMessages)
   receiver: User;
 
+  @Column()
+  content: string;
+
   @CreateDateColumn()
   createdAt: Date;
-
-  @Column({ default: false })
-  read: boolean;
 }

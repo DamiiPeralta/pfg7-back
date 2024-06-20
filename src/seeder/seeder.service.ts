@@ -1,10 +1,11 @@
 import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
+import * as dataAdmin from '../utils/dataAdmin.json'
 import * as dataUsers from '../utils/dataUsers.json'
 import * as dataTeams from '../utils/dataTeams.json'
 import * as dataTasks from '../utils/dataTasks.json'
 import * as dataSprints from '../utils/dataSprints.json'
-import { CreateUserDto } from 'src/user/user.dto';
+import { CreateUserDto, UpdateUserDto } from 'src/user/user.dto';
 import { TeamService } from 'src/team/team.service';
 import { CreateTeamDto } from 'src/team/team.dto';
 import { TaskService } from 'src/task/task.service';
@@ -25,6 +26,26 @@ export class SeederService {
     private readonly sprintService: SprintService,
 
   ){}
+  async seedAdmin(){
+    const dbUsers = await this.userService.getAllUsers();
+    if(dbUsers.length > 0) {
+      for (const dbUser of dbUsers) {
+        if(dbUser.credentials.nickname === dataAdmin.nickname) {
+          return ('Admin already seeded');
+        }
+      }
+    }
+    const admin = new CreateUserDto();
+    admin.name = dataAdmin.name;
+    admin.nickname = dataAdmin.nickname;
+    admin.email = dataAdmin.email;
+    admin.password = dataAdmin.password;
+    await this.authService.signUp(admin);
+
+    await this.userService.makeAdmin(admin.email)
+
+    return ('Admin seeded successfully');
+  }
   async seedUsers() {
     try {
       const dbUsers = await this.userService.getAllUsers();

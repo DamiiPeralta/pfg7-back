@@ -6,15 +6,16 @@ import {
   Logger,
   InternalServerErrorException,
   Put,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginUserDto } from '../user/user.dto';
 import { CreateUserDto } from '../user/user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   ChangePasswordDto,
   CredentialsDto,
   ForgotPasswordDto,
+  ResetPasswordDto,
 } from 'src/credentials/credentials.dto';
 @Controller('auth')
 @ApiTags('Auth')
@@ -32,19 +33,17 @@ export class AuthController {
       return await this.authService.signUp(createUserDto);
     } catch (error) {
       if (error instanceof BadRequestException) {
-        throw error; // Propagar excepción BadRequestException sin modificar
+        throw error;
       } else if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        // Si el error proviene de una respuesta HTTP (por ejemplo, una solicitud a un servicio externo)
         this.logger.error(
           `External request error: ${error.response.data.message}`,
         );
         throw new InternalServerErrorException('Internal server error.');
       } else {
-        // Otros errores no manejados
         this.logger.error(`Error no manejado: ${error.message}`);
         throw new InternalServerErrorException('Internal server error.');
       }
@@ -62,19 +61,17 @@ export class AuthController {
       return { token };
     } catch (error) {
       if (error instanceof BadRequestException) {
-        throw error; // Propagar excepción BadRequestException sin modificar
+        throw error;
       } else if (
         error.response &&
         error.response.data &&
         error.response.data.message
       ) {
-        // Si el error proviene de una respuesta HTTP (por ejemplo, una solicitud a un servicio externo)
         this.logger.error(
           `External request error: ${error.response.data.message}`,
         );
         throw new InternalServerErrorException('Internal server error.');
       } else {
-        // Otros errores no manejados
         this.logger.error(`Error no manejado: ${error.message}`);
         throw new InternalServerErrorException('Internal server error.');
       }
@@ -97,14 +94,29 @@ export class AuthController {
 
   @Put('forgotPassword')
   @ApiOperation({
-    summary: 'Blablabla',
-    description:
-      'Accesible from authorized link. Returns a status message.',
+    summary: 'Sends an email with a link to reset the password.',
+    description: 'Expects user email. Returns a status message.',
   })
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     try {
-      return "No implementado todavia"
       return await this.authService.forgotPassword(forgotPasswordDto);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+  @Put('resetPassword/:rToken')
+  @ApiOperation({
+    summary: 'Resets the password.',
+    description:
+      'Accesible only from authorized link. Expects the reset token sent through email to the user and the new password through body. Returns a status message.',
+  })
+  async resetPassword(
+    @Param('rToken') rToken: string,
+    @Body() body: ResetPasswordDto,
+  ) {
+    try {
+      const { newPassword } = body;
+      return await this.authService.resetPassword(newPassword, rToken);
     } catch (error) {
       throw new BadRequestException(error.message);
     }

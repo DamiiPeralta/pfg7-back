@@ -1,5 +1,5 @@
 {
-  "name": "ecommerce-damii-peralta",
+  "name": "easytask-ft48-grupo7",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -31,6 +31,7 @@
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^10.3.9",
     "@nestjs/jwt": "^10.2.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-socket.io": "^10.3.9",
@@ -50,6 +51,7 @@
     "pg": "^8.11.5",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "socket.io": "^4.7.5",
     "typeorm": "^0.3.20",
     "uuid": "^9.0.1"
   },

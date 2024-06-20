@@ -9,15 +9,13 @@ import {
   Body,
   NotFoundException,
   Query,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
 import { Task } from './task.entity';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { Roles } from 'src/decorators/roles.decorator';
-import { RolesGuard } from 'src/roles/roles.guard';
+// import { AdminGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Tasks')
 @ApiBearerAuth()
@@ -26,8 +24,7 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get()
-  //@Roles(Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
+  // @UseGuards(AdminGuard)
   @ApiOperation({
     summary: 'Get all tasks',
     description:
@@ -42,8 +39,6 @@ export class TaskController {
   }
 
   @Get(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get task by ID',
     description:
@@ -58,8 +53,6 @@ export class TaskController {
   }
 
   @Get('team/:id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Get tasks by team ID',
     description:
@@ -76,8 +69,6 @@ export class TaskController {
   }
 
   @Post()
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Creates a new task',
     description:
@@ -97,8 +88,6 @@ export class TaskController {
   }
 
   @Put(':taskId/assign/:userId')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Assign user owner.',
     description:
@@ -117,8 +106,6 @@ export class TaskController {
   }
 
   @Put(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Updates a task´s properties.',
     description:
@@ -133,8 +120,6 @@ export class TaskController {
   }
 
   @Delete(':id')
-  //@Roles(Role.User, Role.Admin)
-  //@UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({
     summary: 'Deletes a Task.',
     description:

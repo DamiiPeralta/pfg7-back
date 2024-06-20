@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Auth0Dto, CreateUserDto } from './user.dto';
 import { Credentials } from 'src/credentials/credentials.entity';
@@ -62,7 +62,27 @@ export class UserRepository {
     try {
       const user = await this.userRepository.findOne({
         where: { user_id: id },
-        relations: ['tasks', 'teams'],
+        relations: ['tasks', 'teams', 'credentials'],
+        select: {
+          user_id: true,
+          name: true,
+          created: true,
+          last_login: true,
+          status: true,
+          profilePicture: true,
+          is_admin: true,
+          tasks: {
+            name: true,
+            description: true,
+          },
+          teams: {
+            team_name: true,
+          },
+          credentials: {
+            email: true,
+            nickname: true,
+          },
+        },
       });
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found`);
@@ -147,8 +167,13 @@ export class UserRepository {
 
   async updateUser(id: string, user: Partial<User>): Promise<User> {
     try {
-      const upUser = await this.findUserById(id);
-      Object.assign(upUser, user); // Update only provided fields
+      const upUser = await this.userRepository.findOne({
+        where: { user_id: id },
+      });
+      if (!upUser) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+      Object.assign(upUser, user); // Actualizar solo los campos proporcionados
       return await this.userRepository.save(upUser);
     } catch (error) {
       if (error instanceof NotFoundException) {
@@ -169,6 +194,21 @@ export class UserRepository {
       throw new InternalServerErrorException('Failed to delete user');
     }
   }
+
+  async getDeletedUsers(): Promise<User[]> {
+    try {
+      const deletedUsers = await this.userRepository.find({
+        withDeleted: true, // Incluir usuarios eliminados
+        where: {
+          deletedAt: Not(IsNull()),
+        },
+      });
+      return deletedUsers;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to get deleted users');
+    }
+  }
+
   async createWithAuth0(user: Auth0Dto) {
     const { email, name, picture } = user;
 
@@ -335,5 +375,13 @@ export class UserRepository {
       }
       throw new InternalServerErrorException('Failed to search friends');
     }
+  }
+  async makeAdmin(adminCredential: string) {
+    const admin = await this.userRepository.findOne({
+      where: { credentials: { email: adminCredential } },
+    });
+    admin.is_admin = true;
+    await this.userRepository.save(admin);
+    return admin;
   }
 }
